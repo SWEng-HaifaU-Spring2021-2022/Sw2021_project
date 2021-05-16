@@ -21,13 +21,17 @@ public class App extends Application {
 
     private static Scene scene;
     private SimpleClient client;
+    //private static Stage stage=new Stage();
+    public static void setScene(Scene newscene){
+        scene=newscene;
 
+    }
     @Override
     public void start(Stage stage) throws IOException {
     	EventBus.getDefault().register(this);
     	client = SimpleClient.getClient();
     	client.openConnection();
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("primary"), 1000, 1000);
         stage.setScene(scene);
         stage.show();
     }

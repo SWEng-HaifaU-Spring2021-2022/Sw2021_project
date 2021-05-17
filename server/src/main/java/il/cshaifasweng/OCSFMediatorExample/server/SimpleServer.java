@@ -12,6 +12,10 @@ import org.hibernate.service.ServiceRegistry;
 import java.io.IOException;
 import java.util.List;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Hall;
+import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
+import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 
 public class SimpleServer extends AbstractServer {
@@ -128,21 +132,21 @@ public class SimpleServer extends AbstractServer {
         return data;
     }
 
-    private static List<Movies> getAllHalls() throws Exception {
+    private static List<Hall> getAllHalls() throws Exception {
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Hall> query = builder.createQuery(Hall.class);
-        query.from(Movies.class);
+        query.from(Movie.class);
         List<Hall> data = session.createQuery(query).getResultList();
         return data;
     }
 
-    private static List<Theatre> getAllTheatres() throws Exception {
+    private static List<Theater> getAllTheatres() throws Exception {
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Theatre> query = builder.createQuery(Theatre.class);
-        query.from(Theatre.class);
-        List<Theatre> data = session.createQuery(query).getResultList();
+        CriteriaQuery<Theater> query = builder.createQuery(Theater.class);
+        query.from(Theater.class);
+        List<Theater> data = session.createQuery(query).getResultList();
         return data;
     }
 
@@ -160,7 +164,7 @@ public class SimpleServer extends AbstractServer {
         // Add ALL of your entities here. You can also try adding a whole package.
         configuration.addAnnotatedClass(Movie.class);
         configuration.addAnnotatedClass(Hall.class);
-        configuration.addAnnotatedClass(Theatre.class);
+        configuration.addAnnotatedClass(Theater.class);
         configuration.addAnnotatedClass(MovieShow.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())

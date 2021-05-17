@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+
 /**
  * Sample Skeleton for 'Catalog.fxml' Controller Class
  */

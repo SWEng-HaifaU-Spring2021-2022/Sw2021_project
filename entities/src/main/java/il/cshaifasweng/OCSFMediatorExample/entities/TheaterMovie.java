@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="theatermovies")
 public class TheaterMovie extends Movie {
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	private List<MovieShow> MSList;
 	private int entryPrice;
 	public TheaterMovie() {}

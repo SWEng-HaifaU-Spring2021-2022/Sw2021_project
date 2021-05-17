@@ -18,7 +18,7 @@ public class Theater {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int theaterId;
 	private String location;
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "owner")
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "theater")
 	 private List<Hall> halls;
 	/*machinesList*/
 	public Theater()

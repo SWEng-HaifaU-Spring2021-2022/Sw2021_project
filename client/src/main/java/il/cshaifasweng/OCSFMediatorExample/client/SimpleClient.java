@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 
 public class SimpleClient extends AbstractClient {

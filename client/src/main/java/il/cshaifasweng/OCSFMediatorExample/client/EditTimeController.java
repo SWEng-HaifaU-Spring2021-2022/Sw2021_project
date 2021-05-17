@@ -23,6 +23,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
+
 public class EditTimeController implements Initializable {
     private final ObservableList<MovieShow> data = FXCollections.observableArrayList();
 

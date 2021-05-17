@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,6 +13,7 @@
         <columns>
           <TableColumn fx:id="imageCol" prefWidth="75.0" text="Image" />
           <TableColumn fx:id="nameCol" prefWidth="85.0" text="Movie Name" />
+            <TableColumn fx:id="hebName" prefWidth="75.0" text="Movie Name Heb" />
             <TableColumn fx:id="actorsCol" prefWidth="81.0" resizable="false" text="Actors" />
             <TableColumn fx:id="ratingCol" prefWidth="75.0" text="Rating" />
             <TableColumn fx:id="GenerCol" prefWidth="75.0" text="Genere" />
@@ -21,15 +21,9 @@
             <TableColumn fx:id="producerCol" prefWidth="75.0" text="Producer" />
             <TableColumn fx:id="ShowsCol" prefWidth="71.0" text="Showing in theaters" />
             <TableColumn fx:id="ShowtimeCol" prefWidth="127.0" text="Show times" />
-            <TableColumn fx:id="editCol" prefWidth="75.0" text="Edit" />
         </columns>
-         <contextMenu>
-            <ContextMenu>
-              <items>
-                <MenuItem fx:id="editOp" mnemonicParsing="false" onAction="#handleMovieTimeEdit" text="Edit" />
-              </items>
-            </ContextMenu>
-         </contextMenu>
       </TableView>
+      <Button fx:id="EditBtn" layoutX="27.0" layoutY="335.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
+      <Label fx:id="testLabel" layoutX="55.0" layoutY="417.0" prefHeight="25.0" prefWidth="279.0" text="Label" />
    </children>
 </AnchorPane>

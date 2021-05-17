@@ -15,7 +15,7 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		if (msg.getClass().equals(Warning.class)) {
+		if (msg.getClass().equals(Movie.class)) {
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
 

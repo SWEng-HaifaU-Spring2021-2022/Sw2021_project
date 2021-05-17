@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * Sample Skeleton for 'Catalog.fxml' Controller Class
@@ -21,19 +22,22 @@ import java.util.ResourceBundle;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class CatalogController implements Initializable  {
     private final ObservableList<Movie> data = FXCollections.observableArrayList();
+//ToDO:fix edit the attributes names
     @FXML // fx:id="homePage"
     private Button homePage; // Value injected by FXMLLoader
 
@@ -45,6 +49,9 @@ public class CatalogController implements Initializable  {
 
     @FXML // fx:id="nameCol"
     private TableColumn<Movie, String> nameCol; // Value injected by FXMLLoader
+
+    @FXML // fx:id="hebName"
+    private TableColumn<Movie, String> hebName; // Value injected by FXMLLoader
 
     @FXML // fx:id="actorsCol"
     private TableColumn<Movie, String> actorsCol; // Value injected by FXMLLoader
@@ -67,11 +74,12 @@ public class CatalogController implements Initializable  {
     @FXML // fx:id="ShowtimeCol"
     private TableColumn<Movie, LocalDateTime> ShowtimeCol; // Value injected by FXMLLoader
 
-    @FXML // fx:id="editCol"
-    private TableColumn<Movie, Button> editCol; // Value injected by FXMLLoader
 
-    @FXML // fx:id="editOp"
-    private MenuItem editOp; // Value injected by FXMLLoader
+    @FXML // fx:id="EditBtn"
+    private Button EditBtn;
+
+    @FXML // fx:id="testLabel"
+    private Label testLabel; // Value injected by FXMLLoader
 
     @FXML
     void goHomePage(ActionEvent event)throws IOException {
@@ -88,9 +96,10 @@ public class CatalogController implements Initializable  {
         loadData();
 
     }
-        private void initCol(){
+    private void initCol(){ //TODO: update it to match the final class attributes
       imageCol.setCellValueFactory(new PropertyValueFactory<>("img"));
       nameCol.setCellValueFactory(new PropertyValueFactory<>("EngName"));
+      hebName.setCellValueFactory(new PropertyValueFactory<>("HebNmae"));
       actorsCol.setCellValueFactory(new PropertyValueFactory<>("Actors"));
       producerCol.setCellValueFactory(new PropertyValueFactory<>("Producer"));
       descriptionCol.setCellValueFactory(new PropertyValueFactory<>("Description"));
@@ -100,21 +109,23 @@ public class CatalogController implements Initializable  {
       ShowsCol.setCellValueFactory(new PropertyValueFactory<>("showInTheater"));
   }
 
-  private void loadData(){
+  private void loadData(){//TODO: send a request to the server to get all the movies
       data.clear();
-      LocalDateTime myObj = LocalDateTime.now();
+    /*  LocalDateTime myObj = LocalDateTime.now();
       ImageView emp0photo = new ImageView(new Image(getClass().getResourceAsStream("test.jpg")));
       emp0photo.setFitHeight(100);
       emp0photo.setFitWidth(100);
       Movie m=new Movie(1,emp0photo,"test","טסט","wajeeh, alex,daniDev","WB","testmovie",4, myObj,true,"Action");
-      data.add(m);
+      data.add(m);*/
        MoviesTable.getItems().setAll(data);
        autoResizeColumns(MoviesTable);
   }
     @FXML
     private void handleRefresh(ActionEvent event) {
+        testLabel.setText("Success");
         loadData();
     }
+
     public static void autoResizeColumns( TableView<?> table )//method to reszie columns taken from StackOverFlow
     {
         //Set the right policy
@@ -143,9 +154,33 @@ public class CatalogController implements Initializable  {
         } );
     }
     @FXML
-    void handleMovieTimeEdit(ActionEvent event) {
+    void editMovieBtn(ActionEvent event) throws  IOException {
+        try {
+            int index=MoviesTable.getSelectionModel().getSelectedIndex();
+            if(index<=-1) {
+                return;
+            }
+            Movie selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
+            Parent parent = loader.load();
+            EditTimeController controller=(EditTimeController) loader.getController();
+            controller.inflatUI(selectedMovie);
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle("Edit Movie");
+            stage.setScene(new Scene(parent));
+            stage.show();
+
+            stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            System.out.println("error Showing edit page");
+        }
 
     }
+
 
 }
 

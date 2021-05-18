@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
+import java.io.Serializable;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -18,7 +18,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 @Entity
 @Table(name = "movieShow")
-public class MovieShow {
+public class MovieShow implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private int movieShowId;

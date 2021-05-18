@@ -12,7 +12,10 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Hall;
@@ -33,12 +36,19 @@ public class SimpleServer extends AbstractServer {
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-    	//System.out.println("dasdasdasd handler");
         msgObject msgObj = (msgObject) msg;
         try {
-        	//client.sendToClient("bla bla bla");
-            if (msgObj.getMsg().startsWith("#getAll")) {
-            	client.sendToClient(get(msgObj.getMsg(), client));
+            if (msgObj.getMsg().equals("#getAllMovies")) {
+            	/*List<TheaterMovie> list=getAllMovies();
+            	List<TheaterMovie> temp=new ArrayList();
+            	TheaterMovie [] arr=new TheaterMovie[list.size()];
+            	list.toArray(arr);
+            	//int [] arr= {1,2,3,4};
+            	TheaterMovie tm=list.get(0);*/
+            	msgObject msgobj2=new msgObject("AllMovies",getAllMovies());
+         
+            	client.sendToClient(msgobj2);
+            	//get(msgObj.getMsg(), client);
             	System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             }
             if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
@@ -48,7 +58,7 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private Object get(String msgString, ConnectionToClient client) throws Exception {
+    private void get(String msgString, ConnectionToClient client) throws Exception {
     	System.out.println("get func");
     	System.out.println(msgString);
     	SessionFactory sessionFactory = getSessionFactory();
@@ -57,8 +67,10 @@ public class SimpleServer extends AbstractServer {
 
         if (msgString.equals("#getAllMovies")) {
             try {
-            	//System.out.println("dasdadsasd");
-            	return getAllMovies();
+            	System.out.println("before sending to client");
+            	 client.sendToClient(getAllMovies());
+            	client.sendToClient("bla bla");
+                // System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             	
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,7 +97,6 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
     private void update(msgObject msgObj, ConnectionToClient client)
@@ -141,26 +152,30 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private static TheaterMovie getAllMovies() throws Exception {
-    	//System.out.println("12313131");
+    private static List<Movie> getAllMovies() throws Exception {
+    	SessionFactory sessionFactory = getSessionFactory();
+    	session = sessionFactory.openSession();
+    	CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+        query.from(Movie.class);
+        List<Movie> list= session.createQuery(query).getResultList();
+        for(Movie m : list) {
+        	System.out.println(m.getDescription());
+        }
+        return list;
+    	/*SessionFactory sessionFactory = getSessionFactory();
+    	session = sessionFactory.openSession();
+    	
+    	
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<TheaterMovie> query = builder.createQuery(TheaterMovie.class);
-        query.from(TheaterMovie.class);
-        List<TheaterMovie> data = session.createQuery(query).getResultList();
-        if(data==null) {
-        	System.out.println("no movies :(");
-        }
-        else
-        {
-        	for (TheaterMovie tm : data) {
-				System.out.println(tm.getDescription());
-			}
-        }
-        return data.get(0);
+        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+        query.from(Movie.class);
+        return session.createQuery(query).getResultList();*/
     }
 
     private static List<Hall> getAllHalls() throws Exception {
-
+    	SessionFactory sessionFactory = getSessionFactory();
+    	session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Hall> query = builder.createQuery(Hall.class);
         query.from(Movie.class);
@@ -200,11 +215,12 @@ public class SimpleServer extends AbstractServer {
         return configuration.buildSessionFactory(serviceRegistry);
     }
     private static void AddToDB() {
+    	try {
     	String [] actors= {" Lewis Tan","Jessica McNamee"," Josh Lawson"};
     	String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
     	File imagfile1 = new File(System.getProperty("user.dir") + "/MK.jpg");
-    	byte[] pixelsArray1 = new byte[(int) imagfile1.length()];
-    	TheaterMovie m=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1,40);
+    	byte[] pixelsArray1 = Files.readAllBytes(Paths.get("C:\\Users\\USER1\\eclipse-workspace\\Sw2021_project\\server\\src\\main\\java\\il\\cshaifasweng\\OCSFMediatorExample\\server\\MK.jpg"));
+    	Movie m=new Movie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1);
     	Theater th=new Theater("Haifa");
     	Hall hall=new Hall(40,th,1);
     	th.AddHalls(hall);
@@ -215,6 +231,10 @@ public class SimpleServer extends AbstractServer {
     	session.save(m);
     	session.save(ms);
     	session.flush();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
     }
     public static void test() {
     	 try {

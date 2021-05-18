@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.io.Serializable;
 @Entity
 @Table(name = "theaters")
-public class Theater {
+public class Theater implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int theaterId;

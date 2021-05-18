@@ -8,6 +8,8 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
 import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
+import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+import javafx.application.Platform;
 
 public class SimpleClient extends AbstractClient {
 	
@@ -20,13 +22,23 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		obj=msg;
-		TheaterMovie tm=(TheaterMovie)obj;
-		System.out.println(tm.getDescription());
 		/*if (msg.getClass().equals(List.class)) {
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 			obj=(List<Movie>)msg;
 		}*/
+		//System.out.println("sadasdads");
+		if(msg.getClass().equals(msgObject.class)) {
+			System.out.print("msg arrived");
+			msgObject tempmsg=(msgObject)msg;
+			if(tempmsg.getMsg().equals("AllMovies")) {
+				Platform.runLater(()->{
+					CatalogController Catalog=new CatalogController();
+					List<Movie>TML=(List<Movie>)tempmsg.getObject();
+					Catalog.LoadData(TML);
+				});
+			}
+		}
+		System.out.println("sadasdads");
 
 	}
 	

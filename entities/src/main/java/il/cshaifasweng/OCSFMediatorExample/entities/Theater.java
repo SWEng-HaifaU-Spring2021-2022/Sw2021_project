@@ -12,14 +12,16 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.io.Serializable;
 @Entity
-@Table(name = "theater")
+@Table(name = "theaters")
 public class Theater {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int theaterId;
 	private String location;
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "theater")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="theater")
 	 private List<Hall> halls;
+	@OneToMany(fetch=FetchType.LAZY,mappedBy="theater")
+	private List<MovieShow>movieShowList;
 	/*machinesList*/
 	public Theater()
 	{
@@ -29,6 +31,7 @@ public class Theater {
 	{
 		this.location = location;
 		this.halls = new ArrayList<>();
+		this.movieShowList=new ArrayList<>();
 	}
 	public int getTheaterId() {
 		return theaterId;
@@ -48,6 +51,11 @@ public class Theater {
 	public void setHalls(List<Hall> halls) {
 		this.halls = halls;
 	}
-	
+	public void AddHalls(Hall hall) {
+		halls.add(hall);
+	}
+	public void ADdMovieShow(MovieShow ms) {
+		this.movieShowList.add(ms);
+	}
 	
 }

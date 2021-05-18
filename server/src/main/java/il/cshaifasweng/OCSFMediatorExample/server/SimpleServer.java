@@ -9,13 +9,17 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+
+import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Hall;
 import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
 import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
+import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 
 public class SimpleServer extends AbstractServer {
@@ -166,10 +170,46 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(Hall.class);
         configuration.addAnnotatedClass(Theater.class);
         configuration.addAnnotatedClass(MovieShow.class);
+        configuration.addAnnotatedClass(TheaterMovie.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
         return configuration.buildSessionFactory(serviceRegistry);
+    }
+    private static void AddToDB() {
+    	String [] actors= {" Lewis Tan","Jessica McNamee"," Josh Lawson"};
+    	String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
+    	File imagfile1 = new File(System.getProperty("user.dir") + "/MK.jpg");
+    	byte[] pixelsArray1 = new byte[(int) imagfile1.length()];
+    	TheaterMovie m=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1,40);
+    	Theater th=new Theater("Haifa");
+    	Hall hall=new Hall(40,th,1);
+    	th.AddHalls(hall);
+    	Date d=new Date(10000000);
+    	MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
+    	session.save(th);
+    	session.save(hall);
+    	session.save(m);
+    	session.save(ms);
+    	session.flush();
+    }
+    public static void test() {
+    	 try {
+             SessionFactory sessionFactory = getSessionFactory();
+             session = sessionFactory.openSession();
+             session.beginTransaction();
+             AddToDB();
+             session.getTransaction().commit(); // Save everything.
+         } catch (Exception exception) {
+             if (session != null) {
+                 session.getTransaction().rollback();
+             }
+             System.err.println("An error occurred, changes have been rolled back.");
+             exception.printStackTrace();
+         } finally {
+             if (session != null)
+                 session.close();
+         }
     }
 
 }

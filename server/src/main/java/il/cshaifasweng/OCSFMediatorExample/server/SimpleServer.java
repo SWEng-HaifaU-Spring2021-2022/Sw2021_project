@@ -21,6 +21,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
 import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
+import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
@@ -32,9 +33,14 @@ public class SimpleServer extends AbstractServer {
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    	//System.out.println("dasdasdasd handler");
         msgObject msgObj = (msgObject) msg;
         try {
-            if (msgObj.getMsg().startsWith("#getAll")) get(msgObj.getMsg(), client);
+        	//client.sendToClient("bla bla bla");
+            if (msgObj.getMsg().startsWith("#getAll")) {
+            	client.sendToClient(get(msgObj.getMsg(), client));
+            	System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
+            }
             if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
         }
         catch (Exception e) {
@@ -42,29 +48,36 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private void get(String msgString, ConnectionToClient client) throws Exception {
-        if (msgString == "#getAllMovies") {
+    private Object get(String msgString, ConnectionToClient client) throws Exception {
+    	System.out.println("get func");
+    	System.out.println(msgString);
+    	SessionFactory sessionFactory = getSessionFactory();
+    	session = sessionFactory.openSession();
+    	//session.beginTransaction();
+
+        if (msgString.equals("#getAllMovies")) {
             try {
-                client.sendToClient(getAllMovies());
-                System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
+            	//System.out.println("dasdadsasd");
+            	return getAllMovies();
+            	
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgString == "#getAllHalls") {
+        } else if (msgString.equals( "#getAllHalls")) {
             try {
                 client.sendToClient(getAllHalls());
                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgString == "#getAllTheatres") {
+        } else if (msgString.equals( "#getAllTheatres")) {
             try {
                 client.sendToClient(getAllTheatres());
                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgString == "#getAllMovieShows") {
+        } else if (msgString.equals( "#getAllMovieShows")) {
             try {
                 client.sendToClient(getAllMovieShows());
                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
@@ -72,6 +85,7 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     private void update(msgObject msgObj, ConnectionToClient client)
@@ -97,43 +111,52 @@ public class SimpleServer extends AbstractServer {
 
     private void change(msgObject msgObj, ConnectionToClient client)
     {
-        if(msgObj.getMsg()=="#updateMovie"){
+        if(msgObj.getMsg().equals("#updateMovie")){
             session.save((Movie)msgObj.getObject());
             session.flush();
         }
-        else if(msgObj.getMsg()=="#addMovie"){
+        else if(msgObj.getMsg().equals("#addMovie")){
             session.update((Movie)msgObj.getObject());
             session.flush();
         }
-        else if (msgObj.getMsg()=="#removeMovie")
+        else if (msgObj.getMsg().equals("#removeMovie"))
         {
             session.delete(((Movie)msgObj.getObject()));
             session.flush();
         }
-        else if (msgObj.getMsg()=="#addMovieShow")
+        else if (msgObj.getMsg().equals("#addMovieShow"))
         {
             session.save(((MovieShow)msgObj.getObject()));
             session.flush();
         }
-        else if (msgObj.getMsg()=="#updateMovieShow")
+        else if (msgObj.getMsg().equals("#updateMovieShow"))
         {
             session.update(((MovieShow)msgObj.getObject()));
             session.flush();
         }
-        else if (msgObj.getMsg()=="#deleteMovieShow")
+        else if (msgObj.getMsg().equals("#deleteMovieShow"))
         {
             session.delete(((MovieShow)msgObj.getObject()));
             session.flush();
         }
     }
 
-    private static List<Movie> getAllMovies() throws Exception {
-
+    private static TheaterMovie getAllMovies() throws Exception {
+    	//System.out.println("12313131");
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
-        query.from(Movie.class);
-        List<Movie> data = session.createQuery(query).getResultList();
-        return data;
+        CriteriaQuery<TheaterMovie> query = builder.createQuery(TheaterMovie.class);
+        query.from(TheaterMovie.class);
+        List<TheaterMovie> data = session.createQuery(query).getResultList();
+        if(data==null) {
+        	System.out.println("no movies :(");
+        }
+        else
+        {
+        	for (TheaterMovie tm : data) {
+				System.out.println(tm.getDescription());
+			}
+        }
+        return data.get(0);
     }
 
     private static List<Hall> getAllHalls() throws Exception {

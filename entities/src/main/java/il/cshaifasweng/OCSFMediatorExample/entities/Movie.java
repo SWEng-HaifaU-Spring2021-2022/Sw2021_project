@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 @Entity
 @Table(name="movie")
-public class Movie {
+public class Movie implements Serializable  {
 	@Id
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private int movieId;

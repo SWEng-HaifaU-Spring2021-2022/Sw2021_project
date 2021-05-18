@@ -38,40 +38,40 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class CatalogController implements Initializable {
-	private final ObservableList<TheaterMovie> data = FXCollections.observableArrayList();
+	private  final ObservableList<Movie> data = FXCollections.observableArrayList();
 //ToDO:fix edit the attributes names
 	@FXML // fx:id="homePage"
 	private Button homePage; // Value injected by FXMLLoader
 
 	@FXML // fx:id="MoviesTable"
-	private TableView<TheaterMovie> MoviesTable; // Value injected by FXMLLoader
+	private TableView<Movie> MoviesTable; // Value injected by FXMLLoader
 
 	@FXML // fx:id="imageCol"
-	private TableColumn<TheaterMovie, String> imageCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> imageCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="nameCol"
-	private TableColumn<TheaterMovie, String> nameCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> nameCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="hebName"
-	private TableColumn<TheaterMovie, String> hebName; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> hebName; // Value injected by FXMLLoader
 
 	@FXML // fx:id="actorsCol"
-	private TableColumn<TheaterMovie, String> actorsCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> actorsCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="GenerCol"
-	private TableColumn<TheaterMovie, String> GenerCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> GenerCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="descriptionCol"
-	private TableColumn<TheaterMovie, String> descriptionCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> descriptionCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="producerCol"
-	private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> producerCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="ShowsCol"
-	private TableColumn<TheaterMovie, Boolean> ShowsCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, Boolean> ShowsCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="ShowtimeCol"
-	private TableColumn<TheaterMovie, MovieShow> ShowtimeCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, MovieShow> ShowtimeCol; // Value injected by FXMLLoader
 
 	@FXML // fx:id="EditBtn"
 	private Button EditBtn;
@@ -91,66 +91,62 @@ public class CatalogController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// initCol();
-
-		try {
-			initCol();
-			loadData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		initCol();
 	}
 
 	private void initCol() { // TODO: update it to match the final class attributes
-		imageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
+		try {
+		//imageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
 		nameCol.setCellValueFactory(new PropertyValueFactory<>("engName"));
 		hebName.setCellValueFactory(new PropertyValueFactory<>("hebName"));
 		actorsCol.setCellValueFactory(new PropertyValueFactory<>("actors"));
 		producerCol.setCellValueFactory(new PropertyValueFactory<>("Producer"));
 		descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-		ShowtimeCol.setCellValueFactory(new PropertyValueFactory<>("ShowTime"));
+		//ShowtimeCol.setCellValueFactory(new PropertyValueFactory<>("ShowTime"));
 		GenerCol.setCellValueFactory(new PropertyValueFactory<>("genere"));
-		ShowsCol.setCellValueFactory(new PropertyValueFactory<>("MSList"));
-	}
-
-	private void loadData() throws IOException {// TODO: send a request to the server to get all the movies
-		try {
-			data.clear();
-			msgObject msg = new msgObject("#getAllMovies");
-			//System.out.println("1231312312");
-			SimpleClient.getClient().sendToServer(msg);
-			List<TheaterMovie> TM = (List<TheaterMovie>) SimpleClient.obj;
-			/*
-			 * LocalDateTime myObj = LocalDateTime.now(); ImageView emp0photo = new
-			 * ImageView(new Image(getClass().getResourceAsStream("test.jpg")));
-			 * emp0photo.setFitHeight(100); emp0photo.setFitWidth(100); Movie m=new
-			 * Movie(1,emp0photo,"test","טסט","wajeeh, alex,daniDev","WB","testmovie",4,
-			 * myObj,true,"Action"); data.add(m);
-			 */
-			if (TM != null) {
-				for (TheaterMovie tm : TM) {
-					System.out.println(tm.getDescription());
-					data.add(tm);
-				}
-				MoviesTable.getItems().setAll(data);
-				autoResizeColumns(MoviesTable);
-			}
-
-			else {
-				System.out.println("empty");
-			}
-		} catch (IOException e) {
-			System.out.println("error loading data");
+		//ShowsCol.setCellValueFactory(new PropertyValueFactory<>("MSList"));
+		msgObject msg = new msgObject("#getAllMovies");
+		SimpleClient.getClient().sendToServer(msg);
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
 
+	public void LoadData(List<Movie>TMlist) {
+		data.clear();
+		List<Movie> TM = TMlist;
+		/*
+		 * LocalDateTime myObj = LocalDateTime.now(); ImageView emp0photo = new
+		 * ImageView(new Image(getClass().getResourceAsStream("test.jpg")));
+		 * emp0photo.setFitHeight(100); emp0photo.setFitWidth(100); Movie m=new
+		 * Movie(1,emp0photo,"test","טסט","wajeeh, alex,daniDev","WB","testmovie",4,
+		 * myObj,true,"Action"); data.add(m);
+		 */
+		if (TM != null) {
+			//System.out.println("12312313");
+			for (Movie tm : TM) {
+				System.out.println(tm.getDescription());
+				data.add(tm);
+			}
+			System.out.println("12312313");
+			MoviesTable.getItems().setAll(data);
+			System.out.println("12312313");
+			autoResizeColumns(MoviesTable);
+			System.out.println("12312313");
+		}
+
+		else {
+			System.out.println("empty");
+		}
+		System.out.println("12312313");
 	}
 
 	@FXML
 	private void handleRefresh(ActionEvent event) throws IOException {
 		testLabel.setText("Success");
-		loadData();
+		//loadData();
 	}
 
 	public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow

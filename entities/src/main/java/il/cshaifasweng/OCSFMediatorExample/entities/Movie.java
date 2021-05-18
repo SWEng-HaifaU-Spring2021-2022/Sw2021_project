@@ -14,7 +14,7 @@ public class Movie implements Serializable  {
 	 private String genere;
 	 private String description;
 	 private String producer;
-	 @Column(length = 100000000)
+	 @Column(columnDefinition="LONGBLOB")
 	 private byte[] image;
 	public Movie()
 	{

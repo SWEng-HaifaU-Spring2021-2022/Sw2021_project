@@ -15,7 +15,6 @@
           <TableColumn fx:id="nameCol" prefWidth="85.0" text="Movie Name" />
             <TableColumn fx:id="hebName" prefWidth="75.0" text="Movie Name Heb" />
             <TableColumn fx:id="actorsCol" prefWidth="81.0" resizable="false" text="Actors" />
-            <TableColumn fx:id="ratingCol" prefWidth="75.0" text="Rating" />
             <TableColumn fx:id="GenerCol" prefWidth="75.0" text="Genere" />
             <TableColumn fx:id="descriptionCol" prefWidth="75.0" text="Description" />
             <TableColumn fx:id="producerCol" prefWidth="75.0" text="Producer" />

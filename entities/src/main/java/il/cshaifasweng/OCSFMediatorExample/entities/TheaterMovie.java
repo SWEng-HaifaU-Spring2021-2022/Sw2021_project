@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 import javax.persistence.*;
-
+import java.io.Serializable;
 @Entity
 @Table(name="movie")
-public class TheaterMovie extends Movie {
+public class TheaterMovie extends Movie implements Serializable  {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	private List<MovieShow> MSList;
 	private int entryPrice;

@@ -6,7 +6,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
@@ -17,18 +22,22 @@ public class MovieShow {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private int movieShowId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "movieid_id")
 	 private Movie movie;
 	 private Date showDate;
+	 @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "theater_id")
 	 private Theater theater;
-	 private Time beginTime;
-	 private Time endTime;
+	 private String beginTime;
+	 private String endTime;
 	 private int maxNumber; 
 	 
 	 public MovieShow()
 	 {
 		 
 	 }
-	 public MovieShow(Movie movie, Date showDate, Theater theater,Time beginTime, Time endTime,int maxNumber)
+	 public MovieShow(Movie movie, Date showDate, Theater theater,String beginTime, String endTime,int maxNumber)
 	 {
 		 this.movie = movie;
 		 this.showDate = showDate;
@@ -61,16 +70,16 @@ public class MovieShow {
 	public void setTheater(Theater theater) {
 		this.theater = theater;
 	}
-	public Time getBeginTime() {
+	public String getBeginTime() {
 		return beginTime;
 	}
-	public void setBeginTime(Time beginTime) {
+	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
-	public Time getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(Time endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 	public int getMaxNumber() {

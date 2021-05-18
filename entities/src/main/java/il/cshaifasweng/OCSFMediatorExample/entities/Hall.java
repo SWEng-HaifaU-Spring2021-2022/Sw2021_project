@@ -18,25 +18,26 @@ import java.io.Serializable;
 public class Hall {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	 @JoinColumn(name = "theater_id")
+	private int Hallid;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "theater_id")
 	private Theater theater;
 	private int hallId;
 	private int capacity;
 	/*private int theaterId;*/
 	private int hallNumber;
-	/*private boolean[] seatsMatrix;*/
+	private boolean[][] seatsMatrix;
 	
 	public Hall()
 	{
 		
 	}
-	public Hall(int capacity, int theaterId, int hallNumber, boolean seatsMatrix)
+	public Hall(int capacity,Theater theater, int hallNumber)
 	{
 		this.capacity = capacity;
 		this.hallNumber = hallNumber;
-		/*this.theaterId = theaterId;*/
-		/*this.seatsMatrix = seatsMatrix;*/
+		this.theater=theater;
+		this.seatsMatrix=new boolean[5][5];
 	}
 	public int getHallId() {
 		return hallId;

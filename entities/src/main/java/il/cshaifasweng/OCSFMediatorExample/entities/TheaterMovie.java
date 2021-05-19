@@ -12,7 +12,7 @@ public class TheaterMovie extends Movie implements Serializable  {
 	private List<MovieShow> MSList;
 	private int entryPrice;
 	public TheaterMovie() {}
-	public TheaterMovie(String engName, String hebName, String[] actors, String genere, String description, String producer, byte[] image,int entryPrice) {
+	public TheaterMovie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image,int entryPrice) {
 		super(engName,hebName,actors,genere,description,producer,image);
 		this.entryPrice=entryPrice;
 		MSList=new  ArrayList<MovieShow>();

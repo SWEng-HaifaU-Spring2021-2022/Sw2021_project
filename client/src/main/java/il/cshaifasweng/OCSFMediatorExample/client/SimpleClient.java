@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,19 +27,29 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 			obj=(List<Movie>)msg;
 		}*/
-		//System.out.println("sadasdads");
 		if(msg.getClass().equals(msgObject.class)) {
 			System.out.print("msg arrived");
 			msgObject tempmsg=(msgObject)msg;
 			if(tempmsg.getMsg().equals("AllMovies")) {
 				Platform.runLater(()->{
-					CatalogController Catalog=new CatalogController();
-					List<Movie>TML=(List<Movie>)tempmsg.getObject();
-					Catalog.LoadData(TML);
+					try {
+						obj=tempmsg.getObject();
+						App.setRoot("Catalog");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				});
 			}
+			else if(tempmsg.getMsg().equals("movieShowsForMovie")) {
+				Platform.runLater(()->{
+					obj=tempmsg.getObject();
+					System.out.println("movie shows message arrived");
+				});
+			}
+			
 		}
-		System.out.println("sadasdads");
+	
 
 	}
 	
@@ -50,3 +61,4 @@ public class SimpleClient extends AbstractClient {
 	}
 
 }
+

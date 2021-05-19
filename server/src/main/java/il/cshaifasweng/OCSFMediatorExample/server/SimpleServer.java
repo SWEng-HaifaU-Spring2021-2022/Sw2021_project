@@ -38,18 +38,8 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         msgObject msgObj = (msgObject) msg;
         try {
-            if (msgObj.getMsg().equals("#getAllMovies")) {
-            	/*List<TheaterMovie> list=getAllMovies();
-            	List<TheaterMovie> temp=new ArrayList();
-            	TheaterMovie [] arr=new TheaterMovie[list.size()];
-            	list.toArray(arr);
-            	//int [] arr= {1,2,3,4};
-            	TheaterMovie tm=list.get(0);*/
-            	msgObject msgobj2=new msgObject("AllMovies",getAllMovies());
-         
-            	client.sendToClient(msgobj2);
-            	//get(msgObj.getMsg(), client);
-            	System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
+            if (msgObj.getMsg().startsWith("#get")) {
+            	get(msgObj, client);
             }
             if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
         }
@@ -58,19 +48,15 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private void get(String msgString, ConnectionToClient client) throws Exception {
-    	System.out.println("get func");
-    	System.out.println(msgString);
+    private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
     	SessionFactory sessionFactory = getSessionFactory();
     	session = sessionFactory.openSession();
     	//session.beginTransaction();
-
+    	String msgString=msgobject.getMsg();
         if (msgString.equals("#getAllMovies")) {
             try {
-            	System.out.println("before sending to client");
             	 client.sendToClient(getAllMovies());
-            	client.sendToClient("bla bla");
-                // System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
+                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             	
             } catch (IOException e) {
                 e.printStackTrace();
@@ -89,13 +75,11 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgString.equals( "#getAllMovieShows")) {
-            try {
-                client.sendToClient(getAllMovieShows());
-                System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }else if(msgString.equals("#getshows")) {
+        	int id=(int)msgobject.getObject();
+        	client.sendToClient(getMovieShowsbyid(id));
+        	System.out.format("Sent movies Show of movies id"+id+" to client %s\n", client.getInetAddress().getHostAddress());
+        	
         }
     }
 
@@ -152,9 +136,7 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private static List<Movie> getAllMovies() throws Exception {
-    	SessionFactory sessionFactory = getSessionFactory();
-    	session = sessionFactory.openSession();
+    private static msgObject getAllMovies() throws Exception {
     	CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
         query.from(Movie.class);
@@ -162,15 +144,8 @@ public class SimpleServer extends AbstractServer {
         for(Movie m : list) {
         	System.out.println(m.getDescription());
         }
-        return list;
-    	/*SessionFactory sessionFactory = getSessionFactory();
-    	session = sessionFactory.openSession();
-    	
-    	
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
-        query.from(Movie.class);
-        return session.createQuery(query).getResultList();*/
+        msgObject msg=new msgObject("AllMovies",list);
+        return msg;
     }
 
     private static List<Hall> getAllHalls() throws Exception {
@@ -192,15 +167,24 @@ public class SimpleServer extends AbstractServer {
         return data;
     }
 
-    private static List<MovieShow> getAllMovieShows() throws Exception {
-
+    private static msgObject getMovieShowsbyid(int id) throws Exception {
+    	System.out.println("getting movie shows");
+    	//String sqlquery="SELECT * FROM demo.movieshow where movieid_id="+id;
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<MovieShow> query = builder.createQuery(MovieShow.class);
         query.from(MovieShow.class);
         List<MovieShow> data = session.createQuery(query).getResultList();
-        return data;
+        System.out.println("befor for");
+        List<MovieShow> wantedlist = new ArrayList();
+        for(MovieShow ms:data) {
+        	System.out.println(ms.getBeginTime());
+        	
+        }
+        System.out.println("after for");
+        msgObject msg=new msgObject("movieShowsForMovie",wantedlist);
+        return msg;
+        
     }
-
     private static SessionFactory getSessionFactory() throws HibernateException {
         Configuration configuration = new Configuration();
         // Add ALL of your entities here. You can also try adding a whole package.
@@ -214,11 +198,11 @@ public class SimpleServer extends AbstractServer {
                 .build();
         return configuration.buildSessionFactory(serviceRegistry);
     }
+
     private static void AddToDB() {
     	try {
-    	String [] actors= {" Lewis Tan","Jessica McNamee"," Josh Lawson"};
+    	String  actors= " Lewis Tan,Jessica McNamee, Josh Lawson";
     	String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
-    	File imagfile1 = new File(System.getProperty("user.dir") + "/MK.jpg");
     	byte[] pixelsArray1 = Files.readAllBytes(Paths.get("C:\\Users\\USER1\\eclipse-workspace\\Sw2021_project\\server\\src\\main\\java\\il\\cshaifasweng\\OCSFMediatorExample\\server\\MK.jpg"));
     	Movie m=new Movie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1);
     	Theater th=new Theater("Haifa");

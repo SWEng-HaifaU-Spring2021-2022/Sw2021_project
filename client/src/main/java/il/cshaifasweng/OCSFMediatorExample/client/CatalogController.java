@@ -72,14 +72,15 @@ public class CatalogController  implements Initializable {
     @FXML // fx:id="testLabel"
     private Label testLabel; // Value injected by FXMLLoader
 
-    private Movie selectedMovie=new Movie();
+    private static Movie selectedMovie=new Movie();
     @FXML
     void editMovieBtn(ActionEvent event) throws IOException {
 			int index = MoviesTable.getSelectionModel().getSelectedIndex();
 			if (index <= -1) {
 				return;
 			}
-			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();;
+			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+			System.out.println(selectedMovie.getEngName());
 			msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
         	SimpleClient.getClient().sendToServer(msg);
         	System.out.println("message sent to server to get all moviesshows for a the selcted movie");	
@@ -88,16 +89,17 @@ public class CatalogController  implements Initializable {
     public void openEditPage() throws IOException {
     	
     		//Movie selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
-    		System.out.println("check1");
+    		//System.out.println("check1");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 			Parent parent = loader.load();
-			System.out.println("check2");
+			//System.out.println("check2");
 			EditTimeController controller = (EditTimeController) loader.getController();
-			System.out.println("check3");
+			//System.out.println("check3");
+		    System.out.println(selectedMovie.getEngName());
 			controller.inflatUI(selectedMovie);
-			System.out.println("check4");
+			//System.out.println("check4");
 			Stage stage = new Stage();
-			System.out.println("check5");
+			//System.out.println("check5");
 			stage.setTitle("Edit Movie");
 			stage.setScene(new Scene(parent));
 			stage.show();

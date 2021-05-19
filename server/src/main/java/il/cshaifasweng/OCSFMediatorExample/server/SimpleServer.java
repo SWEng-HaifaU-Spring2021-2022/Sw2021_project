@@ -42,6 +42,9 @@ public class SimpleServer extends AbstractServer {
             	get(msgObj, client);
             }
             if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
+            if(msgObj.getMsg().startsWith("#add")){
+                change(msgObj,client);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -106,6 +109,9 @@ public class SimpleServer extends AbstractServer {
 
     private void change(msgObject msgObj, ConnectionToClient client)
     {
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        session.beginTransaction();
         if(msgObj.getMsg().equals("#updateMovie")){
             session.save((Movie)msgObj.getObject());
             session.flush();
@@ -123,6 +129,15 @@ public class SimpleServer extends AbstractServer {
         {
             session.save(((MovieShow)msgObj.getObject()));
             session.flush();
+            session.getTransaction().commit();
+            System.out.println("a new movie show added");
+            msgObject tempmsg=new msgObject("newmovieShowadd",null);
+            try {
+                client.sendToClient(tempmsg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         else if (msgObj.getMsg().equals("#updateMovieShow"))
         {
@@ -178,9 +193,10 @@ public class SimpleServer extends AbstractServer {
         List<MovieShow> wantedlist = new ArrayList();
         for(MovieShow ms:data) {
         	System.out.println(ms.getBeginTime());
-        	
+        	//wantedlist.add(ms);
         }
         System.out.println("after for");
+        System.out.println("the Arraylist size is:"+ wantedlist.size());
         msgObject msg=new msgObject("movieShowsForMovie",wantedlist);
         return msg;
         

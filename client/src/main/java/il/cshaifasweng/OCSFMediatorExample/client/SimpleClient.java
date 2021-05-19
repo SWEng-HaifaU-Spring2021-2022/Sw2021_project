@@ -27,6 +27,7 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 			obj=(List<Movie>)msg;
 		}*/
+		System.out.println("get over here");
 		if(msg.getClass().equals(msgObject.class)) {
 			System.out.print("msg arrived");
 			msgObject tempmsg=(msgObject)msg;
@@ -57,6 +58,12 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 				
+			}else if(tempmsg.getMsg().equals("newmovieShowadd")){
+				System.out.println("an object have been added");
+				Platform.runLater(()->{
+					EditTimeController ETC=new EditTimeController();
+					ETC.afterinserting();
+				});
 			}
 			
 		}

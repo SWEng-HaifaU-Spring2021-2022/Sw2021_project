@@ -88,7 +88,7 @@ public class EditTimeController implements Initializable {
     @FXML // fx:id="insYear"
     private TextField insYear; // Value injected by FXMLLoader
 
-    private static  Movie cur_Movie=null;
+    public   Movie cur_Movie=null;
 
     @FXML
     void DeleteShow(ActionEvent event) {
@@ -96,6 +96,14 @@ public class EditTimeController implements Initializable {
         if (index <= -1) {
             return;
         }
+        MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
+        msgObject msg=new msgObject("#deleteMovieShow",ms);
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to remove the selcted moviesshows for a the DB");
     }
     @FXML
     void insertNewShow(ActionEvent event) {
@@ -114,13 +122,14 @@ public class EditTimeController implements Initializable {
             e.printStackTrace();
         }
         System.out.println("adding new movie show request sent to the server");
+        afterinserting();
     }
     public void afterinserting(){
-        insbegintime.setText("");
-        insendtime.setText("");
-        insDay.setText("");
-        insMn.setText("");
-        insYear.setText("");
+        insbegintime.clear();
+        insendtime.clear();
+        insDay.clear();
+        insMn.clear();
+        insYear.clear();
     }
     @FXML
     void getSelected(MouseEvent event) {
@@ -173,8 +182,20 @@ public class EditTimeController implements Initializable {
     }
     @FXML
     void updateSelectedShowTime(ActionEvent event) {//TODO:send a request to the server to update the show time
-        Stage stage = (Stage) UpdateButton.getScene().getWindow();
-        stage.close();
+        int index = ShowTimeTable.getSelectionModel().getSelectedIndex();
+        if (index <= -1) {
+            return;
+        }
+        MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
+        msgObject msg=new msgObject("#updateMovieShow",ms);
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to update the selcted moviesshows for a the DB");
+        //Stage stage = (Stage) UpdateButton.getScene().getWindow();
+        //stage.close();
     }
     public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
         cur_Movie=movie;
@@ -187,6 +208,29 @@ public class EditTimeController implements Initializable {
                 System.out.println(ms.getBeginTime());
                 data.add(ms);
             }
+            insertmovieid.setText(Integer.toString(movie.getMovieId()));
+            //MovieShow MS=new MovieShow(movie.getMovieid(),movie.getShowTime());
+            //data.add(MS);
+            ShowTimeTable.getItems().setAll(data);
+            autoResizeColumns(ShowTimeTable);
+        }
+        else{
+            System.out.println("movie show list empty");
+        }
+    }
+    public void inflatUIupdate(Movie movie){//TODO: update it after getting the entities and a DB connection
+        cur_Movie=movie;
+        System.out.println(movie.getEngName()+"from inflatUI");
+        //initCol();
+        if(SimpleClient.obj!=null){
+            List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
+            System.out.println(list.size()+"list length");
+            for(MovieShow ms: list) {
+                System.out.println(ms.getBeginTime());
+                data.add(ms);
+            }
+
+            insertmovieid.setText(Integer.toString(movie.getMovieId()));
             //MovieShow MS=new MovieShow(movie.getMovieid(),movie.getShowTime());
             //data.add(MS);
             ShowTimeTable.getItems().setAll(data);

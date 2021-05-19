@@ -72,7 +72,7 @@ public class CatalogController  implements Initializable {
     @FXML // fx:id="testLabel"
     private Label testLabel; // Value injected by FXMLLoader
 
-    private static Movie selectedMovie=new Movie();
+    public static Movie selectedMovie=new Movie();
     @FXML
     void editMovieBtn(ActionEvent event) throws IOException {
 			int index = MoviesTable.getSelectionModel().getSelectedIndex();

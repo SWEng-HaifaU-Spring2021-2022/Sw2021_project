@@ -61,8 +61,16 @@ public class SimpleClient extends AbstractClient {
 			}else if(tempmsg.getMsg().equals("newmovieShowadd")){
 				System.out.println("an object have been added");
 				Platform.runLater(()->{
-					EditTimeController ETC=new EditTimeController();
-					ETC.afterinserting();
+				});
+			}else if(tempmsg.getMsg().equals("MovieShow Deleted")){
+				System.out.println("an object have been deleted");
+				Platform.runLater(()->{
+
+				});
+			}else if(tempmsg.getMsg().equals("movie show updated")){
+				System.out.println("an object have been updated");
+				Platform.runLater(()->{
+
 				});
 			}
 			

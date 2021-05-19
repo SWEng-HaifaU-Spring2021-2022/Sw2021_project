@@ -10,7 +10,7 @@ public class Movie implements Serializable  {
 	 private int movieId;
 	 private String engName;
 	 private String hebName;
-	 private String[] actors;
+	 private String actors;
 	 private String genere;
 	 private String description;
 	 private String producer;
@@ -20,7 +20,7 @@ public class Movie implements Serializable  {
 	{
 		
 	}
-	public Movie(String engName, String hebName, String[] actors, String genere, String description, String producer, byte[] image )
+	public Movie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image )
 	{
 		this.engName = engName;
 		this.hebName = hebName;
@@ -48,10 +48,10 @@ public class Movie implements Serializable  {
 	public void setHebName(String hebName) {
 		this.hebName = hebName;
 	}
-	public String[] getActors() {
+	public String getActors() {
 		return actors;
 	}
-	public void setActors(String[] actors) {
+	public void setActors(String actors) {
 		this.actors = actors;
 	}
 	public String getGenere() {

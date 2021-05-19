@@ -72,28 +72,35 @@ public class CatalogController  implements Initializable {
     @FXML // fx:id="testLabel"
     private Label testLabel; // Value injected by FXMLLoader
 
+    private Movie selectedMovie=new Movie();
     @FXML
     void editMovieBtn(ActionEvent event) throws IOException {
 			int index = MoviesTable.getSelectionModel().getSelectedIndex();
 			if (index <= -1) {
 				return;
 			}
+			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();;
 			msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
         	SimpleClient.getClient().sendToServer(msg);
         	System.out.println("message sent to server to get all moviesshows for a the selcted movie");	
     }
+    
     public void openEditPage() throws IOException {
     	
-    		Movie selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
+    		//Movie selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
+    		System.out.println("check1");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 			Parent parent = loader.load();
+			System.out.println("check2");
 			EditTimeController controller = (EditTimeController) loader.getController();
+			System.out.println("check3");
 			controller.inflatUI(selectedMovie);
-			Stage stage = new Stage(StageStyle.DECORATED);
+			System.out.println("check4");
+			Stage stage = new Stage();
+			System.out.println("check5");
 			stage.setTitle("Edit Movie");
 			stage.setScene(new Scene(parent));
 			stage.show();
-
 			stage.setOnHiding((e) -> {
 				handleRefresh(new ActionEvent());
 

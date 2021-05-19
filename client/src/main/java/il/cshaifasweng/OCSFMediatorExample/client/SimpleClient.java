@@ -42,10 +42,21 @@ public class SimpleClient extends AbstractClient {
 				});
 			}
 			else if(tempmsg.getMsg().equals("movieShowsForMovie")) {
+				System.out.println("movie shows arrived1");
 				Platform.runLater(()->{
 					obj=tempmsg.getObject();
-					System.out.println("movie shows message arrived");
+					CatalogController Catalog=new CatalogController();
+					System.out.println("movie shows arrived2");
+					try {
+						System.out.println("movie shows arrived3");
+						Catalog.openEditPage();
+						System.out.println("movie shows arrived4");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				});
+				
 			}
 			
 		}

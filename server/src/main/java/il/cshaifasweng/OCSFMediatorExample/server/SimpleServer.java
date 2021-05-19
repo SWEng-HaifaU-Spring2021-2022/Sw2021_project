@@ -94,6 +94,15 @@ public class SimpleServer extends AbstractServer {
             session.beginTransaction();
             change(msgObj, client);
             session.getTransaction().commit(); // Save everything.
+            if(msgObj.getMsg().equals("updateMovieShow")){
+                msgObj.setMsg("movie show updated");
+                try {
+                    client.sendToClient(msgObj);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (Exception exception) {
             if (session != null) {
                 session.getTransaction().rollback();
@@ -148,6 +157,14 @@ public class SimpleServer extends AbstractServer {
         {
             session.delete(((MovieShow)msgObj.getObject()));
             session.flush();
+            session.getTransaction().commit();
+            System.out.println("MovieShow Deleted");
+            msgObject tempmsg=new msgObject("movieshowdeleted",null);
+            try {
+                client.sendToClient(tempmsg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name="movie")
 public class TheaterMovie extends Movie implements Serializable  {
+	private static final long serialVersionUID = -8224097662914849956L;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	private List<MovieShow> MSList;
 	private int entryPrice;
@@ -15,7 +18,7 @@ public class TheaterMovie extends Movie implements Serializable  {
 	public TheaterMovie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image,int entryPrice) {
 		super(engName,hebName,actors,genere,description,producer,image);
 		this.entryPrice=entryPrice;
-		MSList=new  ArrayList<MovieShow>();
+		MSList=new ArrayList<>();
 	}
 	public int getEntryPrice() {
 		return entryPrice;

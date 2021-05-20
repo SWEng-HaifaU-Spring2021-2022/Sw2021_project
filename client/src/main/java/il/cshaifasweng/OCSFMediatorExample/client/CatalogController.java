@@ -87,19 +87,11 @@ public class CatalogController  implements Initializable {
     }
     
     public void openEditPage() throws IOException {
-    	
-    		//Movie selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
-    		//System.out.println("check1");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 			Parent parent = loader.load();
-			//System.out.println("check2");
 			EditTimeController controller = (EditTimeController) loader.getController();
-			//System.out.println("check3");
-		    System.out.println(selectedMovie.getEngName());
 			controller.inflatUI(selectedMovie);
-			//System.out.println("check4");
 			Stage stage = new Stage();
-			//System.out.println("check5");
 			stage.setTitle("Edit Movie");
 			stage.setScene(new Scene(parent));
 			stage.show();

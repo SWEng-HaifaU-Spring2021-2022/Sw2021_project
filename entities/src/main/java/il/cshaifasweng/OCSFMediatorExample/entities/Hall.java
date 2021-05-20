@@ -16,6 +16,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "hall")
 public class Hall implements Serializable {
+	private static final long serialVersionUID = -8224097662914849956L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int Hallid;
@@ -24,9 +25,8 @@ public class Hall implements Serializable {
 	private Theater theater;
 	private int hallId;
 	private int capacity;
-	/*private int theaterId;*/
 	private int hallNumber;
-	private boolean[][] seatsMatrix;
+	//private boolean[][] seatsMatrix;
 	
 	public Hall()
 	{
@@ -36,8 +36,8 @@ public class Hall implements Serializable {
 	{
 		this.capacity = capacity;
 		this.hallNumber = hallNumber;
-		this.theater=theater;
-		this.seatsMatrix=new boolean[5][5];
+		setTheater(theater);
+		//this.seatsMatrix=new boolean[5][5];
 	}
 	public int getHallId() {
 		return hallId;
@@ -51,12 +51,6 @@ public class Hall implements Serializable {
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
-	/*public int getTheaterId() {
-		return theaterId;
-	}
-	public void setTheaterId(int theaterId) {
-		this.theaterId = theaterId;
-	}*/
 	public int getHallNumber() {
 		return hallNumber;
 	}

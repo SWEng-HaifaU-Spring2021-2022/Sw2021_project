@@ -59,12 +59,13 @@ public class SimpleServer extends AbstractServer {
         if (msgString.equals("#getAllMovies")) {
             try {
             	 client.sendToClient(getAllMovies());
+            	 System.out.println("retrived Movies");
                  System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
             	
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgString.equals( "#getAllHalls")) {
+        }/* else if (msgString.equals( "#getAllHalls")) {
             try {
                 client.sendToClient(getAllHalls());
                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
@@ -78,10 +79,18 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if(msgString.equals("#getshows")) {
+        }*/else if(msgString.equals("#getshows"))  {
         	int id=(int)msgobject.getObject();
-        	client.sendToClient(getMovieShowsbyid(id));
-        	System.out.format("Sent movies Show of movies id"+id+" to client %s\n", client.getInetAddress().getHostAddress());
+        	msgObject msgObject=(msgObject) getMovieShowsbyid(id);
+        	System.out.println(msgObject.getMsg());
+        	try{
+                client.sendToClient(msgObject);
+            }
+        	catch (Exception ex){
+        	    ex.printStackTrace();
+            }
+        	System.out.println(this.isListening());
+        	System.out.format("Sent movies Show of movies id "+id+" to client %s\n", client.getInetAddress().getHostAddress());
         	
         }
     }
@@ -180,7 +189,7 @@ public class SimpleServer extends AbstractServer {
         return msg;
     }
 
-    private static List<Hall> getAllHalls() throws Exception {
+    /*private static List<Hall> getAllHalls() throws Exception {
     	SessionFactory sessionFactory = getSessionFactory();
     	session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -188,16 +197,16 @@ public class SimpleServer extends AbstractServer {
         query.from(Movie.class);
         List<Hall> data = session.createQuery(query).getResultList();
         return data;
-    }
+    }*/
 
-    private static List<Theater> getAllTheatres() throws Exception {
+  /*  private static List<Theater> getAllTheatres() throws Exception {
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Theater> query = builder.createQuery(Theater.class);
         query.from(Theater.class);
         List<Theater> data = session.createQuery(query).getResultList();
         return data;
-    }
+    }*/
 
     private static msgObject getMovieShowsbyid(int id) throws Exception {
     	System.out.println("getting movie shows");
@@ -205,16 +214,16 @@ public class SimpleServer extends AbstractServer {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<MovieShow> query = builder.createQuery(MovieShow.class);
         query.from(MovieShow.class);
-        List<MovieShow> data = session.createQuery(query).getResultList();
-        System.out.println("befor for");
+        ArrayList<MovieShow> data = (ArrayList<MovieShow>) session.createQuery(query).getResultList();
         List<MovieShow> wantedlist = new ArrayList();
         for(MovieShow ms:data) {
-        	System.out.println(ms.getBeginTime());
-        	//wantedlist.add(ms);
+       //   MovieShow tempms=new MovieShow(ms.getMovie(),ms.getShowDate(),ms.getTheater(),ms.getBeginTime(),ms.getEndTime(),ms.getMaxNumber());
+          System.out.println("working");
+         // wantedlist.add(tempms);
         }
-        System.out.println("after for");
-        System.out.println("the Arraylist size is:"+ wantedlist.size());
-        msgObject msg=new msgObject("movieShowsForMovie",wantedlist);
+        //System.out.println("after for");
+        System.out.println("the Arraylist size is:"+ data);
+        msgObject msg=new msgObject("movieShowsForMovie",data);
         return msg;
         
     }
@@ -237,16 +246,19 @@ public class SimpleServer extends AbstractServer {
     	String  actors= " Lewis Tan,Jessica McNamee, Josh Lawson";
     	String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
     	byte[] pixelsArray1 = Files.readAllBytes(Paths.get("C:\\Users\\USER1\\eclipse-workspace\\Sw2021_project\\server\\src\\main\\java\\il\\cshaifasweng\\OCSFMediatorExample\\server\\MK.jpg"));
-    	Movie m=new Movie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1);
+    	TheaterMovie m=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1,40);
     	Theater th=new Theater("Haifa");
     	Hall hall=new Hall(40,th,1);
     	th.AddHalls(hall);
     	Date d=new Date(10000000);
     	MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
-    	session.save(th);
-    	session.save(hall);
+    	ms.setMovie(m);
     	session.save(m);
+    	session.flush();
+            session.save(th);
+            session.flush();
     	session.save(ms);
+    	session.save(hall);
     	session.flush();
     	}
     	catch(Exception ex) {

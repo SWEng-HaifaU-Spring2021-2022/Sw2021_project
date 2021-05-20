@@ -114,10 +114,11 @@ public class EditTimeController implements Initializable {
         int year=Integer.parseInt(insYear.getText());
         System.out.println(year+"/"+month+"/"+day);
         Date  date=new Date(year,month,day);
-        MovieShow newMS=new MovieShow(cur_Movie,date,null,new_begin_time,new_end_time,40);
-        msgObject msg=new msgObject("#addMovieShow",newMS);
+       // MovieShow newMS=new MovieShow(cur_Movie,date,null,new_begin_time,new_end_time,40);
+       msgObject msg=new msgObject("#addMovieShow",null);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+
+           SimpleClient.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }

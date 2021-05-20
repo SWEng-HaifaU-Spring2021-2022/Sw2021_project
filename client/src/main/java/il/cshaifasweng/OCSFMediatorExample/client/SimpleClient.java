@@ -39,21 +39,14 @@ public class SimpleClient extends AbstractClient {
 				});
 			}
 			else if(tempmsg.getMsg().equals("movieShowsForMovie")) {
-				System.out.println("movie shows arrived 1");
+				System.out.println("movie shows arrived:getting movie shows");
 				Platform.runLater(()->{
 					obj=tempmsg.getObject();
 					CatalogController Catalog=new CatalogController();
 					ArrayList<MovieShow>MSL=(ArrayList<MovieShow>)obj;
-					System.out.println("the arraylist length: "+ MSL.size());
-					for (MovieShow ms:MSL){
-						System.out.println("inside the for");
-						//System.out.println(ms.getMovie().getMovieId());
-					}
-					System.out.println("movie shows arrived 2");
 					try {
-						System.out.println("movie shows arrived  3");
+						System.out.println("Openning the edit Page");
 						Catalog.openEditPage();
-						System.out.println("movie shows arrived  4");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

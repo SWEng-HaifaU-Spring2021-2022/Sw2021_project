@@ -81,5 +81,9 @@ public class MovieShow implements Serializable  {
 	public void setMaxNumber(int maxNumber) {
 		this.maxNumber = maxNumber;
 	}
-
+	@Override
+	public String toString(){
+	 	String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
+	 	return  str;
+	}
 }

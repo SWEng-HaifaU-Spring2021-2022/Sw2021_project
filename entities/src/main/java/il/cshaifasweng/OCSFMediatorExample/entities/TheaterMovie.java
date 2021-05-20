@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import java.awt.image.ImageObserver;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Observable;
+
 @Entity
 @Table(name="movie")
 public class TheaterMovie extends Movie implements Serializable  {
@@ -27,7 +30,11 @@ public class TheaterMovie extends Movie implements Serializable  {
 		this.entryPrice = entryPrice;
 	}
 	public List<MovieShow> getMSList() {
-		return MSList;
+		String str="";
+		for (MovieShow ms:this.MSList){
+			str+=ms.toString()+"\n";
+		}
+		return this.MSList;
 	}
 	public void AddMovieShow(MovieShow Ms) {
 		this.MSList.add(Ms);

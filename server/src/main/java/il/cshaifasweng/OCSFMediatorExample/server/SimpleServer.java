@@ -45,11 +45,13 @@ public class SimpleServer extends AbstractServer {
             if(msgObj.getMsg().startsWith("#add")){
                 change(msgObj,client);
             }
+            if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
     	SessionFactory sessionFactory = getSessionFactory();
@@ -81,15 +83,12 @@ public class SimpleServer extends AbstractServer {
             }
         }*/else if(msgString.equals("#getshows"))  {
         	int id=(int)msgobject.getObject();
-        	msgObject msgObject=(msgObject) getMovieShowsbyid(id);
-        	System.out.println(msgObject.getMsg());
         	try{
-                client.sendToClient(msgObject);
+                client.sendToClient(getMovieShowsbyid(id));
             }
         	catch (Exception ex){
         	    ex.printStackTrace();
             }
-        	System.out.println(this.isListening());
         	System.out.format("Sent movies Show of movies id "+id+" to client %s\n", client.getInetAddress().getHostAddress());
         	
         }
@@ -98,12 +97,13 @@ public class SimpleServer extends AbstractServer {
     private void update(msgObject msgObj, ConnectionToClient client)
     {
         try {
-            SessionFactory sessionFactory = getSessionFactory();
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            change(msgObj, client);
-            session.getTransaction().commit(); // Save everything.
-            if(msgObj.getMsg().equals("updateMovieShow")){
+
+            if(msgObj.getMsg().equals("#updateMovieShow")){
+                SessionFactory sessionFactory = getSessionFactory();
+                session = sessionFactory.openSession();
+                session.beginTransaction();
+                change(msgObj, client);
+                session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
                 try {
                     client.sendToClient(msgObj);
@@ -182,9 +182,6 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
         query.from(Movie.class);
         List<Movie> list= session.createQuery(query).getResultList();
-        for(Movie m : list) {
-        	System.out.println(m.getDescription());
-        }
         msgObject msg=new msgObject("AllMovies",list);
         return msg;
     }
@@ -210,20 +207,17 @@ public class SimpleServer extends AbstractServer {
 
     private static msgObject getMovieShowsbyid(int id) throws Exception {
     	System.out.println("getting movie shows");
-    	//String sqlquery="SELECT * FROM demo.movieshow where movieid_id="+id;
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<MovieShow> query = builder.createQuery(MovieShow.class);
         query.from(MovieShow.class);
         ArrayList<MovieShow> data = (ArrayList<MovieShow>) session.createQuery(query).getResultList();
         List<MovieShow> wantedlist = new ArrayList();
         for(MovieShow ms:data) {
-       //   MovieShow tempms=new MovieShow(ms.getMovie(),ms.getShowDate(),ms.getTheater(),ms.getBeginTime(),ms.getEndTime(),ms.getMaxNumber());
-          System.out.println("working");
-         // wantedlist.add(tempms);
+            if(ms.getMovie().getMovieId()==id){
+                wantedlist.add(ms);
+            }
         }
-        //System.out.println("after for");
-        System.out.println("the Arraylist size is:"+ data);
-        msgObject msg=new msgObject("movieShowsForMovie",data);
+        msgObject msg=new msgObject("movieShowsForMovie",wantedlist);
         return msg;
         
     }

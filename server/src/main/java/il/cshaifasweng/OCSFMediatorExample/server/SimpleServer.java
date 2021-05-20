@@ -81,10 +81,15 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/else if(msgString.equals("#getshows"))  {
+        }*/else if(msgString.equals("#getshows")||msgString.equals("#getshowsdisplay"))  {
         	int id=(int)msgobject.getObject();
         	try{
-                client.sendToClient(getMovieShowsbyid(id));
+        	    msgObject tempmsg=getMovieShowsbyid(id);
+        	    if (msgString.equals("#getshowsdisplay")){
+        	        System.out.println("bla bla");
+        	        tempmsg.setMsg("getshowsdisplay");
+                }
+                client.sendToClient(tempmsg);
             }
         	catch (Exception ex){
         	    ex.printStackTrace();
@@ -179,9 +184,12 @@ public class SimpleServer extends AbstractServer {
 
     private static msgObject getAllMovies() throws Exception {
     	CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
-        query.from(Movie.class);
-        List<Movie> list= session.createQuery(query).getResultList();
+        CriteriaQuery<TheaterMovie> query = builder.createQuery(TheaterMovie.class);
+        query.from(TheaterMovie.class);
+        List<TheaterMovie> list= session.createQuery(query).getResultList();
+        for(TheaterMovie m:list){
+            m.getMSList();
+        }
         msgObject msg=new msgObject("AllMovies",list);
         return msg;
     }
@@ -241,19 +249,23 @@ public class SimpleServer extends AbstractServer {
     	String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
     	byte[] pixelsArray1 = Files.readAllBytes(Paths.get("C:\\Users\\USER1\\eclipse-workspace\\Sw2021_project\\server\\src\\main\\java\\il\\cshaifasweng\\OCSFMediatorExample\\server\\MK.jpg"));
     	TheaterMovie m=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",pixelsArray1,40);
+            session.save(m);
+            session.flush();
     	Theater th=new Theater("Haifa");
-    	Hall hall=new Hall(40,th,1);
-    	th.AddHalls(hall);
-    	Date d=new Date(10000000);
-    	MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
-    	ms.setMovie(m);
-    	session.save(m);
-    	session.flush();
             session.save(th);
             session.flush();
-    	session.save(ms);
-    	session.save(hall);
-    	session.flush();
+    	Hall hall=new Hall(40,th,1);
+    	th.AddHalls(hall);
+            session.save(hall);
+            session.flush();
+    	Date d=new Date(10000000);
+    	MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
+    	m.AddMovieShow(ms);
+            session.save(ms);
+
+            session.flush();
+            session.save(hall);
+            session.flush();
     	}
     	catch(Exception ex) {
     		ex.printStackTrace();

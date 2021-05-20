@@ -10,6 +10,8 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import javafx.application.Platform;
 
+import javax.xml.catalog.Catalog;
+
 public class SimpleClient extends AbstractClient {
 	
 	private static SimpleClient client = null;
@@ -67,7 +69,17 @@ public class SimpleClient extends AbstractClient {
 				Platform.runLater(()->{
 
 				});
-			}
+			}/*else if (tempmsg.getMsg().equals("getshowsdisplay")){
+				System.out.println("\nsdaad");
+				CatalogController catalog=new CatalogController();
+				System.out.println("\nsdaad");
+				catalog.displayscreeningtime((List<MovieShow>)tempmsg.getObject());
+				System.out.println("\nsdaad");
+				Platform.runLater(()->{
+
+				});
+
+			}*/
 			
 		}
 	

@@ -199,7 +199,7 @@ public class EditTimeController implements Initializable {
         //stage.close();
     }
     public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
-        NameLabel.setText("Screening Table for the movie"+ movie.getEngName());
+        NameLabel.setText("Screening Table for "+ movie.getEngName()+" movie");
         cur_Movie=movie;
         initCol();
         if(SimpleClient.obj!=null){

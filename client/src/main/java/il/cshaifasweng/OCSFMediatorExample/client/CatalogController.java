@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import com.sun.prism.Image;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -67,8 +69,6 @@ public class CatalogController  implements Initializable {
     @FXML // fx:id="producerCol"
     private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
 
-	@FXML // fx:id="ScreeningTimes"
-	private Label ScreeningTimes; // Value injected by FXMLLoader
 
     @FXML // fx:id="EditBtn"
     private Button EditBtn; // Value injected by FXMLLoader
@@ -84,20 +84,16 @@ public class CatalogController  implements Initializable {
 				return;
 			}
 			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
-
 			msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
         	SimpleClient.getClient().sendToServer(msg);
         	System.out.println("message sent to server to get all moviesshows for a the selcted movie");	
     }
     
     public void openEditPage() throws IOException {
-    	System.out.println("checking if there is an error 1");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 			Parent parent = loader.load();
-		System.out.println("checking if there is an error 2");
 			EditTimeController controller = (EditTimeController) loader.getController();
 			controller.inflatUI(selectedMovie);
-		System.out.println("checking if there is an error 3");
 			Stage stage = new Stage();
 			stage.setTitle("Edit Movie");
 			stage.setScene(new Scene(parent));
@@ -187,14 +183,44 @@ public class CatalogController  implements Initializable {
 			column.setPrefWidth(max + 10.0d);
 		});
 	}
+
 	@FXML
-	void ShowScreeningTime(InputMethodEvent event) {//TODO:send a request to the server to update the show time
-		int index = MoviesTable.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
+	void ShowScreeningTime(MouseEvent event) {
+		int index=MoviesTable.getSelectionModel().getSelectedIndex();
+		if(index<=-1) {
 			return;
 		}
-		System.out.println("selcted item");
-		ScreeningTimes.setText("selcted item");
+		else{
+			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+			List<MovieShow>templist=selectedMovie.getMSList();
+			System.out.println("asdasd");
+			String str="";
+			for (MovieShow ms:templist){
+
+				str+=ms.toString()+"\n";
+			}
+			testLabel.setText(str);
+		/*	msgObject msg=new msgObject("#getshowsdisplay",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
+			try {
+				SimpleClient.getClient().sendToServer(msg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("message sent to server to get all moviesshows for a the selcted movie to display it");
+			while(SimpleClient.obj!=null){
+				System.out.println("obj is null");
+			}*/
+		}
+
 	}
-    
+	public  static  void displayscreeningtime(List<MovieShow> MSList){
+
+    	//System.out.println("adsadasd");
+    	/*String str="";
+		for (MovieShow ms:MSList){
+			System.out.println(ms.toString());
+			str+=ms.toString()+"\n";
+		}
+		//ScreeningTimes.setText(str);*/
+	}
 }

@@ -14,7 +14,7 @@ import java.util.Observable;
 @Table(name="movie")
 public class TheaterMovie extends Movie implements Serializable  {
 	private static final long serialVersionUID = -8224097662914849956L;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
 	private List<MovieShow> MSList;
 	private int entryPrice;
 	public TheaterMovie() {}
@@ -34,7 +34,7 @@ public class TheaterMovie extends Movie implements Serializable  {
 		for (MovieShow ms:this.MSList){
 			str+=ms.toString()+"\n";
 		}
-		return this.MSList;
+		return MSList;
 	}
 	public void AddMovieShow(MovieShow Ms) {
 		this.MSList.add(Ms);

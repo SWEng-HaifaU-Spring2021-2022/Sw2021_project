@@ -20,18 +20,18 @@ import org.greenrobot.eventbus.Subscribe;
 public class App extends Application {
 
     private static Scene scene;
-    private SimpleClient client;
+    private  static SimpleClient client = new SimpleClient("localhost", 2324);
     //private static Stage stage=new Stage();
     public static void setScene(Scene newscene){
         scene=newscene;
 
     }
+
     @Override
     public void start(Stage stage) throws IOException {
     	EventBus.getDefault().register(this);
-    	client = SimpleClient.getClient();
     	client.openConnection();
-        scene = new Scene(loadFXML("primary"), 1000, 1000);
+        scene = new Scene(loadFXML("primary"), 720, 720);
         stage.setScene(scene);
         stage.show();
     }
@@ -66,6 +66,9 @@ public class App extends Application {
     	});
     	
     }
+
+    static SimpleClient getClient()
+    {return client;}
 
 	public static void main(String[] args) {
         launch();

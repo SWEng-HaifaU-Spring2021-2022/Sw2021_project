@@ -8,10 +8,10 @@ public class App
 	private static SimpleServer server;
     public static void main( String[] args ) throws IOException
     {
-        server = new SimpleServer(3000);
+        server = new SimpleServer(2324);
         //server.test();
         System.out.println("Server is up");
         server.listen();
-        System.out.println("Afterlisten");
+        System.out.println("After listen");
     }
 }

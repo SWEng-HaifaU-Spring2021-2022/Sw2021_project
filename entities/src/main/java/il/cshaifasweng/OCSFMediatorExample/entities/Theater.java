@@ -36,9 +36,6 @@ public class Theater implements Serializable {
 	public int getTheaterId() {
 		return theaterId;
 	}
-	public void setTheaterId(int theaterId) {
-		this.theaterId = theaterId;
-	}
 	public String getLocation() {
 		return location;
 	}

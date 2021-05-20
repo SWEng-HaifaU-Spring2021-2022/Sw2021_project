@@ -29,7 +29,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 
 public class EditTimeController implements Initializable {
@@ -88,7 +88,7 @@ public class EditTimeController implements Initializable {
     @FXML // fx:id="insYear"
     private TextField insYear; // Value injected by FXMLLoader
 
-    public   Movie cur_Movie=null;
+    public TheaterMovie cur_Movie=null;
 
     @FXML
     void DeleteShow(ActionEvent event) {
@@ -99,7 +99,7 @@ public class EditTimeController implements Initializable {
         MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
         msgObject msg=new msgObject("#deleteMovieShow",ms);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+            App.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class EditTimeController implements Initializable {
         MovieShow newMS=new MovieShow(cur_Movie,date,null,new_begin_time,new_end_time,40);
         msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+            App.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class EditTimeController implements Initializable {
         MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+            App.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,7 +197,7 @@ public class EditTimeController implements Initializable {
         //Stage stage = (Stage) UpdateButton.getScene().getWindow();
         //stage.close();
     }
-    public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
+    public void inflatUI(TheaterMovie movie){//TODO: update it after getting the entities and a DB connection
         cur_Movie=movie;
         System.out.println(movie.getEngName()+"from inflatUI");
         initCol();
@@ -218,7 +218,7 @@ public class EditTimeController implements Initializable {
             System.out.println("movie show list empty");
         }
     }
-    public void inflatUIupdate(Movie movie){//TODO: update it after getting the entities and a DB connection
+    public void inflatUIupdate(TheaterMovie movie){//TODO: update it after getting the entities and a DB connection
         cur_Movie=movie;
         System.out.println(movie.getEngName()+"from inflatUI");
         //initCol();

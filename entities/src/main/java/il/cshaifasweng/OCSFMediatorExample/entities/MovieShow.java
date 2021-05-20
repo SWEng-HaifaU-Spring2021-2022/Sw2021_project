@@ -47,9 +47,6 @@ public class MovieShow implements Serializable  {
 	public Movie getMovieId() {
 		return movie;
 	}
-	public void setMovieId(Movie movie) {
-		this.movie = movie;
-	}
 	public Date getShowDate() {
 		return showDate;
 	}

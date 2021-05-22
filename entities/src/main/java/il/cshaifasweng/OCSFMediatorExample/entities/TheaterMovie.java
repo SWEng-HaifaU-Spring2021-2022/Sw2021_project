@@ -17,13 +17,25 @@ public class TheaterMovie extends Movie implements Serializable  {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
 	private List<MovieShow> MSList;
 	private int entryPrice;
+
 	public TheaterMovie() {}
 	public TheaterMovie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image,int entryPrice) {
 		super(engName,hebName,actors,genere,description,producer,image);
 		this.entryPrice=entryPrice;
 		MSList=new ArrayList<>();
 	}
-	public int getEntryPrice() {
+
+	public TheaterMovie(String engName, String hebName, String actors, String genre, String description, String producer, byte[] image ) {
+		this.engName = engName;
+		this.hebName = hebName;
+		this.actors = actors;
+		this.genere = genre;
+		this.description = description;
+		this.image = image;
+		this.producer = producer;
+	}
+
+		public int getEntryPrice() {
 		return entryPrice;
 	}
 	public void setEntryPrice(int entryPrice) {

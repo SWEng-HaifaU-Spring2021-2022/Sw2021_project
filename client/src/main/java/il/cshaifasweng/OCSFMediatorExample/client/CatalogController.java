@@ -10,14 +10,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.imageio.ImageIO;
 
 import com.sun.prism.Image;
 
+
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,9 +39,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.*;
 
+
 public class CatalogController  implements Initializable {
 	
 	ObservableList<TheaterMovie> list = FXCollections.observableArrayList();
+
 
     @FXML // fx:id="homePage"
     private Button homePage; // Value injected by FXMLLoader
@@ -70,11 +73,14 @@ public class CatalogController  implements Initializable {
     private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
 
 
+
+
     @FXML // fx:id="EditBtn"
     private Button EditBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="testLabel"
     private Label testLabel; // Value injected by FXMLLoader
+
 
     public static TheaterMovie selectedMovie=new TheaterMovie();
     @FXML
@@ -87,9 +93,11 @@ public class CatalogController  implements Initializable {
 			msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
         	SimpleClient.getClient().sendToServer(msg);
         	System.out.println("message sent to server to get all moviesshows for a the selcted movie");	
+
     }
-    
+
     public void openEditPage() throws IOException {
+
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 			Parent parent = loader.load();
 			EditTimeController controller = (EditTimeController) loader.getController();
@@ -105,8 +113,11 @@ public class CatalogController  implements Initializable {
     	
     	
     	
+
     }
+
     private void handleRefresh(ActionEvent actionEvent) {
+
 		try {
 			//SimpleClient.getClient().sendToServer("#warning");
 			msgObject msg=new msgObject("#getAllMovies");
@@ -155,21 +166,22 @@ public class CatalogController  implements Initializable {
     		ex.printStackTrace();
     	}
     	MoviesTable.setItems(list);
+
     }
 
     @FXML
-    void goHomePage(ActionEvent event)throws IOException {
-    	try {
-    		App.setRoot("Primary");
-    	}
-    	catch(IOException ex){
-    		ex.printStackTrace();
-    	}
+    void goHomePage(ActionEvent event) throws IOException {
+        try {
+            App.setRoot("Primary");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
 
-    
+
     public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow
+
 	{
 		// Set the right policy
 		table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -222,5 +234,6 @@ public class CatalogController  implements Initializable {
 		}
 
 	}
+
 
 }

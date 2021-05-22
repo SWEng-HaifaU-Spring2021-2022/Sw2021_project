@@ -13,9 +13,12 @@ import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 
 import com.sun.prism.Image;
-import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
-import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
-import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+
+
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.application.Platform;
+import javafx.beans.Observable;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,14 +32,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.*;
 
-public class CatalogController implements Initializable {
 
-    static ObservableList<TheaterMovie> list = FXCollections.observableArrayList();
+public class CatalogController  implements Initializable {
+	
+	ObservableList<TheaterMovie> list = FXCollections.observableArrayList();
+
 
     @FXML // fx:id="homePage"
     private Button homePage; // Value injected by FXMLLoader
@@ -65,106 +72,101 @@ public class CatalogController implements Initializable {
     @FXML // fx:id="producerCol"
     private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
 
+
+
+
     @FXML // fx:id="EditBtn"
     private Button EditBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="testLabel"
     private Label testLabel; // Value injected by FXMLLoader
 
-    public static TheaterMovie selectedMovie = new TheaterMovie();
 
+    public static TheaterMovie selectedMovie=new TheaterMovie();
     @FXML
     void editMovieBtn(ActionEvent event) throws IOException {
-        int index = MoviesTable.getSelectionModel().getSelectedIndex();
-        if (index <= -1) {
-            return;
-        }
-        selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
-        System.out.println(selectedMovie.getEngName());
-        msgObject msg = new msgObject("#getshows", MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
-        App.getClient().sendToServer(msg);
-        System.out.println("message sent to server to get all moviesshows for a the selcted movie");
+			int index = MoviesTable.getSelectionModel().getSelectedIndex();
+			if (index <= -1) {
+				return;
+			}
+			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+			msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
+        	SimpleClient.getClient().sendToServer(msg);
+        	System.out.println("message sent to server to get all moviesshows for a the selcted movie");	
+
     }
 
     public void openEditPage() throws IOException {
 
-        //Movie selectedMovie = MoviesTable.getSelectionModel().getSelectedItem();
-        //System.out.println("check1");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
-        Parent parent = loader.load();
-        //System.out.println("check2");
-        EditTimeController controller = (EditTimeController) loader.getController();
-        //System.out.println("check3");
-        System.out.println(selectedMovie.getEngName());
-        controller.inflatUI(selectedMovie);
-        //System.out.println("check4");
-        Stage stage = new Stage();
-        //System.out.println("check5");
-        stage.setTitle("Edit Movie");
-        stage.setScene(new Scene(parent));
-        stage.show();
-        stage.setOnHiding((e) -> {
-            handleRefresh(new ActionEvent());
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
+			Parent parent = loader.load();
+			EditTimeController controller = (EditTimeController) loader.getController();
+			controller.inflatUI(selectedMovie);
+			Stage stage = new Stage();
+			stage.setTitle("Edit Movie");
+			stage.setScene(new Scene(parent));
+			stage.show();
+			stage.setOnHiding((e) -> {
+				handleRefresh(new ActionEvent());
 
-        });
-
+			});
+    	
+    	
+    	
 
     }
 
     private void handleRefresh(ActionEvent actionEvent) {
-        // TODO Auto-generated method stub
 
+		try {
+			//SimpleClient.getClient().sendToServer("#warning");
+			msgObject msg=new msgObject("#getAllMovies");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all movies");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	private  void initCol() {
+    	try {
+    		imageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
+    		
+        	nameCol.setCellValueFactory(new PropertyValueFactory<>("engName"));
+        	hebName.setCellValueFactory(new PropertyValueFactory<>("hebName"));
+        	actorsCol.setCellValueFactory(new PropertyValueFactory<>("actors"));
+        	GenerCol.setCellValueFactory(new PropertyValueFactory<>("genere"));
+        	descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        	producerCol.setCellValueFactory(new PropertyValueFactory<>("producer"));
+
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
     }
-
-    private void initCol() {
-        try {
-            imageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
-            nameCol.setCellValueFactory(new PropertyValueFactory<>("engName"));
-            hebName.setCellValueFactory(new PropertyValueFactory<>("hebName"));
-            actorsCol.setCellValueFactory(new PropertyValueFactory<>("actors"));
-            GenerCol.setCellValueFactory(new PropertyValueFactory<>("genere"));
-            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-            producerCol.setCellValueFactory(new PropertyValueFactory<>("producer"));
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initCol();
-        msgObject Smsg = new msgObject("#getAllMovies", null);
-        msgObject Cmsg = new msgObject("", null);
-        try {
-            App.getClient().sendToServer(Smsg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("message sent to server to get all movies");
-        try {
-            Cmsg = (msgObject) SimpleClient.getObj();
-            List<TheaterMovie> m = (List<TheaterMovie>) Cmsg.getObject();
-            loadData(m);
-            autoResizeColumns(MoviesTable);
-            System.out.println("done initialize");
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
+    	initCol();
+    	List<TheaterMovie>m= (List<TheaterMovie>)SimpleClient.obj;
+    	loadData(m);
+    	autoResizeColumns(MoviesTable);
+    	System.out.println("done initialize");
     }
-
     public void loadData(List<TheaterMovie> movieList) {
-        try {
-            list.clear();
-            for (TheaterMovie m : movieList) {
-                list.add(m);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        MoviesTable.setItems(list);
+    	try {
+    		list.clear();
+        	for(TheaterMovie m: movieList) {
+        		list.add(m);
+        	}
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	MoviesTable.setItems(list);
+
     }
 
     @FXML
@@ -179,28 +181,59 @@ public class CatalogController implements Initializable {
 
 
     public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow
-    {
-        // Set the right policy
-        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        table.getColumns().stream().forEach((column) -> {
-            // Minimal width = columnheader
-            Text t = new Text(column.getText());
-            double max = t.getLayoutBounds().getWidth();
-            for (int i = 0; i < table.getItems().size(); i++) {
-                // cell must not be empty
-                if (column.getCellData(i) != null) {
-                    t = new Text(column.getCellData(i).toString());
-                    double calcwidth = t.getLayoutBounds().getWidth();
-                    // remember new max-width
-                    if (calcwidth > max) {
-                        max = calcwidth;
-                    }
-                }
-            }
-            // set the new max-widht with some extra space
-            column.setPrefWidth(max + 10.0d);
-        });
-    }
+
+	{
+		// Set the right policy
+		table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+		table.getColumns().stream().forEach((column) -> {
+			// Minimal width = columnheader
+			Text t = new Text(column.getText());
+			double max = t.getLayoutBounds().getWidth();
+			for (int i = 0; i < table.getItems().size(); i++) {
+				// cell must not be empty
+				if (column.getCellData(i) != null) {
+					t = new Text(column.getCellData(i).toString());
+					double calcwidth = t.getLayoutBounds().getWidth();
+					// remember new max-width
+					if (calcwidth > max) {
+						max = calcwidth;
+					}
+				}
+			}
+			// set the new max-widht with some extra space
+			column.setPrefWidth(max + 10.0d);
+		});
+	}
+
+	@FXML
+	void ShowScreeningTime(MouseEvent event) {
+		int index=MoviesTable.getSelectionModel().getSelectedIndex();
+		if(index<=-1) {
+			return;
+		}
+		else{
+			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+			List<MovieShow>templist=selectedMovie.getMSList();
+			String str="";
+			System.out.println(templist);
+			for (MovieShow ms:templist){
+
+				str+=ms.toString()+"\n";
+			}
+			testLabel.setText(str);
+		/*	msgObject msg=new msgObject("#getshowsdisplay",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
+			try {
+				SimpleClient.getClient().sendToServer(msg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("message sent to server to get all moviesshows for a the selcted movie to display it");
+			while(SimpleClient.obj!=null){
+				System.out.println("obj is null");
+			}*/
+		}
+
+	}
 
 
 }

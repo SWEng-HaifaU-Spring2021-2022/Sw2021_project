@@ -4,7 +4,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 @Entity
 @Table(name="movie")
-abstract class Movie implements Serializable  {
+
+public class Movie implements Serializable   {
+	private static final long serialVersionUID = -8224097662914849956L;
+
 	@Id
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 protected int movieId;
@@ -72,5 +75,6 @@ abstract class Movie implements Serializable  {
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
+
 
 }

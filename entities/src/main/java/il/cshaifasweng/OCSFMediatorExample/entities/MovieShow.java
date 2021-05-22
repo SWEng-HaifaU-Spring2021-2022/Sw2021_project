@@ -10,11 +10,12 @@ import java.util.ArrayList;
 @Entity
 @Table(name = "movieShow")
 public class MovieShow implements Serializable  {
+	private static final long serialVersionUID = -8224097662914849956L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private int movieShowId;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "movieid_id")
+	@JoinColumn(name = "movie_id")
 	 private Movie movie;
 	@Basic
 	 private Date showDate;
@@ -31,9 +32,9 @@ public class MovieShow implements Serializable  {
 	 }
 	 public MovieShow(Movie movie, Date showDate, Theater theater,String beginTime, String endTime,int maxNumber)
 	 {
-		 this.movie = movie;
+		setMovie(movie);
 		 this.showDate = showDate;
-		 this.theater = theater;
+		 setTheater(theater);
 		 this.beginTime = beginTime;
 		 this.endTime = endTime;
 		 this.maxNumber = maxNumber;
@@ -44,9 +45,14 @@ public class MovieShow implements Serializable  {
 	public void setMovieShowId(int movieShowId) {
 		this.movieShowId = movieShowId;
 	}
-	public Movie getMovieId() {
+	public Movie getMovie() {
 		return movie;
 	}
+
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+
 	public Date getShowDate() {
 		return showDate;
 	}
@@ -77,5 +83,9 @@ public class MovieShow implements Serializable  {
 	public void setMaxNumber(int maxNumber) {
 		this.maxNumber = maxNumber;
 	}
-	 
+	@Override
+	public String toString(){
+	 	String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
+	 	return  str;
+	}
 }

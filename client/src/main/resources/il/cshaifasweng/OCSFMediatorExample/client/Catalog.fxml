@@ -5,22 +5,24 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="588.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CatalogController">
+<AnchorPane prefHeight="671.0" prefWidth="1558.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CatalogController">
    <children>
       <Button fx:id="homePage" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHomePage" text="Home" />
-      <TableView fx:id="MoviesTable" layoutX="5.0" layoutY="68.0" prefHeight="241.0" prefWidth="904.0">
+      <TableView fx:id="MoviesTable" layoutX="5.0" layoutY="68.0" onInputMethodTextChanged="#ShowScreeningTime" onMouseClicked="#ShowScreeningTime" prefHeight="241.0" prefWidth="904.0">
         <columns>
           <TableColumn fx:id="imageCol" prefWidth="75.0" text="Image" />
           <TableColumn fx:id="nameCol" prefWidth="85.0" text="Movie Name" />
             <TableColumn fx:id="hebName" prefWidth="108.0" text="Movie Name Heb" />
             <TableColumn fx:id="actorsCol" prefWidth="48.0" resizable="false" text="Actors" />
             <TableColumn fx:id="GenerCol" prefWidth="75.0" text="Genere" />
-            <TableColumn fx:id="descriptionCol" prefWidth="75.0" text="Description" />
             <TableColumn fx:id="producerCol" prefWidth="75.0" text="Producer" />
+            <TableColumn fx:id="descriptionCol" prefWidth="72.0" text="Description" />
         </columns>
       </TableView>
-      <Button fx:id="EditBtn" layoutX="27.0" layoutY="335.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
-      <Label fx:id="testLabel" layoutX="55.0" layoutY="417.0" prefHeight="25.0" prefWidth="279.0" text="Label" />
+      <Button fx:id="EditBtn" layoutX="27.0" layoutY="532.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
+      <Label fx:id="testLabel" layoutX="39.0" layoutY="362.0" prefHeight="152.0" prefWidth="1099.0" text="Label" />
+      <Text layoutX="39.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Screening dates:" />
    </children>
 </AnchorPane>

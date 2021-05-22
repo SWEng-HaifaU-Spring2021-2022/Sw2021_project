@@ -4,6 +4,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,10 +12,7 @@ import javafx.event.ActionEvent ;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -34,7 +32,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 
 public class EditTimeController implements Initializable {
     private final ObservableList<MovieShow> data = FXCollections.observableArrayList();
-
+    private  static Movie cur_Movie=null;
+    private static Theater temptheater=null;
     @FXML // fx:id="ShowTimeTable"
     private TableView<MovieShow> ShowTimeTable; // Value injected by FXMLLoader
 
@@ -49,8 +48,8 @@ public class EditTimeController implements Initializable {
     @FXML // fx:id="endTimeCol"
     private TableColumn<MovieShow, String> endTimeCol; // Value injected by FXMLLoader
 
-    @FXML // fx:id="MovieidCol"
-    private TableColumn<MovieShow, Number> MovieidCol; // Value injected by FXMLLoader
+  /*  @FXML // fx:id="MovieidCol"
+    private TableColumn<MovieShow, Movie> MovieidCol; // Value injected by FXMLLoader*/
 
     @FXML // fx:id="beginTimeTbox"
     private TextField beginTimeTbox; // Value injected by FXMLLoader
@@ -88,7 +87,10 @@ public class EditTimeController implements Initializable {
     @FXML // fx:id="insYear"
     private TextField insYear; // Value injected by FXMLLoader
 
-    public TheaterMovie cur_Movie=null;
+
+    @FXML // fx:id="NameLabel"
+    private Label NameLabel; // Value injected by FXMLLoader
+
 
     @FXML
     void DeleteShow(ActionEvent event) {
@@ -114,10 +116,12 @@ public class EditTimeController implements Initializable {
         int year=Integer.parseInt(insYear.getText());
         System.out.println(year+"/"+month+"/"+day);
         Date  date=new Date(year,month,day);
-        MovieShow newMS=new MovieShow(cur_Movie,date,null,new_begin_time,new_end_time,40);
-        msgObject msg=new msgObject("#addMovieShow",newMS);
+        MovieShow newMS=new MovieShow(cur_Movie,date,temptheater,new_begin_time,new_end_time,40);
+       msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
-            App.getClient().sendToServer(msg);
+
+           SimpleClient.getClient().sendToServer(msg);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,7 +143,7 @@ public class EditTimeController implements Initializable {
         }
 
         beginTimeTbox.setText(showTimeCol.getCellData(index).toString());
-
+        endTimeTbox.setText(endTimeCol.getCellData(index).toString());
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -147,11 +151,11 @@ public class EditTimeController implements Initializable {
 
     }
     private void initCol() {//TODO: update it to match the final class attributes
-        showidCol.setCellValueFactory(new PropertyValueFactory<>("showid"));
+        showidCol.setCellValueFactory(new PropertyValueFactory<>("movieShowId"));
         DateCol.setCellValueFactory(new PropertyValueFactory<>("showDate"));
         showTimeCol.setCellValueFactory(new PropertyValueFactory<>("beginTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        MovieidCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
+      //  MovieidCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
     }
     public static void autoResizeColumns( TableView<?> table )//method to reszie columns taken from StackOverFlow
     {
@@ -187,6 +191,8 @@ public class EditTimeController implements Initializable {
             return;
         }
         MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
+        ms.setBeginTime( beginTimeTbox.getText());
+        ms.setEndTime(endTimeTbox.getText());
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
             App.getClient().sendToServer(msg);
@@ -197,44 +203,22 @@ public class EditTimeController implements Initializable {
         //Stage stage = (Stage) UpdateButton.getScene().getWindow();
         //stage.close();
     }
-    public void inflatUI(TheaterMovie movie){//TODO: update it after getting the entities and a DB connection
+
+    public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
+        NameLabel.setText("Screening Table for "+ movie.getEngName()+" movie");
         cur_Movie=movie;
-        System.out.println(movie.getEngName()+"from inflatUI");
         initCol();
         if(SimpleClient.obj!=null){
             List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
             System.out.println(list.size()+"list length");
+            temptheater=list.get(0).getTheater();
             for(MovieShow ms: list) {
                 System.out.println(ms.getBeginTime());
                 data.add(ms);
             }
             insertmovieid.setText(Integer.toString(movie.getMovieId()));
-            //MovieShow MS=new MovieShow(movie.getMovieid(),movie.getShowTime());
-            //data.add(MS);
             ShowTimeTable.getItems().setAll(data);
-            autoResizeColumns(ShowTimeTable);
-        }
-        else{
-            System.out.println("movie show list empty");
-        }
-    }
-    public void inflatUIupdate(TheaterMovie movie){//TODO: update it after getting the entities and a DB connection
-        cur_Movie=movie;
-        System.out.println(movie.getEngName()+"from inflatUI");
-        //initCol();
-        if(SimpleClient.obj!=null){
-            List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
-            System.out.println(list.size()+"list length");
-            for(MovieShow ms: list) {
-                System.out.println(ms.getBeginTime());
-                data.add(ms);
-            }
-
-            insertmovieid.setText(Integer.toString(movie.getMovieId()));
-            //MovieShow MS=new MovieShow(movie.getMovieid(),movie.getShowTime());
-            //data.add(MS);
-            ShowTimeTable.getItems().setAll(data);
-            autoResizeColumns(ShowTimeTable);
+            ShowTimeTable.autosize();
         }
         else{
             System.out.println("movie show list empty");

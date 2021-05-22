@@ -6,7 +6,7 @@ public class msgObject implements Serializable {
 	private static final long serialVersionUID = -8224097662914849956L;
     String msg;
     Object object;
-
+    public msgObject(){}
     public msgObject(String msg, Object object) {
         this.msg = msg;
         this.object = object;

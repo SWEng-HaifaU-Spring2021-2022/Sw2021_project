@@ -31,7 +31,8 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
     	EventBus.getDefault().register(this);
     	client.openConnection();
-        scene = new Scene(loadFXML("primary"), 720, 720);
+        scene = new Scene(loadFXML("primary"), 1280, 720);
+
         stage.setScene(scene);
         stage.show();
     }

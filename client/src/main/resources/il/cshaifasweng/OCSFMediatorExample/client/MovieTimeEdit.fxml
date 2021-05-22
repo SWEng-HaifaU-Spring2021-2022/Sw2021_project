@@ -9,33 +9,34 @@
 
 <AnchorPane prefHeight="577.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.EditTimeController">
     <children>
-        <TableView fx:id="ShowTimeTable" layoutX="6.0" layoutY="14.0" onMouseClicked="#getSelected" prefHeight="201.0" prefWidth="512.0">
+        <TableView fx:id="ShowTimeTable" layoutX="14.0" layoutY="47.0" onMouseClicked="#getSelected" prefHeight="201.0" prefWidth="512.0">
             <columns>
                 <TableColumn fx:id="showidCol" prefWidth="75.0" text="Showid" />
                 <TableColumn fx:id="DateCol" prefWidth="75.0" text="Date" />
                 <TableColumn fx:id="showTimeCol" prefWidth="75.0" text="begin time" />
                 <TableColumn fx:id="endTimeCol" prefWidth="75.0" text="End time" />
-                <TableColumn fx:id="MovieidCol" prefWidth="75.0" text="Movie" />
+            <!--    <TableColumn fx:id="MovieidCol" prefWidth="75.0" text="Movie" />-->
             </columns>
         </TableView>
-        <TextField fx:id="beginTimeTbox" layoutX="28.0" layoutY="244.0" prefHeight="30.0" prefWidth="205.0" />
-        <Button fx:id="UpdateButton" layoutX="28.0" layoutY="289.0" mnemonicParsing="false" onAction="#updateSelectedShowTime" prefHeight="30.0" prefWidth="78.0" text="Update" />
-        <TextField fx:id="endTimeTbox" layoutX="288.0" layoutY="242.0" prefHeight="30.0" prefWidth="172.0" />
-        <TextField fx:id="insertmovieid" editable="false" layoutX="20.0" layoutY="373.0" />
-        <TextField fx:id="insbegintime" layoutX="216.0" layoutY="373.0" />
-        <TextField fx:id="insendtime" layoutX="406.0" layoutY="373.0" />
-        <Label layoutX="27.0" layoutY="341.0" text="movie id" />
-        <Label layoutX="225.0" layoutY="341.0" text="begin time" />
-        <Label layoutX="406.0" layoutY="341.0" text="end time" />
-        <TextField fx:id="insDay" layoutX="589.0" layoutY="373.0" prefHeight="25.0" prefWidth="32.0" />
-        <TextField fx:id="instheaterid" layoutX="786.0" layoutY="373.0" />
-        <Label layoutX="589.0" layoutY="341.0" text="Day" />
-        <Label layoutX="786.0" layoutY="341.0" text="theaterid" />
-        <Button fx:id="insertBtn" layoutX="22.0" layoutY="414.0" mnemonicParsing="false" onAction="#insertNewShow" prefHeight="30.0" prefWidth="57.0" text="Insert" />
-        <Button fx:id="DeleteBtn" layoutX="20.0" layoutY="496.0" mnemonicParsing="false" onAction="#DeleteShow" prefHeight="30.0" prefWidth="69.0" text="Delete" />
-      <TextField fx:id="insMn" layoutX="637.0" layoutY="373.0" prefHeight="25.0" prefWidth="38.0" />
-      <TextField fx:id="insYear" layoutX="688.0" layoutY="373.0" prefHeight="25.0" prefWidth="57.0" />
-      <Label layoutX="638.0" layoutY="341.0" text="Month" />
-      <Label layoutX="699.0" layoutY="341.0" text="Year" />
+        <TextField fx:id="beginTimeTbox" layoutX="24.0" layoutY="265.0" prefHeight="30.0" prefWidth="159.0" />
+        <Button fx:id="UpdateButton" layoutX="24.0" layoutY="317.0" mnemonicParsing="false" onAction="#updateSelectedShowTime" prefHeight="30.0" prefWidth="78.0" text="Update" />
+        <TextField fx:id="endTimeTbox" layoutX="256.0" layoutY="265.0" prefHeight="30.0" prefWidth="159.0" />
+        <TextField fx:id="insertmovieid" editable="false" layoutX="22.0" layoutY="392.0" />
+        <TextField fx:id="insbegintime" layoutX="218.0" layoutY="392.0" />
+        <TextField fx:id="insendtime" layoutX="408.0" layoutY="392.0" />
+        <Label layoutX="29.0" layoutY="360.0" text="movie id" />
+        <Label layoutX="227.0" layoutY="360.0" text="begin time" />
+        <Label layoutX="408.0" layoutY="360.0" text="end time" />
+        <TextField fx:id="insDay" layoutX="591.0" layoutY="392.0" prefHeight="25.0" prefWidth="32.0" />
+        <TextField fx:id="instheaterid" layoutX="788.0" layoutY="392.0" />
+        <Label layoutX="591.0" layoutY="360.0" text="Day" />
+        <Label layoutX="788.0" layoutY="360.0" text="theaterid" />
+        <Button fx:id="insertBtn" layoutX="24.0" layoutY="433.0" mnemonicParsing="false" onAction="#insertNewShow" prefHeight="30.0" prefWidth="57.0" text="Insert" />
+        <Button fx:id="DeleteBtn" layoutX="22.0" layoutY="515.0" mnemonicParsing="false" onAction="#DeleteShow" prefHeight="30.0" prefWidth="69.0" text="Delete" />
+      <TextField fx:id="insMn" layoutX="639.0" layoutY="392.0" prefHeight="25.0" prefWidth="38.0" />
+      <TextField fx:id="insYear" layoutX="690.0" layoutY="392.0" prefHeight="25.0" prefWidth="57.0" />
+      <Label layoutX="640.0" layoutY="360.0" text="Month" />
+      <Label layoutX="701.0" layoutY="360.0" text="Year" />
+      <Label fx:id="NameLabel" layoutX="23.0" layoutY="14.0" prefHeight="17.0" prefWidth="299.0" text="Label" />
     </children>
 </AnchorPane>

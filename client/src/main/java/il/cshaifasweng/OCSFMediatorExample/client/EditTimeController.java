@@ -4,6 +4,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 public class EditTimeController implements Initializable {
     private final ObservableList<MovieShow> data = FXCollections.observableArrayList();
     private  static Movie cur_Movie=null;
+    private static Theater temptheater=null;
     @FXML // fx:id="ShowTimeTable"
     private TableView<MovieShow> ShowTimeTable; // Value injected by FXMLLoader
 
@@ -112,7 +114,7 @@ public class EditTimeController implements Initializable {
         int year=Integer.parseInt(insYear.getText());
         System.out.println(year+"/"+month+"/"+day);
         Date  date=new Date(year,month,day);
-        MovieShow newMS=new MovieShow(cur_Movie,date,null,new_begin_time,new_end_time,40);
+        MovieShow newMS=new MovieShow(cur_Movie,date,temptheater,new_begin_time,new_end_time,40);
        msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
 
@@ -205,12 +207,14 @@ public class EditTimeController implements Initializable {
         if(SimpleClient.obj!=null){
             List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
             System.out.println(list.size()+"list length");
+            temptheater=list.get(0).getTheater();
             for(MovieShow ms: list) {
                 System.out.println(ms.getBeginTime());
                 data.add(ms);
             }
             insertmovieid.setText(Integer.toString(movie.getMovieId()));
             ShowTimeTable.getItems().setAll(data);
+            ShowTimeTable.autosize();
         }
         else{
             System.out.println("movie show list empty");

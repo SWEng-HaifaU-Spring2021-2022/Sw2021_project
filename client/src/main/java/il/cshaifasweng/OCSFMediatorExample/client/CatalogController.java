@@ -107,7 +107,16 @@ public class CatalogController  implements Initializable {
     	
     }
     private void handleRefresh(ActionEvent actionEvent) {
-		// TODO Auto-generated method stub
+		try {
+			//SimpleClient.getClient().sendToServer("#warning");
+			msgObject msg=new msgObject("#getAllMovies");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all movies");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	private  void initCol() {
@@ -193,8 +202,8 @@ public class CatalogController  implements Initializable {
 		else{
 			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
 			List<MovieShow>templist=selectedMovie.getMSList();
-			System.out.println("asdasd");
 			String str="";
+			System.out.println(templist);
 			for (MovieShow ms:templist){
 
 				str+=ms.toString()+"\n";
@@ -213,14 +222,5 @@ public class CatalogController  implements Initializable {
 		}
 
 	}
-	public  static  void displayscreeningtime(List<MovieShow> MSList){
 
-    	//System.out.println("adsadasd");
-    	/*String str="";
-		for (MovieShow ms:MSList){
-			System.out.println(ms.toString());
-			str+=ms.toString()+"\n";
-		}
-		//ScreeningTimes.setText(str);*/
-	}
 }

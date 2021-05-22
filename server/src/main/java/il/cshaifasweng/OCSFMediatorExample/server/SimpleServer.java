@@ -156,6 +156,7 @@ public class SimpleServer extends AbstractServer {
             System.out.println("a new movie show added");
             msgObject tempmsg=new msgObject("newmovieShowadd",null);
             try {
+
                 client.sendToClient(tempmsg);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -175,6 +176,7 @@ public class SimpleServer extends AbstractServer {
             System.out.println("MovieShow Deleted");
             msgObject tempmsg=new msgObject("movieshowdeleted",null);
             try {
+                session.getTransaction().commit();
                 client.sendToClient(tempmsg);
             } catch (IOException e) {
                 e.printStackTrace();

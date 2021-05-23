@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
 
 public class EditTimeController implements Initializable {
@@ -88,8 +88,10 @@ public class EditTimeController implements Initializable {
     @FXML // fx:id="insYear"
     private TextField insYear; // Value injected by FXMLLoader
 
+
     @FXML // fx:id="NameLabel"
     private Label NameLabel; // Value injected by FXMLLoader
+
 
     @FXML
     void DeleteShow(ActionEvent event) {
@@ -100,7 +102,7 @@ public class EditTimeController implements Initializable {
         MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
         msgObject msg=new msgObject("#deleteMovieShow",ms);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+            App.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,6 +129,7 @@ public class EditTimeController implements Initializable {
         try {
 
            SimpleClient.getClient().sendToServer(msg);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +203,7 @@ public class EditTimeController implements Initializable {
         ms.setEndTime(endTimeTbox.getText());
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
-            SimpleClient.getClient().sendToServer(msg);
+            App.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -208,6 +211,7 @@ public class EditTimeController implements Initializable {
         //Stage stage = (Stage) UpdateButton.getScene().getWindow();
         //stage.close();
     }
+
     public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
         NameLabel.setText("Screening Table for "+ movie.getEngName()+" movie");
         cur_Movie=movie;

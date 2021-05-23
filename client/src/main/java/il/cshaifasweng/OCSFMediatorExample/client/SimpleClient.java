@@ -8,16 +8,17 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+
+
 import javafx.application.Platform;
 
 import javax.xml.catalog.Catalog;
 
 public class SimpleClient extends AbstractClient {
-	
-	private static SimpleClient client = null;
+
 	public static Object obj=null;
 
-	private SimpleClient(String host, int port) {
+	protected SimpleClient(String host, int port) {
 		super(host, port);
 	}
 
@@ -28,7 +29,7 @@ public class SimpleClient extends AbstractClient {
 		//System.out.println(temp.getMsg());
 		if(msg.getClass().equals(msgObject.class)) {
 			System.out.print("msg arrived");
-			msgObject tempmsg=(msgObject)msg;
+			msgObject tempmsg =(msgObject)msg;
 			if(tempmsg.getMsg().equals("AllMovies")) {
 				Platform.runLater(()->{
 					try {
@@ -85,13 +86,9 @@ public class SimpleClient extends AbstractClient {
 	
 
 	}
-	
-	public static SimpleClient getClient() {
-		if (client == null) {
-			client = new SimpleClient("localhost", 3000);
-		}
-		return client;
-	}
 
+	public static Object getObj() {
+		return obj;
+	}
 }
 

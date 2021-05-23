@@ -23,9 +23,9 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		System.out.println("message arrived");
+		//System.out.println("message arrived");
 		msgObject temp=(msgObject)msg;
-		System.out.println(temp.getMsg());
+		//System.out.println(temp.getMsg());
 		if(msg.getClass().equals(msgObject.class)) {
 			System.out.print("msg arrived");
 			msgObject tempmsg=(msgObject)msg;

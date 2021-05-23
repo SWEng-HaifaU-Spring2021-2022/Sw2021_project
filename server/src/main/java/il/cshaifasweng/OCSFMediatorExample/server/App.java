@@ -9,7 +9,7 @@ public class App
     public static void main( String[] args ) throws IOException
     {
         server = new SimpleServer(3000);
-        server.test();
+      //  server.test();
         server.listen();
         System.out.println("Server is up");
     }

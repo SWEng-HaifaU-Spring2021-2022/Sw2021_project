@@ -105,6 +105,13 @@ public class EditTimeController implements Initializable {
             e.printStackTrace();
         }
         System.out.println("message sent to server to remove the selcted moviesshows for a the DB");
+      /*   msg=new msgObject("#getshows",cur_Movie.getMovieId());
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to get updated moviesshows for " +cur_Movie.getEngName() +"movie");*/
     }
     @FXML
     void insertNewShow(ActionEvent event) {
@@ -208,7 +215,9 @@ public class EditTimeController implements Initializable {
         if(SimpleClient.obj!=null){
             List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
             System.out.println(list.size()+"list length");
-            temptheater=list.get(0).getTheater();
+            if(list.size()>0){
+                temptheater=list.get(0).getTheater();
+            }
             for(MovieShow ms: list) {
                 System.out.println(ms.getBeginTime());
                 data.add(ms);

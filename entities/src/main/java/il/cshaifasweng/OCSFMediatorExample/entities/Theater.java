@@ -49,9 +49,6 @@ public class Theater implements Serializable {
 	public List<Hall> getHalls() {
 		return halls;
 	}
-	public void setHalls(List<Hall> halls) {
-		this.halls = halls;
-	}
 	public void AddHalls(Hall hall) {
 		halls.add(hall);
 	}

@@ -23,7 +23,8 @@ import java.net.URL;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -111,9 +112,9 @@ public class EditTimeController implements Initializable {
         String new_end_time=insendtime.getText();
         int day=Integer.parseInt(insDay.getText());
         int month=Integer.parseInt(insMn.getText());
-        int year=Integer.parseInt(insYear.getText());
-        System.out.println(year+"/"+month+"/"+day);
-        Date  date=new Date(year,month,day);
+        int year=Integer.parseInt(insYear.getText())-1900;
+        Date date=new Date(year,month,day);
+        System.out.println(date.toString());
         MovieShow newMS=new MovieShow(cur_Movie,date,temptheater,new_begin_time,new_end_time,40);
        msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
@@ -214,7 +215,7 @@ public class EditTimeController implements Initializable {
             }
             insertmovieid.setText(Integer.toString(movie.getMovieId()));
             ShowTimeTable.getItems().setAll(data);
-            ShowTimeTable.autosize();
+            autoResizeColumns(ShowTimeTable);
         }
         else{
             System.out.println("movie show list empty");

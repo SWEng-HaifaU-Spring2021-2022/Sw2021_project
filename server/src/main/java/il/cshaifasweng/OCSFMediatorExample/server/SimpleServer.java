@@ -86,7 +86,7 @@ public class SimpleServer extends AbstractServer {
         	try{
         	    msgObject tempmsg=getMovieShowsbyid(id);
         	    if (msgString.equals("#getshowsdisplay")){
-        	        System.out.println("bla bla");
+        	       // System.out.println("bla bla");
         	        tempmsg.setMsg("getshowsdisplay");
                 }
                 client.sendToClient(tempmsg);
@@ -170,17 +170,23 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msgObj.getMsg().equals("#deleteMovieShow"))
         {
-            session.delete(((MovieShow)msgObj.getObject()));
-            session.flush();
-            session.getTransaction().commit();
+            try{
+                session.delete(((MovieShow)msgObj.getObject()));
+                session.getTransaction().commit();
+            }
+            catch (HibernateException e){
+             e.printStackTrace();
+             session.getTransaction().rollback();
+            }
             System.out.println("MovieShow Deleted");
             msgObject tempmsg=new msgObject("movieshowdeleted",null);
             try {
-                session.getTransaction().commit();
+               // session.getTransaction().commit();
                 client.sendToClient(tempmsg);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            session.close();
         }
     }
 
@@ -254,18 +260,14 @@ public class SimpleServer extends AbstractServer {
             session.save(m);
             session.flush();
     	Theater th=new Theater("Haifa");
-            session.save(th);
-            session.flush();
-    	Hall hall=new Hall(40,th,1);
-    	th.AddHalls(hall);
-            session.save(hall);
-            session.flush();
+    	session.save(th);
+    	session.flush();
     	Date d=new Date(10000000);
     	MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
     	m.AddMovieShow(ms);
             session.save(ms);
-
             session.flush();
+            Hall hall=new Hall(40,th,1);
             session.save(hall);
             session.flush();
     	}

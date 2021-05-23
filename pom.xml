@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>OCSFMediatorExample</artifactId>
@@ -9,11 +10,16 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
-	<artifactId>server</artifactId>
-	<packaging>jar</packaging>
-	<name>server</name>
+	<artifactId>project</artifactId>
+	<packaging>pom</packaging>
+	<name>project</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
+	<modules>
+		<module>server</module>
+		<module>entities</module>
+		<module>client</module>
+	</modules>
 	<dependencies>
 		<dependency>
 			<groupId>mysql</groupId>

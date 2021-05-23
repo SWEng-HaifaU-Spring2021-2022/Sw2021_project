@@ -13,11 +13,10 @@ public class Hall implements Serializable {
 	private static final long serialVersionUID = -8224097662914849956L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int Hallid;
+	private int hallId;
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id")
 	private Theater theater;
-	private int hallId;
 	private int capacity;
 	private int hallNumber;
 	//private boolean[][] seatsMatrix;
@@ -33,11 +32,8 @@ public class Hall implements Serializable {
 		setTheater(theater);
 		//this.seatsMatrix=new boolean[5][5];
 	}
-	public int getHallId() {
+	public int gethallId() {
 		return hallId;
-	}
-	public void setHallId(int hallId) {
-		this.hallId = hallId;
 	}
 	public int getCapacity() {
 		return capacity;

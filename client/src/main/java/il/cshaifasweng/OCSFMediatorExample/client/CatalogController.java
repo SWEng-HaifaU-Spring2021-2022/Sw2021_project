@@ -215,22 +215,11 @@ public class CatalogController  implements Initializable {
 			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
 			List<MovieShow>templist=selectedMovie.getMSList();
 			String str="";
-			System.out.println(templist);
 			for (MovieShow ms:templist){
 
 				str+=ms.toString()+"\n";
 			}
 			testLabel.setText(str);
-		/*	msgObject msg=new msgObject("#getshowsdisplay",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
-			try {
-				SimpleClient.getClient().sendToServer(msg);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			System.out.println("message sent to server to get all moviesshows for a the selcted movie to display it");
-			while(SimpleClient.obj!=null){
-				System.out.println("obj is null");
-			}*/
 		}
 
 	}

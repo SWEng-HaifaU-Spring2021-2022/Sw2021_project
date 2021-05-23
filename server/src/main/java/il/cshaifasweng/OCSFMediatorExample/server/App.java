@@ -10,7 +10,7 @@ public class App
     {
 
         server = new SimpleServer(3000);
-       // server.test();
+      //  server.test();
         server.listen();
         System.out.println("Server is up");
     }

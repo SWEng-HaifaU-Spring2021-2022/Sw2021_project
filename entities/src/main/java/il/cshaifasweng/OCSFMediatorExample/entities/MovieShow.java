@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 @Entity
@@ -19,7 +19,7 @@ public class MovieShow implements Serializable  {
 	 private Movie movie;
 	@Basic
 	 private Date showDate;
-	 @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id")
 	 private Theater theater;
 	 private String beginTime;
@@ -85,7 +85,7 @@ public class MovieShow implements Serializable  {
 	}
 	@Override
 	public String toString(){
-	 	String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
+	 	String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"/*+theater.getLocation()*/;
 	 	return  str;
 	}
 }

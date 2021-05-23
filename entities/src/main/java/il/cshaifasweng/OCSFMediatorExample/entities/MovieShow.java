@@ -2,7 +2,6 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import java.util.List;
 import javax.persistence.*;
 import java.io.Serializable;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.sql.Time;
@@ -13,32 +12,32 @@ public class MovieShow implements Serializable  {
 	private static final long serialVersionUID = -8224097662914849956L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 private int movieShowId;
+	private int movieShowId;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movie_id")
-	 private Movie movie;
+	private Movie movie;
 	@Basic
-	 private Date showDate;
+	private Date showDate;
 	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id")
-	 private Theater theater;
-	 private String beginTime;
-	 private String endTime;
-	 private int maxNumber; 
-	 
-	 public MovieShow()
-	 {
-		 
-	 }
-	 public MovieShow(Movie movie, Date showDate, Theater theater,String beginTime, String endTime,int maxNumber)
-	 {
+	private Theater theater;
+	private String beginTime;
+	private String endTime;
+	private int maxNumber;
+
+	public MovieShow()
+	{
+
+	}
+	public MovieShow(Movie movie, Date showDate, Theater theater,String beginTime, String endTime,int maxNumber)
+	{
 		setMovie(movie);
-		 this.showDate = showDate;
-		 setTheater(theater);
-		 this.beginTime = beginTime;
-		 this.endTime = endTime;
-		 this.maxNumber = maxNumber;
-	 }
+		this.showDate = showDate;
+		setTheater(theater);
+		this.beginTime = beginTime;
+		this.endTime = endTime;
+		this.maxNumber = maxNumber;
+	}
 	public int getMovieShowId() {
 		return movieShowId;
 	}
@@ -48,11 +47,9 @@ public class MovieShow implements Serializable  {
 	public Movie getMovie() {
 		return movie;
 	}
-
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
-
 	public Date getShowDate() {
 		return showDate;
 	}
@@ -85,7 +82,7 @@ public class MovieShow implements Serializable  {
 	}
 	@Override
 	public String toString(){
-	 	String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"/*+theater.getLocation()*/;
-	 	return  str;
+		String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"/*+theater.getLocation()*/;
+		return  str;
 	}
 }

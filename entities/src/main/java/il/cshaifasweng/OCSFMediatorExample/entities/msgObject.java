@@ -1,9 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
-import java.io.Serial;
 import java.io.Serializable;
 public class msgObject implements Serializable {
-    @Serial
-	private static final long serialVersionUID = -8224097662914849956L;
+    private static final long serialVersionUID = -8224097662914849956L;
     String msg;
     Object object;
     public msgObject(){}
@@ -15,19 +13,15 @@ public class msgObject implements Serializable {
         this.msg = msg;
         this.object = null;
     }
-
     public String getMsg() {
         return msg;
     }
-
     public void setMsg(String msg) {
         this.msg = msg;
     }
-
     public Object getObject() {
         return object;
     }
-
     public void setObject(Object object) {
         this.object = object;
     }

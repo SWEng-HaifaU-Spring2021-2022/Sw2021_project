@@ -1,40 +1,40 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
-
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
 @Table(name="movie")
-
 public class Movie implements Serializable   {
 	private static final long serialVersionUID = -8224097662914849956L;
-
 	@Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 protected int movieId;
-	protected String engName;
-	protected String hebName;
-	protected String actors;
-	protected String genere;
-	protected String description;
-	protected String producer;
-	 @Column(columnDefinition="LONGBLOB")
-	 protected byte[] image;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int movieId;
+	private String engName;
+	private String hebName;
+	private String actors;
+	private String genere;
+	private String description;
+	private String producer;
+	@Column(columnDefinition="LONGBLOB")
+	private byte[] image;
 	public Movie()
 	{
-		
+
 	}
-	public Movie(String engName, String hebName, String actors, String genre, String description, String producer, byte[] image )
+	public Movie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image )
 	{
 		this.engName = engName;
 		this.hebName = hebName;
 		this.actors = actors;
-		this.genere = genre;
+		this.genere = genere;
 		this.description = description;
 		this.image = image;
 		this.producer = producer;
 	}
 	public int getMovieId() {
 		return movieId;
+	}
+	public void setMovieId(int movieId) {
+		this.movieId = movieId;
 	}
 	public String getEngName() {
 		return engName;
@@ -54,9 +54,12 @@ public class Movie implements Serializable   {
 	public void setActors(String actors) {
 		this.actors = actors;
 	}
-	public String getGenere() { return genere; }
-	public void setGenere(String genere) { this.genere = genere; }
-
+	public String getGenere() {
+		return genere;
+	}
+	public void setGenere(String genere) {
+		this.genere = genere;
+	}
 	public String getDescription() {
 		return description;
 	}
@@ -75,6 +78,4 @@ public class Movie implements Serializable   {
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
-
-
 }

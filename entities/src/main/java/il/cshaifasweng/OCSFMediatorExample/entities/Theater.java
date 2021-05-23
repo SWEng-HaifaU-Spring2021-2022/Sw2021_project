@@ -1,5 +1,4 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
-
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,13 +19,13 @@ public class Theater implements Serializable {
 	private int theaterId;
 	private String location;
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="theater")
-	 private List<Hall> halls;
+	private List<Hall> halls;
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="theater")
 	private List<MovieShow>movieShowList;
 	/*machinesList*/
 	public Theater()
 	{
-		
+
 	}
 	public Theater(String location)
 	{
@@ -36,6 +35,9 @@ public class Theater implements Serializable {
 	}
 	public int getTheaterId() {
 		return theaterId;
+	}
+	public void setTheaterId(int theaterId) {
+		this.theaterId = theaterId;
 	}
 	public String getLocation() {
 		return location;
@@ -52,5 +54,5 @@ public class Theater implements Serializable {
 	public void ADdMovieShow(MovieShow ms) {
 		this.movieShowList.add(ms);
 	}
-	
+
 }

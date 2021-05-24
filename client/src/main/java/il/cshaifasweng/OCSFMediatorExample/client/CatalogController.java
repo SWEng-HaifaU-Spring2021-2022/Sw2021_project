@@ -2,17 +2,17 @@
  * Sample Skeleton for 'Catalog.fxml' Controller Class
  */
 package il.cshaifasweng.OCSFMediatorExample.client;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
+import java.util.*;
 import javax.imageio.ImageIO;
-
-import com.sun.prism.Image;
-
+import javax.security.auth.callback.Callback;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.image.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -40,13 +40,13 @@ public class CatalogController  implements Initializable {
 
 	ObservableList<TheaterMovie> list = FXCollections.observableArrayList();
 
+
 	@FXML // fx:id="homePage"
 	private Button homePage; // Value injected by FXMLLoader
-
 	@FXML // fx:id="MoviesTable"
 	private TableView<TheaterMovie> MoviesTable; // Value injected by FXMLLoader
 	@FXML // fx:id="imageCol"
-	private TableColumn<TheaterMovie, Image> imageCol; // Value injected by FXMLLoader
+	private TableColumn<TheaterMovie, String> imageCol; // Value injected by FXMLLoader
 	@FXML // fx:id="nameCol"
 	private TableColumn<TheaterMovie, String> nameCol; // Value injected by FXMLLoader
 	@FXML // fx:id="hebName"
@@ -59,16 +59,13 @@ public class CatalogController  implements Initializable {
 	private TableColumn<TheaterMovie, String> descriptionCol; // Value injected by FXMLLoader
 	@FXML // fx:id="producerCol"
 	private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
-
-
 	@FXML // fx:id="EditBtn"
 	private Button EditBtn; // Value injected by FXMLLoader
-
 	@FXML // fx:id="testLabel"
 	private Label testLabel; // Value injected by FXMLLoader
-
 	public static TheaterMovie selectedMovie=new TheaterMovie();
 	@FXML
+
 	void editMovieBtn(ActionEvent event) throws IOException {
 		int index = MoviesTable.getSelectionModel().getSelectedIndex();
 		if (index <= -1) {
@@ -92,10 +89,8 @@ public class CatalogController  implements Initializable {
 		stage.setOnHiding((e) -> {
 			handleRefresh(new ActionEvent());
 		});
-
-
-
 	}
+
 	private void handleRefresh(ActionEvent actionEvent) {
 		try {
 			//SimpleClient.getClient().sendToServer("#warning");
@@ -106,12 +101,13 @@ public class CatalogController  implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
+
 	private  void initCol() {
 		try {
-			imageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
 
+			imageCol.setCellValueFactory(new PropertyValueFactory<>("ImgURL"));
+			imageCol.setCellFactory(param -> new ImageTableCell<>());
 			nameCol.setCellValueFactory(new PropertyValueFactory<>("engName"));
 			hebName.setCellValueFactory(new PropertyValueFactory<>("hebName"));
 			actorsCol.setCellValueFactory(new PropertyValueFactory<>("actors"));
@@ -132,7 +128,31 @@ public class CatalogController  implements Initializable {
 		autoResizeColumns(MoviesTable);
 		System.out.println("done initialize");
 	}
+
 	public void loadData(List<TheaterMovie> movieList) {
+	/*	List<TheaterMovie> tempList = new ArrayList<>();
+		try {
+			tempList.clear();
+			for(TheaterMovie m: movieList) {
+				tempList.add(m);
+			}
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		for (int i=0; i<list.size(); i++) {
+			TheaterMovie temp = list.get(i);
+			list.remove(i);
+			list.add(new TheaterMovie(temp.getEngName(),
+					temp.getHebName(),
+					temp.getActors(),
+					temp.getGenere(),
+					temp.getDescription(),
+					temp.getProducer(),
+					new ImageView(new javafx.scene.image.Image(temp.getImgURL()
+					)),temp.getEntryPrice()));
+		}
+*/
 		try {
 			list.clear();
 			for(TheaterMovie m: movieList) {
@@ -142,6 +162,7 @@ public class CatalogController  implements Initializable {
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
+
 		MoviesTable.setItems(list);
 	}
 
@@ -155,7 +176,6 @@ public class CatalogController  implements Initializable {
 		}
 
 	}
-
 
 	public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow
 	{
@@ -180,6 +200,7 @@ public class CatalogController  implements Initializable {
 			column.setPrefWidth(max + 10.0d);
 		});
 	}
+
 	@FXML
 	void ShowScreeningTime(MouseEvent event) {
 		int index=MoviesTable.getSelectionModel().getSelectedIndex();

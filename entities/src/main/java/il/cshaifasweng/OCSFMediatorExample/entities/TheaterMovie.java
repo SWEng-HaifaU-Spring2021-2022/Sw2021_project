@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Observable;
+
 @Entity
 @Table(name="movie")
 public class TheaterMovie extends Movie implements Serializable  {
@@ -16,8 +17,8 @@ public class TheaterMovie extends Movie implements Serializable  {
 	private List<MovieShow> MSList;
 	private int entryPrice;
 	public TheaterMovie() {}
-	public TheaterMovie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image,int entryPrice) {
-		super(engName,hebName,actors,genere,description,producer,image);
+	public TheaterMovie(String engName, String hebName, String actors, String genere, String description, String producer, String imgURL,int entryPrice) {
+		super(engName,hebName,actors,genere,description,producer,imgURL);
 		this.entryPrice=entryPrice;
 		MSList=new ArrayList<>();
 	}

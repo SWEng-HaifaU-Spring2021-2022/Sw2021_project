@@ -1,6 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import java.io.Serializable;
+
+
 @Entity
 @Table(name="movie")
 public class Movie implements Serializable   {
@@ -14,27 +18,25 @@ public class Movie implements Serializable   {
 	private String genere;
 	private String description;
 	private String producer;
-	@Column(columnDefinition="LONGBLOB")
-	private byte[] image;
-	public Movie()
-	{
+	private String ImgURL;
 
-	}
-	public Movie(String engName, String hebName, String actors, String genere, String description, String producer, byte[] image )
-	{
+	public Movie(String engName, String hebName, String actors, String genere, String description, String producer, String imgURL) {
 		this.engName = engName;
 		this.hebName = hebName;
 		this.actors = actors;
 		this.genere = genere;
 		this.description = description;
-		this.image = image;
 		this.producer = producer;
+		this.ImgURL = imgURL;
 	}
+
+	public Movie()
+	{
+
+	}
+
 	public int getMovieId() {
 		return movieId;
-	}
-	public void setMovieId(int movieId) {
-		this.movieId = movieId;
 	}
 	public String getEngName() {
 		return engName;
@@ -72,10 +74,14 @@ public class Movie implements Serializable   {
 	public void setProducer(String producer) {
 		this.producer = producer;
 	}
-	public byte[] getImage() {
-		return image;
+	public String getImgURL() { return ImgURL;}
+	public void setImgURL(String imgURL) {
+		ImgURL = imgURL;
 	}
-	public void setImage(byte[] image) {
-		this.image = image;
+	public ImageView getImageViewProperty (){
+		ImageView imv = new ImageView();
+		imv.setImage(new Image(ImgURL));
+		return imv;
 	}
+	public Image getImageProperty (){return new Image(ImgURL);}
 }

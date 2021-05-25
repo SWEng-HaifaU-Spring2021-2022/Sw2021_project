@@ -15,14 +15,13 @@ public class ImageTableCell<S> extends TableCell<S, String> {
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-
-        if (empty || item == null) {
+        setText(null);
+        if (empty || item == null || item=="") {
             imageView.setImage(null);
-            setText(null);
             setGraphic(null);
+        } else {
+            imageView.setImage(new Image(item));
+            setGraphic(imageView);
         }
-
-        imageView.setImage(new Image(item));
-        setGraphic(imageView);
     }
 }

@@ -103,17 +103,37 @@ public class CatalogController  implements Initializable {
 		}
 	}
 
+/*	private  void initTable()
+	{
+		MoviesTable.setFixedCellSize((double)MoviesTable.widthProperty().multiply(.35));
+		MoviesTable.cell
+	}*/
+
 	private  void initCol() {
 		try {
 
 			imageCol.setCellValueFactory(new PropertyValueFactory<>("ImgURL"));
 			imageCol.setCellFactory(param -> new ImageTableCell<>());
+			imageCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.2));
+
 			nameCol.setCellValueFactory(new PropertyValueFactory<>("engName"));
+			nameCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.13));
+
 			hebName.setCellValueFactory(new PropertyValueFactory<>("hebName"));
+			hebName.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.13));
+
 			actorsCol.setCellValueFactory(new PropertyValueFactory<>("actors"));
+			actorsCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.13));
+
 			GenerCol.setCellValueFactory(new PropertyValueFactory<>("genere"));
+			GenerCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.13));
+
 			descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+			descriptionCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.15));
+
 			producerCol.setCellValueFactory(new PropertyValueFactory<>("producer"));
+			producerCol.prefWidthProperty().bind(MoviesTable.widthProperty().multiply(.13));
+
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -125,34 +145,11 @@ public class CatalogController  implements Initializable {
 		initCol();
 		List<TheaterMovie>m= (List<TheaterMovie>)SimpleClient.obj;
 		loadData(m);
-		autoResizeColumns(MoviesTable);
+		//	autoResizeColumns(MoviesTable);
 		System.out.println("done initialize");
 	}
 
 	public void loadData(List<TheaterMovie> movieList) {
-	/*	List<TheaterMovie> tempList = new ArrayList<>();
-		try {
-			tempList.clear();
-			for(TheaterMovie m: movieList) {
-				tempList.add(m);
-			}
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		for (int i=0; i<list.size(); i++) {
-			TheaterMovie temp = list.get(i);
-			list.remove(i);
-			list.add(new TheaterMovie(temp.getEngName(),
-					temp.getHebName(),
-					temp.getActors(),
-					temp.getGenere(),
-					temp.getDescription(),
-					temp.getProducer(),
-					new ImageView(new javafx.scene.image.Image(temp.getImgURL()
-					)),temp.getEntryPrice()));
-		}
-*/
 		try {
 			list.clear();
 			for(TheaterMovie m: movieList) {
@@ -177,7 +174,7 @@ public class CatalogController  implements Initializable {
 
 	}
 
-	public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow
+/*	public static void autoResizeColumns(TableView<?> table)// method to reszie columns taken from StackOverFlow
 	{
 		// Set the right policy
 		table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -200,7 +197,7 @@ public class CatalogController  implements Initializable {
 			column.setPrefWidth(max + 10.0d);
 		});
 	}
-
+*/
 	@FXML
 	void ShowScreeningTime(MouseEvent event) {
 		int index=MoviesTable.getSelectionModel().getSelectedIndex();

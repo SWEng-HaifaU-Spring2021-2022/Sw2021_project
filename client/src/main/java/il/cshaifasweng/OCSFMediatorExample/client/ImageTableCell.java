@@ -20,7 +20,8 @@ public class ImageTableCell<S> extends TableCell<S, String> {
             imageView.setImage(null);
             setGraphic(null);
         } else {
-            imageView.setImage(new Image(item));
+            Image img=new Image(item,200,200,true,true);
+            imageView.setImage(img);
             setGraphic(imageView);
         }
     }

@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>OCSFMediatorExample</artifactId>
@@ -10,6 +11,7 @@
 	</parent>
 	<groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
 	<artifactId>client</artifactId>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -26,24 +28,6 @@
 			<artifactId>javafx-fxml</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-<!--		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>win</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>linux</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>mac</classifier>
-		</dependency>-->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

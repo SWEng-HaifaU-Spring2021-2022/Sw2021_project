@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-
 import java.awt.*;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
@@ -25,18 +24,22 @@ public class App extends Application {
         scene=newscene;
 
     }
+
     @Override
     public void start(Stage stage) throws IOException {
         EventBus.getDefault().register(this);
         client = SimpleClient.getClient();
         client.openConnection();
         scene = new Scene(loadFXML("primary"), 1280, 720);
+        scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
+
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
+
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();

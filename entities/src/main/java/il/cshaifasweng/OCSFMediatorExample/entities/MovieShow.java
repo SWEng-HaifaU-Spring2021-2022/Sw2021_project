@@ -1,4 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +17,6 @@ public class MovieShow implements Serializable  {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movie_id")
 	private Movie movie;
-	@Basic
 	private Date showDate;
 	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id")
@@ -82,7 +82,10 @@ public class MovieShow implements Serializable  {
 	}
 	@Override
 	public String toString(){
-		String str=""+showDate.toString()+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"/*+theater.getLocation()*/;
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String strDate= formatter.format(showDate);
+		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
+		System.out.println(theater.getLocation());
 		return  str;
 	}
 }

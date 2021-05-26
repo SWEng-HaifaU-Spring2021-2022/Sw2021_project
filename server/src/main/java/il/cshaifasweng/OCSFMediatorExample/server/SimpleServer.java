@@ -193,7 +193,11 @@ public class SimpleServer extends AbstractServer {
         query.from(TheaterMovie.class);
         List<TheaterMovie> list= session.createQuery(query).getResultList();
         for(TheaterMovie m:list){
-            m.getMSList();
+           List<MovieShow> temp= m.getMSList();
+           for (MovieShow ms:temp){
+               System.out.println(ms.getTheater());
+
+           }
         }
         msgObject msg=new msgObject("AllMovies",list);
         return msg;
@@ -258,14 +262,15 @@ public class SimpleServer extends AbstractServer {
             Theater th=new Theater("Haifa");
             session.save(th);
             session.flush();
-            Date d=new Date(10000000);
+            Hall hall=new Hall(40,th,1);
+            session.save(hall);
+            session.flush();
+            Date d=new Date(2021-1900,7,11);
             MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
             m.AddMovieShow(ms);
             session.save(ms);
             session.flush();
-            Hall hall=new Hall(40,th,1);
-            session.save(hall);
-            session.flush();
+
         }
         catch(Exception ex) {
             ex.printStackTrace();

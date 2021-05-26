@@ -10,19 +10,19 @@
 <AnchorPane prefHeight="671.0" prefWidth="1558.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CatalogController">
    <children>
       <Button fx:id="homePage" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHomePage" text="Home" />
-      <TableView fx:id="MoviesTable" layoutX="5.0" layoutY="68.0" onInputMethodTextChanged="#ShowScreeningTime" onMouseClicked="#ShowScreeningTime" prefHeight="241.0" prefWidth="904.0">
+      <TableView fx:id="MoviesTable" layoutX="5.0" layoutY="68.0" onInputMethodTextChanged="#ShowScreeningTime" onMouseClicked="#ShowScreeningTime" prefHeight="259.0" prefWidth="929.0">
         <columns>
-          <TableColumn fx:id="imageCol" prefWidth="75.0" text="Image" />
-          <TableColumn fx:id="nameCol" prefWidth="85.0" text="Movie Name" />
-            <TableColumn fx:id="hebName" prefWidth="108.0" text="Movie Name Heb" />
-            <TableColumn fx:id="actorsCol" prefWidth="48.0" resizable="false" text="Actors" />
-            <TableColumn fx:id="GenerCol" prefWidth="75.0" text="Genere" />
-            <TableColumn fx:id="producerCol" prefWidth="75.0" text="Producer" />
-            <TableColumn fx:id="descriptionCol" prefWidth="72.0" text="Description" />
+          <TableColumn fx:id="imageCol" maxWidth="1.7976931348623157E308" prefWidth="139.0" resizable="false" style="-fx-max-width: 360px; -fx-max-width: 533px;" text="Image" />
+          <TableColumn fx:id="nameCol" maxWidth="1.7976931348623157E308" prefWidth="88.0" text="Movie Name" />
+            <TableColumn fx:id="hebName" maxWidth="1.7976931348623157E308" prefWidth="109.0" text="Movie Name Heb" />
+            <TableColumn fx:id="actorsCol" maxWidth="1.7976931348623157E308" prefWidth="71.0" resizable="false" text="Actors" />
+            <TableColumn fx:id="GenerCol" maxWidth="1.7976931348623157E308" prefWidth="64.0" text="Genere" />
+            <TableColumn fx:id="producerCol" maxWidth="1.7976931348623157E308" prefWidth="81.0" text="Producer" />
+            <TableColumn fx:id="descriptionCol" maxWidth="1.7976931348623157E308" prefWidth="108.0" text="Description" />
         </columns>
       </TableView>
-      <Button fx:id="EditBtn" layoutX="27.0" layoutY="532.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
-      <Label fx:id="testLabel" layoutX="39.0" layoutY="362.0" prefHeight="152.0" prefWidth="1099.0" text="Label" />
-      <Text layoutX="39.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Screening dates:" />
+      <Button fx:id="EditBtn" layoutX="14.0" layoutY="618.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
+      <Label fx:id="testLabel" layoutX="14.0" layoutY="440.0" prefHeight="178.0" prefWidth="1108.0" text="Label" />
+      <Text layoutX="14.0" layoutY="436.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Movie Details:" />
    </children>
 </AnchorPane>

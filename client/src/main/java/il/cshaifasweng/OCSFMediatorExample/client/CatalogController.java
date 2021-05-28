@@ -145,7 +145,7 @@ public class CatalogController  implements Initializable {
 		initCol();
 		List<TheaterMovie>m= (List<TheaterMovie>)SimpleClient.obj;
 		loadData(m);
-		//	autoResizeColumns(MoviesTable);
+			//autoResizeColumns(MoviesTable);
 		System.out.println("done initialize");
 	}
 
@@ -197,7 +197,7 @@ public class CatalogController  implements Initializable {
 					}
 				}
 				// set the new max-widht with some extra space
-				column.setPrefWidth(max + 10.0d);
+				column.setPrefWidth(max);
 
 		});
 	}

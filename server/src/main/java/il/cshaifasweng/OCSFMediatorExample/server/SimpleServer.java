@@ -253,10 +253,10 @@ public class SimpleServer extends AbstractServer {
 
     private static void AddToDB() {
         try {
-            String  actors= " Lewis Tan,Jessica McNamee, Josh Lawson";
-            String str="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
-            String imgURL  = "https://m.media-amazon.com/images/M/MV5BY2ZlNWIxODMtN2YwZi00ZjNmLWIyN2UtZTFkYmZkNDQyNTAyXkEyXkFqcGdeQXVyODkzNTgxMDg@._V1_.jpg";
-            TheaterMovie m=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors,"Action",str,"wb",imgURL,40);
+            String  actors= " Alexander Skarsgård,Millie Bobby Brown, Rebecca Hall";
+            String str="The epic next chapter in the cinematic Monsterverse pits two of the greatest icons in motion picture history against one another - the fearsome Godzilla and the mighty Kong - with humanity caught in the balance.";
+            String imgURL  = "https://upload.wikimedia.org/wikipedia/he/f/f5/Godzilla_vs.Kong.png";
+            TheaterMovie m=new TheaterMovie("Godzilla vs. Kong\n","גודזילה נגד קונג",actors,"Action,Sci-Fi,Thriller",str,"wb",imgURL,70);
             session.save(m);
             session.flush();
             Theater th=new Theater("Haifa");
@@ -266,11 +266,46 @@ public class SimpleServer extends AbstractServer {
             session.save(hall);
             session.flush();
             Date d=new Date(2021-1900,7,11);
-            MovieShow ms=new MovieShow(m,d,th,"15:00","17:00",40);
+            MovieShow ms=new MovieShow(m,d,th,"20:00","22:00",40);
             m.AddMovieShow(ms);
             session.save(ms);
             session.flush();
-
+            //___________________________________________________________________________________________
+            String  actors2= " Lewis Tan,Jessica McNamee, Josh Lawson";
+            String str2="MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
+            String imgURL2  = "https://m.media-amazon.com/images/M/MV5BY2ZlNWIxODMtN2YwZi00ZjNmLWIyN2UtZTFkYmZkNDQyNTAyXkEyXkFqcGdeQXVyODkzNTgxMDg@._V1_.jpg";
+            TheaterMovie m2=new TheaterMovie("Mortal Kombat","מורטל קומבט",actors2,"Action",str2,"wb",imgURL2,40);
+            session.save(m2);
+            session.flush();
+            Theater th2=new Theater("Herzilya");
+            session.save(th2);
+            session.flush();
+            Hall hall2=new Hall(40,th2,1);
+            session.save(hall2);
+            session.flush();
+            Date d2=new Date(2021-1900,10,5);
+            MovieShow ms2=new MovieShow(m2,d2,th2,"19:00","21:00",60);
+            m.AddMovieShow(ms2);
+            session.save(ms2);
+            session.flush();
+            //________________________________________________________________________________________________________________
+            String  actors3= " Chris Pratt,Yvonne Strahovski, J.K. Simmons";
+            String str3="A man is drafted to fight in a future war where the fate of humanity relies on his ability to confront his past.";
+            String imgURL3  = "https://images-na.ssl-images-amazon.com/images/I/81qDMksX4PS._RI_.jpg";
+            TheaterMovie m3=new TheaterMovie("The Tomorrow War","מלחמת המחר",actors3,"Action,Adventure,Sci-Fi,Thriller",str3,"Amazon",imgURL3,50);
+            session.save(m3);
+            session.flush();
+            Theater th3=new Theater("Tel-Aviv");
+            session.save(th3);
+            session.flush();
+            Hall hall3=new Hall(40,th3,2);
+            session.save(hall3);
+            session.flush();
+            Date d3=new Date(2021-1900,2,12);
+            MovieShow ms3=new MovieShow(m3,d3,th3,"12:00","14:00",40);
+            m.AddMovieShow(ms3);
+            session.save(ms3);
+            session.flush();
         }
         catch(Exception ex) {
             ex.printStackTrace();

@@ -2,8 +2,7 @@
  * Sample Skeleton for 'MovieTimeEdit.fxml' Controller Class
  */
 package il.cshaifasweng.OCSFMediatorExample.client;
-import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
-import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent ;
@@ -18,29 +17,32 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
-import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
+import java.time.Instant;
+import java.time.ZoneId;
 
 public class EditTimeController implements Initializable {
     private final ObservableList<MovieShow> data = FXCollections.observableArrayList();
+    private final ObservableList<Theater> theaterslist = FXCollections.observableArrayList();
+    private final ObservableList<Hall> hallsList = FXCollections.observableArrayList();
     private  static Movie cur_Movie=null;
-    private static Theater temptheater=null;
     @FXML // fx:id="ShowTimeTable"
     private TableView<MovieShow> ShowTimeTable; // Value injected by FXMLLoader
     @FXML // fx:id="showidCol"
     private TableColumn<MovieShow, Number> showidCol; // Value injected by FXMLLoader
     @FXML // fx:id="DateCol"
-    private TableColumn<MovieShow, Date> DateCol; // Value injected by FXMLLoader
+    private TableColumn<MovieShow, LocalDate> DateCol; // Value injected by FXMLLoader
     @FXML // fx:id="showTimeCol"
     private TableColumn<MovieShow, String> showTimeCol; // Value injected by FXMLLoader
     @FXML // fx:id="endTimeCol"
     private TableColumn<MovieShow, String> endTimeCol; // Value injected by FXMLLoader
-    /*  @FXML // fx:id="MovieidCol"
-      private TableColumn<MovieShow, Movie> MovieidCol; // Value injected by FXMLLoader*/
+    @FXML // fx:id="Theater_col"
+    private TableColumn<MovieShow, String> Theater_col; // Value injected by FXMLLoader
+   /* @FXML // fx:id="Hall_col"
+    private TableColumn<MovieShow, String> Hall_col; // Value injected by FXMLLoader*/
     @FXML // fx:id="beginTimeTbox"
     private TextField beginTimeTbox; // Value injected by FXMLLoader
     @FXML // fx:id="UpdateButton"
@@ -53,22 +55,24 @@ public class EditTimeController implements Initializable {
     private TextField insbegintime; // Value injected by FXMLLoader
     @FXML // fx:id="insendtime"
     private TextField insendtime; // Value injected by FXMLLoader
-    @FXML // fx:id="insDay"
-    private TextField insDay; // Value injected by FXMLLoader
-    @FXML // fx:id="instheaterid"
-    private TextField instheaterid; // Value injected by FXMLLoader
     @FXML // fx:id="insertBtn"
     private Button insertBtn; // Value injected by FXMLLoader
     @FXML // fx:id="DeleteBtn"
     private Button DeleteBtn; // Value injected by FXMLLoader
-    @FXML // fx:id="insMn"
-    private TextField insMn; // Value injected by FXMLLoader
-    @FXML // fx:id="insYear"
-    private TextField insYear; // Value injected by FXMLLoader
-
     @FXML // fx:id="NameLabel"
     private Label NameLabel; // Value injected by FXMLLoader
-
+    @FXML // fx:id="Theaters_List"
+    private ChoiceBox<Theater> Theaters_List; // Value injected by FXMLLoader
+    @FXML // fx:id="DatePicker_Update"
+    private DatePicker DatePicker_Update; // Value injected by FXMLLoader
+    @FXML // fx:id="Theater_List_Update"
+    private ChoiceBox<Theater> Theater_List_Update; // Value injected by FXMLLoader
+    @FXML // fx:id="Update_Hall"
+    private ChoiceBox<Hall> Update_Hall; // Value injected by FXMLLoader
+    @FXML // fx:id="Hall_Insert"
+    private ChoiceBox<Hall> Hall_Insert; // Value injected by FXMLLoader
+    @FXML // fx:id="NewScreening_Date"
+    private DatePicker NewScreening_Date; // Value injected by FXMLLoader
     @FXML
     void DeleteShow(ActionEvent event) {
         int index = ShowTimeTable.getSelectionModel().getSelectedIndex();
@@ -83,24 +87,18 @@ public class EditTimeController implements Initializable {
             e.printStackTrace();
         }
         System.out.println("message sent to server to remove the selcted moviesshows for a the DB");
-      /*   msg=new msgObject("#getshows",cur_Movie.getMovieId());
-        try {
-            SimpleClient.getClient().sendToServer(msg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("message sent to server to get updated moviesshows for " +cur_Movie.getEngName() +"movie");*/
     }
     @FXML
     void insertNewShow(ActionEvent event) {
         String new_begin_time=insbegintime.getText();
         String new_end_time=insendtime.getText();
-        int day=Integer.parseInt(insDay.getText());
+      /*  int day=Integer.parseInt(insDay.getText());
         int month=Integer.parseInt(insMn.getText());
         int year=Integer.parseInt(insYear.getText())-1901;
-        Date date=new Date(year,month,day);
-        System.out.println(date.toString());
-        MovieShow newMS=new MovieShow(cur_Movie,date,temptheater,new_begin_time,new_end_time,40);
+        Date date=new Date(year,month,day);*/
+        Theater th=Theaters_List.getSelectionModel().getSelectedItem();
+        LocalDate newLocalDate=NewScreening_Date.getValue();
+        MovieShow newMS=new MovieShow(cur_Movie,newLocalDate,th,new_begin_time,new_end_time,40);
         msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
 
@@ -114,9 +112,6 @@ public class EditTimeController implements Initializable {
     public void afterinserting(){
         insbegintime.clear();
         insendtime.clear();
-        insDay.clear();
-        insMn.clear();
-        insYear.clear();
     }
     @FXML
     void getSelected(MouseEvent event) {
@@ -124,8 +119,15 @@ public class EditTimeController implements Initializable {
         if(index<=-1) {
             return;
         }
+        //MovieShow ms= ShowTimeTable.getSelectionModel().getSelectedItem();
         beginTimeTbox.setText(showTimeCol.getCellData(index).toString());
         endTimeTbox.setText(endTimeCol.getCellData(index).toString());
+        DatePicker_Update.setValue(DateCol.getCellData(index));
+/*
+        ms.getTheater();
+        Theater_List_Update.setValue(ms.getTheater());
+*/
+
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -136,6 +138,8 @@ public class EditTimeController implements Initializable {
         DateCol.setCellValueFactory(new PropertyValueFactory<>("showDate"));
         showTimeCol.setCellValueFactory(new PropertyValueFactory<>("beginTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        Theater_col.setCellValueFactory(new PropertyValueFactory<>("theater"));
+        //Hall_col.setCellValueFactory(new PropertyValueFactory<>("theater"));
         //  MovieidCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
     }
     public static void autoResizeColumns( TableView<?> table )//method to reszie columns taken from StackOverFlow
@@ -174,6 +178,8 @@ public class EditTimeController implements Initializable {
         MovieShow ms=ShowTimeTable.getSelectionModel().getSelectedItem();
         ms.setBeginTime( beginTimeTbox.getText());
         ms.setEndTime(endTimeTbox.getText());
+        ms.setShowDate(DatePicker_Update.getValue());
+        ms.setTheater(Theater_List_Update.getSelectionModel().getSelectedItem());
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
             SimpleClient.getClient().sendToServer(msg);
@@ -184,18 +190,58 @@ public class EditTimeController implements Initializable {
         //Stage stage = (Stage) UpdateButton.getScene().getWindow();
         //stage.close();
     }
-    public void inflatUI(Movie movie){//TODO: update it after getting the entities and a DB connection
+    public void inflatUI(Movie movie,List<Theater> TheaterList){
         NameLabel.setText("Screening Table for "+ movie.getEngName()+" movie");
         cur_Movie=movie;
-        initCol();
-        if(SimpleClient.obj!=null){
-            List<MovieShow> list=(List<MovieShow>)SimpleClient.obj;
-            System.out.println(list.size()+"list length");
-            if(list.size()>0){
-                temptheater=list.get(0).getTheater();
+        theaterslist.removeAll();
+        theaterslist.addAll(TheaterList);
+        Theaters_List.getItems().addAll(theaterslist);//choice box
+        Theaters_List.getSelectionModel().selectedItemProperty().addListener((v,oldValue,newValue)-> {
+            Theater th=newValue;
+            if(th!=null){
+                List<Hall>halls=th.getHalls();
+                if(halls==null){
+                    System.out.println("halls list is empty");
+                }
+                else{
+                    System.out.println("halls list isn't empty");
+                    hallsList.clear();
+                    hallsList.addAll(halls);
+                    Hall_Insert.getItems().removeAll(Hall_Insert.getItems());
+                    Hall_Insert.getItems().addAll(hallsList);
+                }
+
+            }else{
+                System.out.println("theater is null");
             }
+        });//adding listeners to the choicebox elements "insert"
+        Theater_List_Update.getItems().addAll(theaterslist);//choice box
+        Theater_List_Update.getSelectionModel().selectedItemProperty().addListener((v,oldValue,newValue)-> {
+            hallsList.clear();
+            Theater th=newValue;
+            if(th!=null){
+                List<Hall>halls=th.getHalls();
+                if(halls==null){
+                    System.out.println("halls list is empty");
+                }
+                else{
+                    System.out.println("halls list isn't empty");
+                    hallsList.clear();
+                    hallsList.removeAll();
+                    hallsList.addAll(halls);
+                    Update_Hall.getItems().removeAll(Update_Hall.getItems());
+                    Update_Hall.getItems().addAll(hallsList);
+                }
+
+            }else{
+                System.out.println("theater is null");
+            }
+        });//adding listener to the choicebox elements "update"
+        initCol();
+        TheaterMovie thMovie=(TheaterMovie) movie;
+        if(thMovie.getMSList()!=null){
+            List<MovieShow> list=thMovie.getMSList();
             for(MovieShow ms: list) {
-                System.out.println(ms.getBeginTime());
                 data.add(ms);
             }
             insertmovieid.setText(Integer.toString(movie.getMovieId()));
@@ -206,4 +252,8 @@ public class EditTimeController implements Initializable {
             System.out.println("movie show list empty");
         }
     }
+   /* @FXML
+    void Get_Halls(MouseEvent event) {
+
+    }*/
 }

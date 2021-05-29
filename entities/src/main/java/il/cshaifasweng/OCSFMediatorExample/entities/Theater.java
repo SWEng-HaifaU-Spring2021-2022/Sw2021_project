@@ -54,5 +54,9 @@ public class Theater implements Serializable {
 	public void ADdMovieShow(MovieShow ms) {
 		this.movieShowList.add(ms);
 	}
+	@Override
+	public String toString() {
+		return  this.location;
+	}
 
 }

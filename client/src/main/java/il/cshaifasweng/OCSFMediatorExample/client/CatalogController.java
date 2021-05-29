@@ -72,16 +72,16 @@ public class CatalogController  implements Initializable {
 			return;
 		}
 		selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
-		msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
+		msgObject msg=new msgObject("#getAllTheatres");
 		SimpleClient.getClient().sendToServer(msg);
-		System.out.println("message sent to server to get all moviesshows for a the selcted movie");
+		System.out.println("message sent to server to get all theaters ");
 	}
 
-	public void openEditPage() throws IOException {
+	public void openEditPage(List<Theater> TheatersList) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 		Parent parent = loader.load();
 		EditTimeController controller = (EditTimeController) loader.getController();
-		controller.inflatUI(selectedMovie);
+		controller.inflatUI(selectedMovie,TheatersList);
 		Stage stage = new Stage();
 		stage.setTitle("Edit Movie");
 		stage.setScene(new Scene(parent));
@@ -214,15 +214,7 @@ public class CatalogController  implements Initializable {
 			String str="";
 			str+="English Name: "+selectedMovie.getEngName()+"\n Hebrew Name: "+selectedMovie.getHebName()+"\n Actors: "+selectedMovie.getActors()+"\n genere: "+selectedMovie.getGenere()+"\n Description: "+selectedMovie.getDescription()+"\n";
 			for (MovieShow ms:templist){
-				if(ms.getTheater()!=null){
-					System.out.println(ms.getTheater().getLocation());
-				}else
-				{
-					System.out.println(" null");
-				}
-				str+=ms.toString()+ms.getTheater().getLocation() +"\n";
-
-
+				str+=ms.toString()+"\n";
 			}
 			testLabel.setText(str);
 		}

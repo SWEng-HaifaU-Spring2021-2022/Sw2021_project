@@ -16,8 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import il.cshaifasweng.OCSFMediatorExample.entities.Hall;
 import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
@@ -26,6 +27,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
 import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+import java.time.Instant;
+import java.time.ZoneId;
 
 public class SimpleServer extends AbstractServer {
 
@@ -66,7 +69,7 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }/* else if (msgString.equals( "#getAllHalls")) {
+        } else if (msgString.equals( "#getAllHalls")) {
             try {
                 client.sendToClient(getAllHalls());
                 System.out.format("Sent movies to client %s\n", client.getInetAddress().getHostAddress());
@@ -80,7 +83,7 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/else if(msgString.equals("#getshows")||msgString.equals("#getshowsdisplay"))  {
+        }else if(msgString.equals("#getshows")||msgString.equals("#getshowsdisplay"))  {
             int id=(int)msgobject.getObject();
             try{
                 msgObject tempmsg=getMovieShowsbyid(id);
@@ -203,7 +206,7 @@ public class SimpleServer extends AbstractServer {
         return msg;
     }
 
-    /*private static List<Hall> getAllHalls() throws Exception {
+    private static List<Hall> getAllHalls() throws Exception {
     	SessionFactory sessionFactory = getSessionFactory();
     	session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -211,15 +214,23 @@ public class SimpleServer extends AbstractServer {
         query.from(Movie.class);
         List<Hall> data = session.createQuery(query).getResultList();
         return data;
-    }*/
+    }
 
-  /*  private static List<Theater> getAllTheatres() throws Exception {
+    private static msgObject getAllTheatres() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Theater> query = builder.createQuery(Theater.class);
         query.from(Theater.class);
         List<Theater> data = session.createQuery(query).getResultList();
-        return data;
-    }*/
+        for (Theater th:data){
+            List<Hall>halls= th.getHalls();
+            for (Hall h:halls){
+                System.out.println(h.getHallNumber());
+            }
+
+        }
+        msgObject newmsg=new msgObject("Theaters Retrived",data);
+        return newmsg;
+    }
 
     private static msgObject getMovieShowsbyid(int id) throws Exception {
         System.out.println("getting movie shows");
@@ -253,6 +264,11 @@ public class SimpleServer extends AbstractServer {
 
     private static void AddToDB() {
         try {
+            //Getting the default zone id
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+
+            //Converting the date to Instant
+            Instant instant;
             String  actors= " Alexander Skarsgård,Millie Bobby Brown, Rebecca Hall";
             String str="The epic next chapter in the cinematic Monsterverse pits two of the greatest icons in motion picture history against one another - the fearsome Godzilla and the mighty Kong - with humanity caught in the balance.";
             String imgURL  = "https://upload.wikimedia.org/wikipedia/he/f/f5/Godzilla_vs.Kong.png";
@@ -266,7 +282,9 @@ public class SimpleServer extends AbstractServer {
             session.save(hall);
             session.flush();
             Date d=new Date(2021-1900,7,11);
-            MovieShow ms=new MovieShow(m,d,th,"20:00","22:00",40);
+            instant=d.toInstant();
+            LocalDate localD1=instant.atZone(defaultZoneId).toLocalDate();
+            MovieShow ms=new MovieShow(m,localD1,th,"20:00","22:00",40);
             m.AddMovieShow(ms);
             session.save(ms);
             session.flush();
@@ -284,7 +302,9 @@ public class SimpleServer extends AbstractServer {
             session.save(hall2);
             session.flush();
             Date d2=new Date(2021-1900,10,5);
-            MovieShow ms2=new MovieShow(m2,d2,th2,"19:00","21:00",60);
+            instant=d2.toInstant();
+            LocalDate localD2=instant.atZone(defaultZoneId).toLocalDate();
+            MovieShow ms2=new MovieShow(m2,localD2,th2,"19:00","21:00",60);
             m.AddMovieShow(ms2);
             session.save(ms2);
             session.flush();
@@ -302,7 +322,9 @@ public class SimpleServer extends AbstractServer {
             session.save(hall3);
             session.flush();
             Date d3=new Date(2021-1900,2,12);
-            MovieShow ms3=new MovieShow(m3,d3,th3,"12:00","14:00",40);
+            instant=d3.toInstant();
+            LocalDate localD3=instant.atZone(defaultZoneId).toLocalDate();
+            MovieShow ms3=new MovieShow(m3,localD3,th3,"12:00","14:00",40);
             m.AddMovieShow(ms3);
             session.save(ms3);
             session.flush();

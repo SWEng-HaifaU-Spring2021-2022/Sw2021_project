@@ -38,15 +38,14 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 			}
-			else if(tempmsg.getMsg().equals("movieShowsForMovie")) {
-				System.out.println("movie shows arrived:getting movie shows");
+			else if(tempmsg.getMsg().equals("Theaters Retrived")) {
+
 				Platform.runLater(()->{
-					obj=tempmsg.getObject();
 					CatalogController Catalog=new CatalogController();
-					ArrayList<MovieShow>MSL=(ArrayList<MovieShow>)obj;
+					ArrayList<Theater>TheatersList=(ArrayList<Theater>)tempmsg.getObject();
 					try {
 						System.out.println("Openning the edit Page");
-						Catalog.openEditPage();
+						Catalog.openEditPage(TheatersList);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -65,16 +64,7 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("an object have been updated");
 				Platform.runLater(()->{
 				});
-			}/*else if (tempmsg.getMsg().equals("getshowsdisplay")){
-				System.out.println("\nsdaad");
-				CatalogController catalog=new CatalogController();
-				System.out.println("\nsdaad");
-				catalog.displayscreeningtime((List<MovieShow>)tempmsg.getObject());
-				System.out.println("\nsdaad");
-				Platform.runLater(()->{
-				});
-			}*/
-
+			}
 		}
 
 

@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class MovieShow implements Serializable  {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movie_id")
 	private Movie movie;
-	private Date showDate;
+	private LocalDate showDate;
 	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "theater_id")
 	private Theater theater;
@@ -29,7 +30,7 @@ public class MovieShow implements Serializable  {
 	{
 
 	}
-	public MovieShow(Movie movie, Date showDate, Theater theater,String beginTime, String endTime,int maxNumber)
+	public MovieShow(Movie movie, LocalDate showDate, Theater theater,String beginTime, String endTime,int maxNumber)
 	{
 		setMovie(movie);
 		this.showDate = showDate;
@@ -50,10 +51,10 @@ public class MovieShow implements Serializable  {
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
-	public Date getShowDate() {
+	public LocalDate getShowDate() {
 		return showDate;
 	}
-	public void setShowDate(Date showDate) {
+	public void setShowDate(LocalDate showDate) {
 		this.showDate = showDate;
 	}
 	public Theater getTheater() {
@@ -82,10 +83,10 @@ public class MovieShow implements Serializable  {
 	}
 	@Override
 	public String toString(){
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		String strDate= formatter.format(showDate);
+		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String strDate=showDate.toString(); //formatter.format(showDate);
 		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
-		System.out.println(theater.getLocation());
+		//System.out.println(theater.getLocation());
 		return  str;
 	}
 }

@@ -1,4 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,13 +21,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import il.cshaifasweng.OCSFMediatorExample.entities.Hall;
-import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
-import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
-import il.cshaifasweng.OCSFMediatorExample.entities.Theater;
-import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
-import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
-import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import java.time.Instant;
 import java.time.ZoneId;
 
@@ -179,28 +173,39 @@ public class SimpleServer extends AbstractServer {
                 session.getTransaction().rollback();
             }
             System.out.println("MovieShow Deleted");
-            msgObject tempmsg=new msgObject("movieshowdeleted",null);
+            msgObject tempmsg= null;
             try {
-                // session.getTransaction().commit();
+                MovieShow ms=(MovieShow)msgObj.getObject();
+                tempmsg = getMovieShowsbyid(ms.getMovie().getMovieId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            tempmsg.setMsg("MovieShow Deleted");
+            session.close();
+            try {
                 client.sendToClient(tempmsg);
+                System.out.println("message sent to reopen edit page");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            session.close();
         }
     }
 
     private static msgObject getAllMovies() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<TheaterMovie> query = builder.createQuery(TheaterMovie.class);
-        query.from(TheaterMovie.class);
-        List<TheaterMovie> list= session.createQuery(query).getResultList();
-        for(TheaterMovie m:list){
-           List<MovieShow> temp= m.getMSList();
-           for (MovieShow ms:temp){
-               System.out.println(ms.getTheater());
+        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+        query.from(Movie.class);
+        List<Movie> list= session.createQuery(query).getResultList();
+        for(Movie m:list){
+            if (m.getClass().equals(TheaterMovie.class)){
+                TheaterMovie TM=(TheaterMovie)m;
+                List<MovieShow> temp= TM.getMSList();
+                for (MovieShow ms:temp){
+                    System.out.println(ms.getTheater());
 
-           }
+                }
+            }
+
         }
         msgObject msg=new msgObject("AllMovies",list);
         return msg;
@@ -256,6 +261,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(Theater.class);
         configuration.addAnnotatedClass(MovieShow.class);
         configuration.addAnnotatedClass(TheaterMovie.class);
+        configuration.addAnnotatedClass(HomeMovie.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -333,13 +339,21 @@ public class SimpleServer extends AbstractServer {
             ex.printStackTrace();
         }
     }
+    private static void addHomeMovie(){
+        String  actors= " Edward Asner,Jordan Nagai,John Ratzenberger";
+        String str="78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.";
+        String imgURL  = "https://upload.wikimedia.org/wikipedia/he/8/82/Up_Poster_Israel.jpg";
+        HomeMovie hm=new HomeMovie("Up","למעלה",actors,"Animation,Adventure,Comedy,Thriller",str,"Amazon",imgURL,"https://www.youtube.com/watch?v=ORFWdXl_zJ4",50);
+        session.save(hm);
+    }
 
     public static void test() {
         try {
             SessionFactory sessionFactory = getSessionFactory();
             session = sessionFactory.openSession();
             session.beginTransaction();
-            AddToDB();
+            //AddToDB();
+            addHomeMovie();
             session.getTransaction().commit(); // Save everything.
         } catch (Exception exception) {
             if (session != null) {
@@ -351,6 +365,26 @@ public class SimpleServer extends AbstractServer {
             if (session != null)
                 session.close();
         }
+    }
+    public static msgObject getAllMovies2() throws Exception {
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+        query.from(Movie.class);
+        List<Movie> list= session.createQuery(query).getResultList();
+        for(Movie m:list){
+            if (m.getClass().equals(TheaterMovie.class)){
+                System.out.println("it's a theater movie ");
+            }
+            /*List<MovieShow> temp= m.getMSList();
+            for (MovieShow ms:temp){
+                System.out.println(ms.getTheater());
+
+            }*/
+        }
+        msgObject msg=new msgObject("AllMovies",list);
+        return msg;
     }
 
 }

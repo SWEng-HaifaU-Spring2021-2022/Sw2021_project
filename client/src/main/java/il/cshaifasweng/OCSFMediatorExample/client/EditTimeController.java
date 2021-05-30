@@ -87,6 +87,7 @@ public class EditTimeController implements Initializable {
             e.printStackTrace();
         }
         System.out.println("message sent to server to remove the selcted moviesshows for a the DB");
+
     }
     @FXML
     void insertNewShow(ActionEvent event) {
@@ -252,8 +253,11 @@ public class EditTimeController implements Initializable {
             System.out.println("movie show list empty");
         }
     }
-   /* @FXML
-    void Get_Halls(MouseEvent event) {
+    public  void reloadTable(List<MovieShow> MSL){
+        data.clear();
+        data.addAll(MSL);
+        ShowTimeTable.getItems().setAll(data);
+        autoResizeColumns(ShowTimeTable);
+    }
 
-    }*/
 }

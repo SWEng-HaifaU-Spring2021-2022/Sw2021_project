@@ -59,6 +59,9 @@ public class SimpleClient extends AbstractClient {
 			}else if(tempmsg.getMsg().equals("MovieShow Deleted")){
 				System.out.println("an object have been deleted");
 				Platform.runLater(()->{
+					List<MovieShow> MSL=(List<MovieShow>) tempmsg.getObject();
+					EditTimeController EditController=new EditTimeController();
+					EditController.reloadTable(MSL);
 				});
 			}else if(tempmsg.getMsg().equals("movie show updated")){
 				System.out.println("an object have been updated");

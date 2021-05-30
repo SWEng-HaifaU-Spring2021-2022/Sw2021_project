@@ -38,32 +38,32 @@ import javafx.scene.*;
 
 public class CatalogController  implements Initializable {
 
-	ObservableList<TheaterMovie> list = FXCollections.observableArrayList();
+	ObservableList<Movie> list = FXCollections.observableArrayList();
 
 
 	@FXML // fx:id="homePage"
 	private Button homePage; // Value injected by FXMLLoader
 	@FXML // fx:id="MoviesTable"
-	private TableView<TheaterMovie> MoviesTable; // Value injected by FXMLLoader
+	private TableView<Movie> MoviesTable; // Value injected by FXMLLoader
 	@FXML // fx:id="imageCol"
-	private TableColumn<TheaterMovie, String> imageCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> imageCol; // Value injected by FXMLLoader
 	@FXML // fx:id="nameCol"
-	private TableColumn<TheaterMovie, String> nameCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> nameCol; // Value injected by FXMLLoader
 	@FXML // fx:id="hebName"
-	private TableColumn<TheaterMovie, String> hebName; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> hebName; // Value injected by FXMLLoader
 	@FXML // fx:id="actorsCol"
-	private TableColumn<TheaterMovie, String> actorsCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> actorsCol; // Value injected by FXMLLoader
 	@FXML // fx:id="GenerCol"
-	private TableColumn<TheaterMovie, String> GenerCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> GenerCol; // Value injected by FXMLLoader
 	@FXML // fx:id="descriptionCol"
-	private TableColumn<TheaterMovie, String> descriptionCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> descriptionCol; // Value injected by FXMLLoader
 	@FXML // fx:id="producerCol"
-	private TableColumn<TheaterMovie, String> producerCol; // Value injected by FXMLLoader
+	private TableColumn<Movie, String> producerCol; // Value injected by FXMLLoader
 	@FXML // fx:id="EditBtn"
 	private Button EditBtn; // Value injected by FXMLLoader
 	@FXML // fx:id="testLabel"
 	private Label testLabel; // Value injected by FXMLLoader
-	public static TheaterMovie selectedMovie=new TheaterMovie();
+	public static Movie selectedMovie=new TheaterMovie();
 	@FXML
 
 	void editMovieBtn(ActionEvent event) throws IOException {
@@ -72,16 +72,16 @@ public class CatalogController  implements Initializable {
 			return;
 		}
 		selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
-		msgObject msg=new msgObject("#getshows",MoviesTable.getSelectionModel().getSelectedItem().getMovieId());
+		msgObject msg=new msgObject("#getAllTheatres");
 		SimpleClient.getClient().sendToServer(msg);
-		System.out.println("message sent to server to get all moviesshows for a the selcted movie");
+		System.out.println("message sent to server to get all theaters ");
 	}
 
-	public void openEditPage() throws IOException {
+	public void openEditPage(List<Theater> TheatersList) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
 		Parent parent = loader.load();
 		EditTimeController controller = (EditTimeController) loader.getController();
-		controller.inflatUI(selectedMovie);
+		controller.inflatUI(selectedMovie,TheatersList);
 		Stage stage = new Stage();
 		stage.setTitle("Edit Movie");
 		stage.setScene(new Scene(parent));
@@ -103,11 +103,6 @@ public class CatalogController  implements Initializable {
 		}
 	}
 
-/*	private  void initTable()
-	{
-		MoviesTable.setFixedCellSize((double)MoviesTable.widthProperty().multiply(.35));
-		MoviesTable.cell
-	}*/
 
 	private  void initCol() {
 		try {
@@ -152,7 +147,7 @@ public class CatalogController  implements Initializable {
 	public void loadData(List<TheaterMovie> movieList) {
 		try {
 			list.clear();
-			for(TheaterMovie m: movieList) {
+			for(Movie m: movieList) {
 				list.add(m);
 			}
 		}
@@ -210,23 +205,37 @@ public class CatalogController  implements Initializable {
 		}
 		else{
 			selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
-			List<MovieShow>templist=selectedMovie.getMSList();
 			String str="";
 			str+="English Name: "+selectedMovie.getEngName()+"\n Hebrew Name: "+selectedMovie.getHebName()+"\n Actors: "+selectedMovie.getActors()+"\n genere: "+selectedMovie.getGenere()+"\n Description: "+selectedMovie.getDescription()+"\n";
-			for (MovieShow ms:templist){
-				if(ms.getTheater()!=null){
-					System.out.println(ms.getTheater().getLocation());
-				}else
-				{
-					System.out.println(" null");
+			if (selectedMovie.getClass().equals(TheaterMovie.class)){
+				TheaterMovie TM= (TheaterMovie)selectedMovie;
+				List<MovieShow>templist=TM.getMSList();
+				for (MovieShow ms:templist){
+					str+=ms.toString()+"\n";
 				}
-				str+=ms.toString()+ms.getTheater().getLocation() +"\n";
-
-
 			}
+			else if(selectedMovie.getClass().equals(HomeMovie.class)){
+				str+="Home Movie \n";
+			}
+			else{
+				str+="Coming soon ";
+			}
+
 			testLabel.setText(str);
 		}
 
 	}
-
+	public void openEditPageV2(List<Theater> TheatersList,TheaterMovie TM) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieTimeEdit.fxml"));
+		Parent parent = loader.load();
+		EditTimeController controller = (EditTimeController) loader.getController();
+		controller.inflatUI(selectedMovie,TheatersList);
+		Stage stage = new Stage();
+		stage.setTitle("Edit Movie");
+		stage.setScene(new Scene(parent));
+		stage.show();
+		stage.setOnHiding((e) -> {
+			handleRefresh(new ActionEvent());
+		});
+	}
 }

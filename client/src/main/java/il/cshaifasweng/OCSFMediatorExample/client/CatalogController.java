@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.Callback;
+
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.beans.value.ObservableValue;
@@ -22,11 +24,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputMethodEvent;
@@ -63,18 +60,38 @@ public class CatalogController  implements Initializable {
 	private Button EditBtn; // Value injected by FXMLLoader
 	@FXML // fx:id="testLabel"
 	private Label testLabel; // Value injected by FXMLLoader
-	public static Movie selectedMovie=new TheaterMovie();
-	@FXML
+	@FXML // fx:id="Delete_Btn"
+	private Button Delete_Btn; // Value injected by FXMLLoader
 
+	public static Movie selectedMovie=new TheaterMovie();
+
+	@FXML // fx:id="Price"
+	private TextField Price; // Value injected by FXMLLoader
+
+	@FXML // fx:id="requestBtn"
+	private Button requestBtn; // Value injected by FXMLLoader
+
+	@FXML // fx:id="message"
+	private Label message; // Value injected by FXMLLoader
+
+	@FXML // fx:id="AddMovieBtn"
+	private Button AddMovieBtn; // Value injected by FXMLLoader
+
+
+	@FXML
 	void editMovieBtn(ActionEvent event) throws IOException {
 		int index = MoviesTable.getSelectionModel().getSelectedIndex();
 		if (index <= -1) {
 			return;
 		}
 		selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
-		msgObject msg=new msgObject("#getAllTheatres");
-		SimpleClient.getClient().sendToServer(msg);
-		System.out.println("message sent to server to get all theaters ");
+		if(selectedMovie.getClass().equals(TheaterMovie.class)){
+			msgObject msg=new msgObject("#getAllTheatres");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all theaters ");
+		}else{
+			System.out.println("the movie isn't for screening");
+		}
 	}
 
 	public void openEditPage(List<Theater> TheatersList) throws IOException {
@@ -232,6 +249,81 @@ public class CatalogController  implements Initializable {
 		controller.inflatUI(selectedMovie,TheatersList);
 		Stage stage = new Stage();
 		stage.setTitle("Edit Movie");
+		stage.setScene(new Scene(parent));
+		stage.show();
+		stage.setOnHiding((e) -> {
+			handleRefresh(new ActionEvent());
+		});
+	}
+	@FXML
+	void deleteMovie(ActionEvent event) {
+		int index = MoviesTable.getSelectionModel().getSelectedIndex();
+		if (index <= -1) {
+			return;
+		}
+		selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+		msgObject msg=new msgObject("#deleteMovie");
+		msg.setObject(selectedMovie);
+		try {
+			/*Stage stage=(Stage)Delete_Btn.getScene().getWindow();
+			stage.close();;*/
+			SimpleClient.getClient().sendToServer(msg);
+			/*stage.setOnHiding((e) -> {
+				handleRefresh(new ActionEvent());
+			});*/
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@FXML
+	void sendRequest(ActionEvent event) throws IOException {
+		int index = MoviesTable.getSelectionModel().getSelectedIndex();
+		if (index <= -1) {
+			return;
+		}
+		selectedMovie=MoviesTable.getSelectionModel().getSelectedItem();
+		if(selectedMovie.getClass().equals(TheaterMovie.class)||selectedMovie.getClass().equals(HomeMovie.class)){
+			PriceRequest pr=new PriceRequest();
+			String description="change price request for '"+selectedMovie.getEngName()+"' movie";
+			if(Price.getText().isEmpty()){
+				message.setText("the field is empty");
+				return;
+			}
+			Integer newprice=Integer.parseInt(Price.getText());
+			if (selectedMovie.getClass().equals(TheaterMovie.class)){
+				TheaterMovie TM=(TheaterMovie) selectedMovie;
+				pr.setOldPrice(TM.getEntryPrice());
+				pr.setNewPrice(newprice);
+				pr.setDescription(description);
+			}
+			if (selectedMovie.getClass().equals(HomeMovie.class)){
+				HomeMovie HM=(HomeMovie) selectedMovie;
+				pr.setOldPrice(HM.getEntryprice());
+				pr.setNewPrice(newprice);
+				pr.setDescription(description);
+			}
+			pr.setMovieID(selectedMovie.getMovieId());
+			msgObject msg=new msgObject("#addPriceRequest",pr);
+			SimpleClient.getClient().sendToServer(msg);
+			Price.clear();
+		}else{
+			message.setText("this is a coming soon movie there is no price now");
+			return;
+		}
+
+	}
+	@FXML
+	void OpenAddPage(ActionEvent event) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("AddComingMovie.fxml"));
+		Parent parent = null;
+		try {
+			parent = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//AddComingMovie addmovie=(AddComingMovie)loader.getController();
+		Stage stage = new Stage();
+		stage.setTitle("add coming soon movie");
 		stage.setScene(new Scene(parent));
 		stage.show();
 		stage.setOnHiding((e) -> {

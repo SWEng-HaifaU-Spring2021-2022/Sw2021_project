@@ -52,21 +52,43 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 
-			}else if(tempmsg.getMsg().equals("newmovieShowadd")){
+			}
+			else if(tempmsg.getMsg().equals("newmovieShowadd")){
 				System.out.println("an object have been added");
 				Platform.runLater(()->{
 				});
-			}else if(tempmsg.getMsg().equals("MovieShow Deleted")){
+			}
+			else if(tempmsg.getMsg().equals("MovieShow Deleted")){
 				System.out.println("an object have been deleted");
 				Platform.runLater(()->{
 					List<MovieShow> MSL=(List<MovieShow>) tempmsg.getObject();
 					EditTimeController EditController=new EditTimeController();
 					EditController.reloadTable(MSL);
 				});
-			}else if(tempmsg.getMsg().equals("movie show updated")){
+			}
+			else if(tempmsg.getMsg().equals("movie show updated")){
 				System.out.println("an object have been updated");
 				Platform.runLater(()->{
 				});
+			}
+			else if(tempmsg.getMsg().equals("Movie deleted")){
+				System.out.println("Movie have been deleted");
+				Warning newwarning=new Warning("Movie have been deleted");
+				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+				RefreshCatalog();
+			}
+			else if(tempmsg.getMsg().equals("failed")){
+				Warning newwarning=new Warning("Some thing went wrong");
+				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			}
+			else if(tempmsg.getMsg().equals("a price request added")){
+				System.out.println("Price request have been added to the DB");
+				Warning newwarning=new Warning("The request successfully sent");
+				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			}
+			else if(tempmsg.getMsg().equals("movie added successfully")){
+				Warning newwarning=new Warning("movie added successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
 		}
 
@@ -79,5 +101,13 @@ public class SimpleClient extends AbstractClient {
 		}
 		return client;
 	}
-
+	private void RefreshCatalog(){
+		msgObject new_msg=new msgObject("#getAllMovies");
+		try {
+			SimpleClient.getClient().sendToServer(new_msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("message sent to server to refresh the catalog page");
+	}
 }

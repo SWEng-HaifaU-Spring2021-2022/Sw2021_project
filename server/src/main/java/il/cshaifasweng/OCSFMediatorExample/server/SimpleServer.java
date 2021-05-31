@@ -126,23 +126,60 @@ public class SimpleServer extends AbstractServer {
     }
 
 
-    private void change(msgObject msgObj, ConnectionToClient client)
-    {
+    private void change(msgObject msgObj, ConnectionToClient client) throws IOException {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
         session.beginTransaction();
         if(msgObj.getMsg().equals("#updateMovie")){
-            session.save((Movie)msgObj.getObject());
-            session.flush();
-        }
-        else if(msgObj.getMsg().equals("#addMovie")){
             session.update((Movie)msgObj.getObject());
             session.flush();
         }
-        else if (msgObj.getMsg().equals("#removeMovie"))
-        {
-            session.delete(((Movie)msgObj.getObject()));
+        else if(msgObj.getMsg().equals("#addMovie")){
+            session.save((Movie)msgObj.getObject());
             session.flush();
+            session.getTransaction().commit();;
+            System.out.println("a coming soon movie have been added");
+            msgObject answer_msg=new msgObject("movie added successfully");
+            try{
+                client.sendToClient(answer_msg);
+            } catch (IOException e) {
+                answer_msg.setMsg("failed");
+                client.sendToClient(answer_msg);
+                e.printStackTrace();
+            }
+        }
+        else if (msgObj.getMsg().equals("#deleteMovie"))
+        {
+            msgObject answer_msg=new msgObject();
+            try{
+                //TODO:check if it a theater movie
+                Movie m=(Movie)msgObj.getObject();
+                if(m.getClass().equals(TheaterMovie.class)){
+                    TheaterMovie TM=(TheaterMovie)m;
+                    for(MovieShow ms:TM.getMSList()){
+                        session.delete((ms));
+                    }
+                }
+                session.delete(((Movie)msgObj.getObject()));
+                session.flush();
+                session.getTransaction().commit(); // Save everything
+                answer_msg.setMsg("Movie deleted");
+                client.sendToClient(answer_msg);
+            }catch (Exception ex){
+                if (session != null) {
+                    session.getTransaction().rollback();
+                }
+                System.err.println("An error occurred, changes have been rolled back.");
+                 answer_msg.setMsg("failed");
+                try {
+                    client.sendToClient(answer_msg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ex.printStackTrace();
+
+            }
+
         }
         else if (msgObj.getMsg().equals("#addMovieShow"))
         {
@@ -189,6 +226,15 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
+        else if(msgObj.getMsg().equals("#addPriceRequest")) {
+            session.save(((PriceRequest)msgObj.getObject()));
+            session.flush();;
+            session.getTransaction().commit();;
+            System.out.println("a new price change request have been added");
+              msgObject answer_msg=new msgObject("a price request added",null);
+              client.sendToClient(answer_msg);
+        }
+
     }
 
     private static msgObject getAllMovies() throws Exception {
@@ -201,7 +247,8 @@ public class SimpleServer extends AbstractServer {
                 TheaterMovie TM=(TheaterMovie)m;
                 List<MovieShow> temp= TM.getMSList();
                 for (MovieShow ms:temp){
-                    System.out.println(ms.getTheater());
+                    ms.getTheater();
+                    //System.out.println();
 
                 }
             }
@@ -229,7 +276,8 @@ public class SimpleServer extends AbstractServer {
         for (Theater th:data){
             List<Hall>halls= th.getHalls();
             for (Hall h:halls){
-                System.out.println(h.getHallNumber());
+                h.getHallNumber();
+               // System.out.println();
             }
 
         }
@@ -262,6 +310,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(MovieShow.class);
         configuration.addAnnotatedClass(TheaterMovie.class);
         configuration.addAnnotatedClass(HomeMovie.class);
+        configuration.addAnnotatedClass(PriceRequest.class); 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -352,7 +401,7 @@ public class SimpleServer extends AbstractServer {
             SessionFactory sessionFactory = getSessionFactory();
             session = sessionFactory.openSession();
             session.beginTransaction();
-            //AddToDB();
+            AddToDB();
             addHomeMovie();
             session.getTransaction().commit(); // Save everything.
         } catch (Exception exception) {

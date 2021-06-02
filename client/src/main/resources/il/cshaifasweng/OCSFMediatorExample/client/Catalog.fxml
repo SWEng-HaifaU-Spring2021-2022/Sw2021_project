@@ -4,10 +4,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="671.0" prefWidth="1558.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CatalogController">
+<AnchorPane prefHeight="894.0" prefWidth="1332.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CatalogController">
    <children>
       <Button fx:id="homePage" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHomePage" text="Home" />
       <TableView fx:id="MoviesTable" layoutX="5.0" layoutY="68.0" onInputMethodTextChanged="#ShowScreeningTime" onMouseClicked="#ShowScreeningTime" prefHeight="346.0" prefWidth="792.0">
@@ -22,7 +23,13 @@
         </columns>
       </TableView>
       <Button fx:id="EditBtn" layoutX="14.0" layoutY="618.0" mnemonicParsing="false" onAction="#editMovieBtn" prefHeight="39.0" prefWidth="100.0" text="Edit" />
-      <Label fx:id="testLabel" layoutX="14.0" layoutY="440.0" prefHeight="178.0" prefWidth="1108.0" text="Label" />
+      <Label fx:id="testLabel" layoutX="14.0" layoutY="440.0" prefHeight="178.0" prefWidth="1108.0" />
       <Text layoutX="14.0" layoutY="436.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Movie Details:" />
+      <Button fx:id="Delete_Btn" layoutX="132.0" layoutY="618.0" mnemonicParsing="false" onAction="#deleteMovie" prefHeight="39.0" prefWidth="100.0" text="Delete" />
+      <TextField fx:id="Price" layoutX="18.0" layoutY="760.0" prefHeight="39.0" prefWidth="161.0" />
+      <Button fx:id="requestBtn" layoutX="204.0" layoutY="760.0" mnemonicParsing="false" onAction="#sendRequest" prefHeight="39.0" prefWidth="100.0" text="Send" />
+      <Label layoutX="18.0" layoutY="733.0" text="Send Price change request" />
+      <Label fx:id="message" layoutX="341.0" layoutY="771.0" prefHeight="17.0" prefWidth="262.0" textFill="RED" />
+      <Button fx:id="AddMovieBtn" layoutX="18.0" layoutY="678.0" mnemonicParsing="false" onAction="#OpenAddPage" prefHeight="39.0" prefWidth="117.0" text="Add a Movie" />
    </children>
 </AnchorPane>

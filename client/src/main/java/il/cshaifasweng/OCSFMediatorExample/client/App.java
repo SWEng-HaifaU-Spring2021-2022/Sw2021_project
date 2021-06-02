@@ -30,7 +30,7 @@ public class App extends Application {
         EventBus.getDefault().register(this);
         client = SimpleClient.getClient();
         client.openConnection();
-        scene = new Scene(loadFXML("primary"), 1280, 720);
+        scene = new Scene(loadFXML("primary"), 1400, 980);
         scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
@@ -56,7 +56,7 @@ public class App extends Application {
     @Subscribe
     public void onWarningEvent(WarningEvent event) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.WARNING,
+            Alert alert = new Alert(AlertType.INFORMATION,
                     String.format("Message: %s\nTimestamp: %s\n",
                             event.getWarning().getMessage(),
                             event.getWarning().getTime().toString())

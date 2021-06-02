@@ -85,7 +85,7 @@ public class MovieShow implements Serializable  {
 	public String toString(){
 		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		String strDate=showDate.toString(); //formatter.format(showDate);
-		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation();
+		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation()+"\n";
 		//System.out.println(theater.getLocation());
 		return  str;
 	}

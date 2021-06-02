@@ -31,7 +31,7 @@ public class TheaterMovie extends Movie implements Serializable  {
 	public List<MovieShow> getMSList() {
 		String str="";
 		for (MovieShow ms:this.MSList){
-			str+=ms.toString()+"\n";
+			str+=ms.toString();
 		}
 		return MSList;
 	}

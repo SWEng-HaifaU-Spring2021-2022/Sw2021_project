@@ -298,7 +298,7 @@ public class CatalogController  implements Initializable {
 			}
 			if (selectedMovie.getClass().equals(HomeMovie.class)){
 				HomeMovie HM=(HomeMovie) selectedMovie;
-				pr.setOldPrice(HM.getEntryprice());
+				pr.setOldPrice(HM.getEntryPrice());
 				pr.setNewPrice(newprice);
 				pr.setDescription(description);
 			}

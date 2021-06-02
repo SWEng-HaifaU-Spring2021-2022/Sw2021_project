@@ -23,7 +23,7 @@ public class HomeMovie extends Movie implements Serializable {
         Link = link;
     }
 
-    public int getEntryprice() {
+    public int getEntryPrice() {
         return entryprice;
     }
 

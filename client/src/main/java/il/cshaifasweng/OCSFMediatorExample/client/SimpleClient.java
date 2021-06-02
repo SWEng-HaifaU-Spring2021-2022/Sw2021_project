@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.event.ActionEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
@@ -25,13 +26,15 @@ public class SimpleClient extends AbstractClient {
 		msgObject temp=(msgObject)msg;
 		//System.out.println(temp.getMsg());
 		if(msg.getClass().equals(msgObject.class)) {
-			System.out.print("msg arrived");
+			System.out.println("msg arrived");
 			msgObject tempmsg=(msgObject)msg;
+			System.out.println(tempmsg.getMsg());
 			if(tempmsg.getMsg().equals("AllMovies")) {
 				Platform.runLater(()->{
 					try {
 						obj=tempmsg.getObject();
-						App.setRoot("Catalog");
+						//App.setRoot("Catalog");
+						App.setRoot("GridCatalog");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -41,11 +44,13 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("Theaters Retrived")) {
 
 				Platform.runLater(()->{
-					CatalogController Catalog=new CatalogController();
+					//CatalogController catalog=new CatalogController();
+					MovieGridController MovieGrid=new MovieGridController();
 					ArrayList<Theater>TheatersList=(ArrayList<Theater>)tempmsg.getObject();
 					try {
 						System.out.println("Openning the edit Page");
-						Catalog.openEditPage(TheatersList);
+						MovieGrid.openEditpage(TheatersList);
+						//catalog.openEditPage(TheatersList);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -56,19 +61,30 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("newmovieShowadd")){
 				System.out.println("an object have been added");
 				Platform.runLater(()->{
+					RefreshCatalog();
 				});
 			}
 			else if(tempmsg.getMsg().equals("MovieShow Deleted")){
 				System.out.println("an object have been deleted");
 				Platform.runLater(()->{
-					List<MovieShow> MSL=(List<MovieShow>) tempmsg.getObject();
+					MovieGridController MGC=new MovieGridController();
+					List<Theater>LT=(List<Theater>) tempmsg.getObject();
+					try {
+						RefreshCatalog();
+						System.out.println("before opening the edit page");
+						MGC.openEditpage(LT);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				/*	List<MovieShow> MSL=(List<MovieShow>) tempmsg.getObject();
 					EditTimeController EditController=new EditTimeController();
-					EditController.reloadTable(MSL);
+					//EditController.reloadTable(MSL);*/
 				});
 			}
 			else if(tempmsg.getMsg().equals("movie show updated")){
 				System.out.println("an object have been updated");
 				Platform.runLater(()->{
+					RefreshCatalog();
 				});
 			}
 			else if(tempmsg.getMsg().equals("Movie deleted")){
@@ -89,6 +105,24 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("movie added successfully")){
 				Warning newwarning=new Warning("movie added successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			}
+		}
+		if(msg.getClass().equals(AdvancedMsg.class)){
+			System.out.println("advanced message");
+			AdvancedMsg advMsg=new AdvancedMsg();
+			if(advMsg.getMsg().equals("MovieShow Deleted")){
+				Platform.runLater(()->{
+					List<Theater>TL=(List<Theater>) advMsg.getObjectList().get(0);
+					//List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
+					Movie movie=(Movie)advMsg.getObjectList().get(1);
+					MovieGridController MGC=new MovieGridController();
+					try {
+						MGC.reopenEditpage(TL,movie);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+
 			}
 		}
 

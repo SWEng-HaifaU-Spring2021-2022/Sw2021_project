@@ -9,10 +9,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 
 public class PrimaryController {
+	@FXML // fx:id="grid"
+	private Button grid; // Value injected by FXMLLoader
+
+	@FXML
+	void open_grid(ActionEvent event) throws IOException {
+		msgObject msg=new msgObject("#getAllMovies");
+		SimpleClient.getClient().sendToServer(msg);
+		System.out.println("message sent to server to get all movies");
+		//App.setRoot("GridCatalog");
+	}
 
 	@FXML
 	void sendWarning(ActionEvent event)  throws IOException {

@@ -9,6 +9,7 @@ import javafx.event.ActionEvent ;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -25,10 +26,11 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 public class EditTimeController implements Initializable {
-    private final ObservableList<MovieShow> data = FXCollections.observableArrayList();
+    private static final ObservableList<MovieShow> data = FXCollections.observableArrayList();
     private final ObservableList<Theater> theaterslist = FXCollections.observableArrayList();
     private final ObservableList<Hall> hallsList = FXCollections.observableArrayList();
     private  static Movie cur_Movie=null;
+
     @FXML // fx:id="ShowTimeTable"
     private TableView<MovieShow> ShowTimeTable; // Value injected by FXMLLoader
     @FXML // fx:id="showidCol"
@@ -83,6 +85,9 @@ public class EditTimeController implements Initializable {
         msgObject msg=new msgObject("#deleteMovieShow",ms);
         try {
             SimpleClient.getClient().sendToServer(msg);
+            Node node = (Node) event.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,10 +98,6 @@ public class EditTimeController implements Initializable {
     void insertNewShow(ActionEvent event) {
         String new_begin_time=insbegintime.getText();
         String new_end_time=insendtime.getText();
-      /*  int day=Integer.parseInt(insDay.getText());
-        int month=Integer.parseInt(insMn.getText());
-        int year=Integer.parseInt(insYear.getText())-1901;
-        Date date=new Date(year,month,day);*/
         Theater th=Theaters_List.getSelectionModel().getSelectedItem();
         LocalDate newLocalDate=NewScreening_Date.getValue();
         MovieShow newMS=new MovieShow(cur_Movie,newLocalDate,th,new_begin_time,new_end_time,40);
@@ -180,7 +181,9 @@ public class EditTimeController implements Initializable {
         ms.setBeginTime( beginTimeTbox.getText());
         ms.setEndTime(endTimeTbox.getText());
         ms.setShowDate(DatePicker_Update.getValue());
-        ms.setTheater(Theater_List_Update.getSelectionModel().getSelectedItem());
+        if(Theater_List_Update.getSelectionModel().getSelectedItem()!=null){
+            ms.setTheater(Theater_List_Update.getSelectionModel().getSelectedItem());
+        }
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
             SimpleClient.getClient().sendToServer(msg);
@@ -242,6 +245,7 @@ public class EditTimeController implements Initializable {
         TheaterMovie thMovie=(TheaterMovie) movie;
         if(thMovie.getMSList()!=null){
             List<MovieShow> list=thMovie.getMSList();
+            data.clear();
             for(MovieShow ms: list) {
                 data.add(ms);
             }
@@ -253,11 +257,6 @@ public class EditTimeController implements Initializable {
             System.out.println("movie show list empty");
         }
     }
-    public  void reloadTable(List<MovieShow> MSL){
-        data.clear();
-        data.addAll(MSL);
-        ShowTimeTable.getItems().setAll(data);
-        autoResizeColumns(ShowTimeTable);
-    }
+
 
 }

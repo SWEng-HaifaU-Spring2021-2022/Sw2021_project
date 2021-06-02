@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="410.0" prefWidth="593.0" style="-fx-border-color: black; -fx-border-width: 3px;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.MovieGridController">
+   <children>
+      <ImageView fx:id="MovieImage" fitHeight="268.0" fitWidth="223.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="EditBtn" layoutX="14.0" layoutY="298.0" mnemonicParsing="false" onAction="#EditBtn" text="Edit" />
+      <Button fx:id="DeleteBtn" layoutX="63.0" layoutY="298.0" mnemonicParsing="false" onAction="#DeleteMovie" text="Delete" />
+      <Button fx:id="sendBtn" layoutX="186.0" layoutY="355.0" mnemonicParsing="false" text="Send" />
+      <TextField fx:id="PriceField" layoutX="14.0" layoutY="355.0" />
+      <Label fx:id="priceRequestLabel" layoutX="14.0" layoutY="331.0" text="Send Price Change Request" />
+      <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ScrollPane layoutX="254.0" layoutY="254.0" prefHeight="113.0" prefWidth="333.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="170.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="descriptionLabel" layoutX="7.0" layoutY="6.0" text="Description" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <Label fx:id="ActorsLabel" layoutX="271.0" layoutY="51.0" text="Actors:" />
+      <Label fx:id="GenerLabel" layoutX="269.0" layoutY="75.0" text="Genre:" />
+      <Label fx:id="PriceLabel" layoutX="272.0" layoutY="100.0" text="Price:" />
+      <Label fx:id="ProducaerLabel" layoutX="271.0" layoutY="124.0" text="Producer:" />
+      <ScrollPane fx:id="screenPane" hbarPolicy="NEVER" layoutX="255.0" layoutY="160.0" prefHeight="81.0" prefWidth="326.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="325.0">
+               <children>
+                  <Label fx:id="ScreeningLabel" layoutX="11.0" text="Screening Time:" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

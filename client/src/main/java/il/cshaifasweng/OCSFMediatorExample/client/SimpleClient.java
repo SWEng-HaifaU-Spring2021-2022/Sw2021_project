@@ -33,7 +33,8 @@ public class SimpleClient extends AbstractClient {
         //System.out.println("message arrived");
         msgObject temp = (msgObject) msg;
         obj = temp;
-        if(temp.getMsg().startsWith("LIN")) ProceedLogIn();
+        if (temp.getMsg().startsWith("LIN")) ProceedLogIn();
+        if (temp.getMsg().startsWith("LOUT")) ProceedLogOut();
         //System.out.println(temp.getMsg());
         if (msg.getClass().equals(msgObject.class)) {
             System.out.println("msg arrived");
@@ -165,37 +166,44 @@ public class SimpleClient extends AbstractClient {
         msg.setObject(data);
         try {
             SimpleClient.getClient().sendToServer(msg);
-            }
-         catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             LogInScreenController.setRetVal(-1);
         }
     }
 
-    static void ProceedLogIn()
-    {
+    static void ProceedLogIn() {
         msgObject receivedMsg = (msgObject) obj;
         if (receivedMsg.getMsg().equals("LINUserFound")) {
             user = (User) receivedMsg.getObject();
             LogInScreenController.setRetVal(1);
         } else if (receivedMsg.getMsg().equals("LINUserNotFound")) LogInScreenController.setRetVal(0);
-        else LogInScreenController.setRetVal(-2);
+        else if (receivedMsg.getMsg().equals("LINAlreadyConnected")) LogInScreenController.setRetVal(-2);
+        else LogInScreenController.setRetVal(-3);
 
     }
 
-    static int RequestLogOut() {
+    static void RequestLogOut() {
         msgObject msg = new msgObject("TryLogOut");
-        if (user == null) return 0;
+        msg.setObject(user);
+        if (user == null) GridCatalogController.setRetVal(0);
         else try {
             SimpleClient.getClient().sendToServer(msg);
-            msg = (msgObject) obj;
-            if (msg.getMsg().equals("LoggedOut")) {
-                user = null;
-                return 1;
-            } else return -1;
         } catch (IOException e) {
             e.printStackTrace();
-            return -1;
+            GridCatalogController.setRetVal(-1);
         }
+
+    }
+
+    static void ProceedLogOut() {
+        msgObject msg = (msgObject) obj;
+        if (msg.getMsg().equals("LOUTLoggedOut")) {
+            user = null;
+            GridCatalogController.setRetVal(1);
+
+        } else if (msg.getMsg().equals("LOUTUnknownLogOutError"))
+            GridCatalogController.setRetVal(-1);
+
     }
 }

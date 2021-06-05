@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -50,9 +51,59 @@ public class GridCatalogController implements Initializable  {
     @FXML
     private Button addBtn;
 
+    @FXML
+    private Button LogBtn;
+
+    @FXML
+    private Label logInStatusLB;
+
+    static int retVal=10;
+
+    public static int getRetVal() {
+        return retVal;
+    }
+
+    public static void setRetVal(int retVal) {
+        GridCatalogController.retVal = retVal;
+    }
+
+
+
+    @FXML
+    void Log(ActionEvent event) {
+
+        try {
+            if (SimpleClient.getUser() == null) App.setRoot("LogInScreen");
+            else {
+                SimpleClient.RequestLogOut();
+                while (retVal==10){
+                    logInStatusLB.setText("Logging out.");
+                    logInStatusLB.setText("Logging out..");
+                    logInStatusLB.setText("Logging out...");
+                }
+                if(retVal==1) initialize(null, null);
+                else if(retVal==-1) logInStatusLB.setText("Couldn't log out! Please try again later.");
+                else if(retVal==0) logInStatusLB.setText("You are logged out already");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logInStatusLB.setText("An unknown error occurred! try again later.");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        pages = movieList.size()/4 + 1;
+        if(SimpleClient.getUser()!=null){
+            LogBtn.setText("Log Out");
+            logInStatusLB.setText("Logged in as: "+SimpleClient.getUser().getFirstName()+" "+SimpleClient.getUser().getLastName()+".");
+        }
+        else
+        {
+            addBtn.setVisible(false);
+            logInStatusLB.setText("");
+            LogBtn.setText("Log In");
+
+        }        pages = movieList.size()/4 + 1;
         // pagesLabel.setText("page " + page + " out of " + pages);
         Platform.runLater(() -> {
             CatalogGrid.getChildren().clear();

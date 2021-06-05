@@ -37,6 +37,11 @@ public class User implements Serializable {
         return userName;
     }
 
+    public boolean getConnected()
+    {
+        return this.isConnected;
+    }
+
     public boolean checkPassword(String plainPassword) {
         if (BCrypt.checkpw(plainPassword, this.password))
             return true;

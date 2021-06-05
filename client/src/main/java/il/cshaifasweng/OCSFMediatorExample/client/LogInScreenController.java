@@ -8,10 +8,7 @@ import java.util.concurrent.TimeUnit;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -38,6 +35,9 @@ public class LogInScreenController {
 
     private static int retVal = 10;
 
+    @FXML
+    private Hyperlink goHomeBtn;
+
     public int getRetVal() {
         return retVal;
     }
@@ -49,6 +49,15 @@ public class LogInScreenController {
     @FXML
     void onEnter(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) LogIn(null);
+    }
+
+    @FXML
+    void goHome(ActionEvent event) {
+        try {
+            App.setRoot("Catalog");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -78,7 +87,8 @@ public class LogInScreenController {
                     instructions.setTextFill(Color.color(0.7, 0, 0));
                     if(retVal==0)instructions.setText("Wrong username or password! please enter your credentials again.");
                     if(retVal==-1)instructions.setText("Server connection error! please try again later.");
-                    if(retVal==-2)instructions.setText("An unknown error has occurred! please try again later.");
+                    if(retVal==-2)instructions.setText("You are already connected! Log out to connect again.");
+                    if(retVal==-3)instructions.setText("An unknown error has occurred! please try again later.");
                 }
             }
         } catch (IOException e) {

@@ -322,27 +322,31 @@ public class SimpleServer extends AbstractServer {
         session = sessionFactory.openSession();
         String sqlQ = "FROM User U WHERE U.userName = :user_name";
         Query query = session.createQuery(sqlQ);
-        query.setParameter("user_name",userName);
+        query.setParameter("user_name", userName);
         List<User> list = query.list();
         if (!list.isEmpty()) {
             User user = list.get(0);
             if (user.checkPassword(password)) {
-                user.setConnected(true);
-                System.out.println(user.getFirstName() + " " + user.getLastName());
-                try {
-                    session.beginTransaction();
-                    session.update(user);
-                    session.getTransaction().commit(); // Save everything.
-                    msg.setObject(user);
-                    msg.setMsg("LINUserFound");
-                    System.out.println("LINUserFound");
-                } catch (HibernateException e) {
-                    if(session!=null)
-                        session.getTransaction().rollback();
-                    e.printStackTrace();
-                    msg.setMsg("LINUnknownLogInError");
+                if (user.getConnected()) msg.setMsg("LINAlreadyConnected");
+                else {
+                    user.setConnected(true);
+                    System.out.println(user.getFirstName() + " " + user.getLastName());
+                    try {
+                        session.beginTransaction();
+                        session.update(user);
+                        session.getTransaction().commit(); // Save everything.
+                        msg.setObject(user);
+                        msg.setMsg("LINUserFound");
+                        System.out.println("LINUserFound");
+                    } catch (HibernateException e) {
+                        if (session != null)
+                            session.getTransaction().rollback();
+                        e.printStackTrace();
+                        msg.setMsg("LINUnknownLogInError");
+                    }
                 }
             } else msg.setMsg("LINUserNotFound");
+
         } else msg.setMsg("LINUserNotFound");
 
 
@@ -351,25 +355,24 @@ public class SimpleServer extends AbstractServer {
 
     private static msgObject tryLogOut(User user) {
         msgObject msg = new msgObject("");
-        try {
-            user.setConnected(false);
-            SessionFactory sessionFactory = getSessionFactory();
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.update(user);
-            session.getTransaction().commit(); // Save everything.
-            msg.setMsg("LoggedOut");
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            msg.setMsg("UnknownLogOutError");
-        }
+            try {
+                user.setConnected(false);
+                SessionFactory sessionFactory = getSessionFactory();
+                session = sessionFactory.openSession();
+                session.beginTransaction();
+                session.update(user);
+                session.getTransaction().commit(); // Save everything.
+                msg.setMsg("LOUTLoggedOut");
+            } catch (HibernateException e) {
+                e.printStackTrace();
+                msg.setMsg("LOUTUnknownLogOutError");
+            }
 
         return msg;
     }
 
 
-
-        private static msgObject getMovieShowsbyid(int id) throws Exception {
+    private static msgObject getMovieShowsbyid(int id) throws Exception {
         System.out.println("getting movie shows");
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<MovieShow> query = builder.createQuery(MovieShow.class);

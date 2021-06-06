@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -82,7 +83,10 @@ public class LogInScreenController {
                 }
 
                 if (retVal==1){
-                    App.setRoot("Catalog");
+
+                    msgObject msg=new msgObject("#getAllMovies");
+                    SimpleClient.getClient().sendToServer(msg);
+                    System.out.println("message sent to server to get all movies");
                 } else{
                     instructions.setTextFill(Color.color(0.7, 0, 0));
                     if(retVal==0)instructions.setText("Wrong username or password! please enter your credentials again.");

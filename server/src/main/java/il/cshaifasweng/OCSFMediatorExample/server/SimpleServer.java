@@ -408,7 +408,7 @@ public class SimpleServer extends AbstractServer {
 
     public static void AddUsers() {
         try {
-            User user = new User("yaseen@gmail.com", "abcdefgh", "Yaseen", "Abd Elhaleem", 5);
+            User user = new User("Admin", "admin", "The", "Admin", 5);
             SessionFactory sessionFactory = getSessionFactory();
             session = sessionFactory.openSession();
             session.beginTransaction();

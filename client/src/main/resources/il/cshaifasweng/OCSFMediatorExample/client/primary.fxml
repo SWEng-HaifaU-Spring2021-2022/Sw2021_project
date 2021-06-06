@@ -8,7 +8,6 @@
 <VBox alignment="CENTER" prefHeight="216.0" prefWidth="396.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
       <Label text="Welcome You'r Connected" />
-      <Button mnemonicParsing="false" onAction="#sendWarning" text="Show movie catalog" />
       <Button fx:id="grid" mnemonicParsing="false" onAction="#open_grid" text="Grid" />
    </children>
    <padding>

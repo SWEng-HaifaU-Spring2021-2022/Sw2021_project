@@ -154,6 +154,7 @@ public class CatalogController  implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		handleRefresh(null);
 		initCol();
 		List<TheaterMovie>m= (List<TheaterMovie>)SimpleClient.obj;
 		loadData(m);

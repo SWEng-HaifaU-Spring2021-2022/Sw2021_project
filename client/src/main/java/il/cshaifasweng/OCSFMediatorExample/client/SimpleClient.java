@@ -15,7 +15,6 @@ import javafx.application.Platform;
 import javax.xml.catalog.Catalog;
 
 public class SimpleClient extends AbstractClient {
-
     private static SimpleClient client = null;
     public static Object obj = null;
     private static User user = null;
@@ -121,20 +120,22 @@ public class SimpleClient extends AbstractClient {
         if (msg.getClass().equals(AdvancedMsg.class)) {
             System.out.println("advanced message");
             AdvancedMsg advMsg = new AdvancedMsg();
-            if (advMsg.getMsg().equals("MovieShow Deleted")) {
-                Platform.runLater(() -> {
-                    List<Theater> TL = (List<Theater>) advMsg.getObjectList().get(0);
-                    //List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
-                    Movie movie = (Movie) advMsg.getObjectList().get(1);
-                    MovieGridController MGC = new MovieGridController();
-                    try {
-                        MGC.reopenEditpage(TL, movie);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+           	if(advMsg.getMsg().equals("MovieShow Deleted")||advMsg.getMsg().equals("newmovieShowadd")||advMsg.getMsg().equals("MovieShow Updated")){
+				System.out.println("advanced message2"+ advMsg.getMsg());
+				Platform.runLater(()->{
+					List<Theater>TL=(List<Theater>) advMsg.getObjectList().get(0);
+					//List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
+					Movie movie=(Movie)advMsg.getObjectList().get(1);
+					MovieGridController MGC=new MovieGridController();
+					try {
+						MGC.reopenEditpage(TL,movie);
+						RefreshCatalog();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
 
-            }
+			}
         }
 
 

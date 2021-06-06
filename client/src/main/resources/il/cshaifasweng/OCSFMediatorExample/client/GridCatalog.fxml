@@ -13,10 +13,12 @@
 
 <AnchorPane prefHeight="929.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.GridCatalogController">
    <children>
+
        <Button fx:id="searchBtn" layoutX="601.0" layoutY="14.0" mnemonicParsing="false" onAction="#search_Filter" text="search" />
       <Button fx:id="homeBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
+
       <Button fx:id="prevPageBtn" layoutX="389.0" layoutY="903.0" mnemonicParsing="false" onAction="#prevPage" text="Prev Page" />
-      <GridPane fx:id="CatalogGrid" hgap="10.0" layoutX="14.0" layoutY="77.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="817.0" prefWidth="1200.0" vgap="10.0">
+      <GridPane fx:id="CatalogGrid" hgap="10.0" layoutX="26.0" layoutY="97.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="798.0" prefWidth="1188.0" vgap="10.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -31,6 +33,7 @@
       </GridPane>
       <Button fx:id="nextPageBtn" layoutX="762.0" layoutY="903.0" mnemonicParsing="false" onAction="#nextPage" text="Next Page" />
       <Button fx:id="addBtn" layoutX="13.0" layoutY="903.0" mnemonicParsing="false" onAction="#addNewMovie" text="Add NEW MOVIE" />
+
        <DatePicker fx:id="firstDate" layoutX="122.0" layoutY="14.0" />
        <Text layoutX="82.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From :" />
        <DatePicker fx:id="lastDate" layoutX="374.0" layoutY="14.0" />
@@ -42,5 +45,6 @@
        <Label fx:id="pagesLabel" layoutX="557.0" layoutY="907.0" />
       <Button fx:id="LogBtn" layoutX="1149.0" layoutY="14.0" mnemonicParsing="false" onAction="#Log" text="Log In" />
       <Label fx:id="logInStatusLB" layoutX="975.0" layoutY="907.0" prefHeight="17.0" prefWidth="218.0" wrapText="true" />
+
    </children>
 </AnchorPane>

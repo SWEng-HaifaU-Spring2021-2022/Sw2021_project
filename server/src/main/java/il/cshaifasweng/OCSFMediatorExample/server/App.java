@@ -7,8 +7,10 @@ public class App
     public static void main( String[] args ) throws IOException
     {
         server = new SimpleServer(3000);
+
        // server.test();
         //server.AddUsers();
+
         server.listen();
         System.out.println("Server is up");
        /* System.out.println("a small test:");

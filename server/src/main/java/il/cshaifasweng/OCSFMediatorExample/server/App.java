@@ -8,6 +8,8 @@ public class App
     {
         server = new SimpleServer(3000);
         //server.test();
+        server.test();
+     //   server.AddUsers();
         server.listen();
         System.out.println("Server is up");
        /* System.out.println("a small test:");

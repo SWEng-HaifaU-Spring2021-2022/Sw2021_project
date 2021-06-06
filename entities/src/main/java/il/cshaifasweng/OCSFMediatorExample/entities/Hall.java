@@ -32,6 +32,7 @@ public class Hall implements Serializable {
 	{
 
 	}
+
 	public Hall(int capacity,Theater theater, int hallNumber)
 	{
 		this.capacity = capacity;
@@ -39,6 +40,7 @@ public class Hall implements Serializable {
 		setTheater(theater);
 		//this.seatsMatrix=new boolean[5][5];
 	}
+
 	public int gethallId() {
 		return hallId;
 	}

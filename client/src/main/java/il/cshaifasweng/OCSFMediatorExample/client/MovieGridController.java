@@ -72,7 +72,14 @@ public class MovieGridController {
         return this.movie;
     }
     public void setDisplay(){
-
+        if(SimpleClient.getUser()==null || (SimpleClient.getUser()!=null && SimpleClient.getUser().getPermission()<3))
+        {
+            EditBtn.setVisible(false);
+            DeleteBtn.setVisible(false);
+            sendBtn.setVisible(false);
+            PriceField.setVisible(false);
+            priceRequestLabel.setVisible(false);
+        }
         MovieTitle.setText(movie.getEngName()+'\\'+movie.getHebName());
         ActorsLabel.setText("Actors: "+movie.getActors());
         ProducaerLabel.setText("Producer "+ movie.getProducer());

@@ -40,5 +40,6 @@
       <Text layoutX="955.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Branch :" />
       <ChoiceBox fx:id="theaterBranch" layoutX="1005.0" layoutY="56.0" prefWidth="150.0" />
       <Label fx:id="pagesLabel" layoutX="557.0" layoutY="907.0" />
+
    </children>
 </AnchorPane>

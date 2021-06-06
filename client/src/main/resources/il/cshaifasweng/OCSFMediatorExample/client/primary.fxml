@@ -9,6 +9,7 @@
    <children>
       <Label text="Welcome You'r Connected" />
       <Button mnemonicParsing="false" onAction="#sendWarning" text="Show movie catalog" />
+      <Button fx:id="pricespage" mnemonicParsing="false" onAction="#openpricess" text="prices" />
       <Button fx:id="grid" mnemonicParsing="false" onAction="#open_grid" text="Grid" />
    </children>
    <padding>

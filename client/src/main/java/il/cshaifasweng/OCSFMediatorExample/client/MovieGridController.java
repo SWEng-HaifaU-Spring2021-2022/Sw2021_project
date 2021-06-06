@@ -72,7 +72,14 @@ public class MovieGridController {
         return this.movie;
     }
     public void setDisplay(){
-
+        if(SimpleClient.getUser()==null || (SimpleClient.getUser()!=null && SimpleClient.getUser().getPermission()<3))
+        {
+            EditBtn.setVisible(false);
+            DeleteBtn.setVisible(false);
+            sendBtn.setVisible(false);
+            PriceField.setVisible(false);
+            priceRequestLabel.setVisible(false);
+        }
         MovieTitle.setText(movie.getEngName()+'\\'+movie.getHebName());
         ActorsLabel.setText("Actors: "+movie.getActors());
         ProducaerLabel.setText("Producer "+ movie.getProducer());
@@ -149,6 +156,40 @@ public class MovieGridController {
             handleRefresh(new ActionEvent());
         });*/
     }
+    
+    @FXML
+    void sendRequest(ActionEvent event) throws IOException {
+        if(movie.getClass().equals(TheaterMovie.class)||movie.getClass().equals(HomeMovie.class)){
+            PriceRequest pr=new PriceRequest();
+            String description="change price request for '"+movie.getEngName()+"' movie";
+            if(PriceField.getText().isEmpty()){
+               /* message.setText("the field is empty");*/
+                return;
+            }
+            Integer newprice=Integer.parseInt(PriceField.getText());
+            if (movie.getClass().equals(TheaterMovie.class)){
+                TheaterMovie TM=(TheaterMovie) movie;
+                pr.setOldPrice(TM.getEntryPrice());
+                pr.setNewPrice(newprice);
+                pr.setDescription(description);
+            }
+            if (movie.getClass().equals(HomeMovie.class)){
+                HomeMovie HM=(HomeMovie) movie;
+                pr.setOldPrice(HM.getEntryPrice());
+                pr.setNewPrice(newprice);
+                pr.setDescription(description);
+            }
+            pr.setMovieID(movie.getMovieId());
+            msgObject msg=new msgObject("#addPriceRequest",pr);
+            SimpleClient.getClient().sendToServer(msg);
+            PriceField.clear();
+        }else{
+           /* message.setText("this is a coming soon movie there is no price now");*/
+            return;
+        }
+    }
+    
+    
     private void handleRefresh(ActionEvent actionEvent) {
         try {
             //SimpleClient.getClient().sendToServer("#warning");

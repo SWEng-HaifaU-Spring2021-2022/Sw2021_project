@@ -108,7 +108,15 @@ public class SimpleClient extends AbstractClient {
             } else if (tempmsg.getMsg().equals("movie added successfully")) {
                 Warning newwarning = new Warning("movie added successfully");
                 EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-            }
+            }else if(tempmsg.getMsg().equals("AllRequests")) {
+				            obj=tempmsg.getObject();
+				            try {
+				              	App.setRoot("contentmanagerPrices");
+			                	} catch (IOException e) {
+			              		// TODO Auto-generated catch block
+			                		e.printStackTrace();
+			                	}
+		      	}
         }
         if (msg.getClass().equals(AdvancedMsg.class)) {
             System.out.println("advanced message");

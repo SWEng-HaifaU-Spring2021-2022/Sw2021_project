@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PriceChangeController">
+   <children>
+      <TableView fx:id="priceTable" layoutX="14.0" layoutY="67.0" prefHeight="196.0" prefWidth="306.0">
+        <columns>
+          <TableColumn fx:id="oldPriceCol" prefWidth="75.0" text="old Price" />
+          <TableColumn fx:id="newPriceCol" prefWidth="75.0" text="new price" />
+            <TableColumn fx:id="descCol" prefWidth="73.0" text="description" />
+        </columns>
+      </TableView>
+      <Button fx:id="AcceptBtn" layoutX="12.0" layoutY="270.0" mnemonicParsing="false" onAction="#accept" text="Accept" />
+      <Button fx:id="RejectBtn" layoutX="100.0" layoutY="270.0" mnemonicParsing="false" onAction="#reject" text="Reject" />
+      <Button fx:id="Home" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
+   </children>
+</AnchorPane>

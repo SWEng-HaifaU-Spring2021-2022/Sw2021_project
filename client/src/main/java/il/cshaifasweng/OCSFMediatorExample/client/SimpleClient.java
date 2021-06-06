@@ -105,6 +105,16 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("movie added successfully")){
 				Warning newwarning=new Warning("movie added successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			} 
+			else if(tempmsg.getMsg().equals("AllRequests")) {
+				obj=tempmsg.getObject();
+				try {
+					App.setRoot("contentmanagerPrices");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		}
 		if(msg.getClass().equals(AdvancedMsg.class)){
@@ -131,7 +141,7 @@ public class SimpleClient extends AbstractClient {
 
 	public static SimpleClient getClient() {
 		if (client == null) {
-			client = new SimpleClient("localhost", 3000);
+			client = new SimpleClient("localhost", 6000);
 		}
 		return client;
 	}

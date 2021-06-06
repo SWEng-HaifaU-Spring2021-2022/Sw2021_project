@@ -93,6 +93,10 @@ public class SimpleServer extends AbstractServer {
             System.out.format("Sent movies Show of movies id "+id+" to client %s\n", client.getInetAddress().getHostAddress());
 
         }
+        else if(msgString.equals("#getAllPriceRequests")) {
+        	client.sendToClient(getAllRequests());
+            System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
+        }
     }
 
     private void update(msgObject msgObj, ConnectionToClient client)
@@ -106,6 +110,36 @@ public class SimpleServer extends AbstractServer {
                 change(msgObj, client);
                 session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
+                try {
+                    client.sendToClient(msgObj);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if(msgObj.getMsg().equals("#updatePrice")){
+                SessionFactory sessionFactory = getSessionFactory();
+                session = sessionFactory.openSession();
+                session.beginTransaction();
+                PriceRequest pr=(PriceRequest)msgObj.getObject();
+                Movie movie=getMovie(pr.getMovieID());
+                System.out.println(pr.getMovieID());
+                System.out.println(movie.getEngName());
+                if(movie.getClass().equals(TheaterMovie.class)) {
+                	TheaterMovie Tm=(TheaterMovie)movie;
+                	Tm.setEntryPrice(pr.getNewPrice());
+                	movie = Tm;
+                }else if(movie.getClass().equals(HomeMovie.class)){
+                	HomeMovie Hm = (HomeMovie)movie;
+                	Hm.setEntryprice(pr.getNewPrice());
+                	movie = Hm;
+                	
+                }
+                session.update(movie);
+                session.delete(pr);
+                session.flush();
+                session.getTransaction().commit(); // Save everything.
+                msgObj.setMsg("Price updated");
                 try {
                     client.sendToClient(msgObj);
                 } catch (IOException e) {
@@ -181,6 +215,16 @@ public class SimpleServer extends AbstractServer {
             }
 
         }
+        else if (msgObj.getMsg().equals("#deleteRequest")) {
+        	msgObject answer_msg = new msgObject();
+        	PriceRequest price = (PriceRequest)msgObj.getObject();
+        	session.delete((PriceRequest)msgObj.getObject());
+        	session.getTransaction().commit(); // Save everything
+            answer_msg.setMsg("PriceRequest deleted");
+            client.sendToClient(answer_msg);
+        	
+        }
+        
         else if (msgObj.getMsg().equals("#addMovieShow"))
         {
             session.save((MovieShow)msgObj.getObject());
@@ -264,6 +308,14 @@ public class SimpleServer extends AbstractServer {
         msgObject msg=new msgObject("AllMovies",list);
         return msg;
     }
+    private static msgObject getAllRequests() throws Exception {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<PriceRequest> query = builder.createQuery(PriceRequest.class);
+        query.from(PriceRequest.class);
+        List<PriceRequest> list= session.createQuery(query).getResultList();
+        msgObject msg=new msgObject("AllRequests",list);
+        return msg;
+    }
     private static Movie getMovie(int id) throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
@@ -279,6 +331,9 @@ public class SimpleServer extends AbstractServer {
                     }
                     return m;
                 }
+            }
+            else if(m.getMovieId() == id) {
+            	return m;
             }
 
         }

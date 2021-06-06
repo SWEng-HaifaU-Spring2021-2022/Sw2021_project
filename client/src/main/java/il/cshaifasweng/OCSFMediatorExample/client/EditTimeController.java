@@ -103,8 +103,10 @@ public class EditTimeController implements Initializable {
         MovieShow newMS=new MovieShow(cur_Movie,newLocalDate,th,new_begin_time,new_end_time,40);
         msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
-
             SimpleClient.getClient().sendToServer(msg);
+            Node node = (Node) event.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,6 +189,9 @@ public class EditTimeController implements Initializable {
         msgObject msg=new msgObject("#updateMovieShow",ms);
         try {
             SimpleClient.getClient().sendToServer(msg);
+            Node node = (Node) event.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

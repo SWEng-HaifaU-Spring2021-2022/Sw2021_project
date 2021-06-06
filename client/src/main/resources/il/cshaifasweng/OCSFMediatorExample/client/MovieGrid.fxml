@@ -13,7 +13,7 @@
       <ImageView fx:id="MovieImage" fitHeight="268.0" fitWidth="223.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="EditBtn" layoutX="14.0" layoutY="298.0" mnemonicParsing="false" onAction="#EditBtn" text="Edit" />
       <Button fx:id="DeleteBtn" layoutX="63.0" layoutY="298.0" mnemonicParsing="false" onAction="#DeleteMovie" text="Delete" />
-      <Button fx:id="sendBtn" layoutX="186.0" layoutY="355.0" mnemonicParsing="false" text="Send" />
+      <Button fx:id="sendBtn" layoutX="186.0" layoutY="355.0" mnemonicParsing="false" onAction="#sendRequest" text="Send" />
       <TextField fx:id="PriceField" layoutX="14.0" layoutY="355.0" />
       <Label fx:id="priceRequestLabel" layoutX="14.0" layoutY="331.0" text="Send Price Change Request" />
       <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title">

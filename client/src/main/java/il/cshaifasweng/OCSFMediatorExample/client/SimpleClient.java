@@ -22,10 +22,10 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		//System.out.println("message arrived");
-		msgObject temp=(msgObject)msg;
+		System.out.println(msg.getClass().toString());
 		//System.out.println(temp.getMsg());
 		if(msg.getClass().equals(msgObject.class)) {
+			msgObject temp=(msgObject)msg;
 			System.out.println("msg arrived");
 			msgObject tempmsg=(msgObject)msg;
 			System.out.println(tempmsg.getMsg());
@@ -107,10 +107,12 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
 		}
-		if(msg.getClass().equals(AdvancedMsg.class)){
+		 else if(msg.getClass().equals(AdvancedMsg.class)){
 			System.out.println("advanced message");
-			AdvancedMsg advMsg=new AdvancedMsg();
-			if(advMsg.getMsg().equals("MovieShow Deleted")){
+			AdvancedMsg advMsg=(AdvancedMsg)msg;
+			System.out.println("advanced message1");
+			if(advMsg.getMsg().equals("MovieShow Deleted")||advMsg.getMsg().equals("newmovieShowadd")||advMsg.getMsg().equals("MovieShow Updated")){
+				System.out.println("advanced message2"+ advMsg.getMsg());
 				Platform.runLater(()->{
 					List<Theater>TL=(List<Theater>) advMsg.getObjectList().get(0);
 					//List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
@@ -118,6 +120,7 @@ public class SimpleClient extends AbstractClient {
 					MovieGridController MGC=new MovieGridController();
 					try {
 						MGC.reopenEditpage(TL,movie);
+						RefreshCatalog();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

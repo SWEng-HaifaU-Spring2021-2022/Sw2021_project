@@ -126,7 +126,7 @@ public class SimpleServer extends AbstractServer {
     }
 
 
-    private void change(msgObject msgObj, ConnectionToClient client) throws IOException {
+    private void change(msgObject msgObj, ConnectionToClient client) throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
         session.beginTransaction();
@@ -186,10 +186,15 @@ public class SimpleServer extends AbstractServer {
             session.save((MovieShow)msgObj.getObject());
             session.flush();
             session.getTransaction().commit();
-            session.close();
             System.out.println("a new movie show added");
-            msgObject tempmsg=new msgObject("newmovieShowadd",null);
+            AdvancedMsg tempmsg=new AdvancedMsg("newmovieShowadd");
+            MovieShow ms=(MovieShow)msgObj.getObject();
+            int movieid=ms.getMovie().getMovieId();
+            tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
+            tempmsg.addobject(getMovie(movieid));
+            session.close();
             try {
+
                 client.sendToClient(tempmsg);
             } catch (IOException e) {
                 tempmsg.setMsg("failed");
@@ -201,9 +206,16 @@ public class SimpleServer extends AbstractServer {
         {
             session.update(((MovieShow)msgObj.getObject()));
             session.flush();
+            AdvancedMsg tempmsg= new AdvancedMsg("MovieShow Updated");
+            MovieShow ms=(MovieShow)msgObj.getObject();
+            int movieid=ms.getMovie().getMovieId();
+            tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
+            tempmsg.addobject(getMovie(movieid));
+            client.sendToClient(tempmsg);
         }
         else if (msgObj.getMsg().equals("#deleteMovieShow"))
         {
+            System.out.println("deleting a movie show");
             try{
                 session.delete(((MovieShow)msgObj.getObject()));
                 session.getTransaction().commit();

@@ -26,7 +26,7 @@ public class Hall implements Serializable {
 	private Theater theater;
 	private int capacity;
 	private int hallNumber;
-	//private boolean[][] seatsMatrix;
+	//private Seats seatsPlaces;
 
 	public Hall()
 	{
@@ -38,7 +38,8 @@ public class Hall implements Serializable {
 		this.capacity = capacity;
 		this.hallNumber = hallNumber;
 		setTheater(theater);
-		//this.seatsMatrix=new boolean[5][5];
+		int RowsNum= (int) Math.round (capacity/10.0);
+		//this.seatsPlaces= new Seats(capacity);
 	}
 
 	public int gethallId() {
@@ -67,4 +68,11 @@ public class Hall implements Serializable {
 		return String.valueOf(this.hallNumber);
 	}
 
+	/*public Seats getSeatsPlaces() {
+		return seatsPlaces;
+	}
+
+	public void setSeatsPlaces(Seats seatsPlaces) {
+		this.seatsPlaces = seatsPlaces;
+	}*/
 }

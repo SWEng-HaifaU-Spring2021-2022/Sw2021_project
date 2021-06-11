@@ -16,7 +16,7 @@
       <Button fx:id="sendBtn" layoutX="186.0" layoutY="355.0" mnemonicParsing="false" onAction="#sendRequest" text="Send" />
       <TextField fx:id="PriceField" layoutX="14.0" layoutY="355.0" />
       <Label fx:id="priceRequestLabel" layoutX="14.0" layoutY="331.0" text="Send Price Change Request" />
-      <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title">
+      <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title" wrapText="true">
          <font>
             <Font size="20.0" />
          </font>
@@ -25,23 +25,24 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="170.0" prefWidth="342.0">
                <children>
-                  <Label fx:id="descriptionLabel" layoutX="7.0" layoutY="6.0" text="Description" />
+                  <Label fx:id="descriptionLabel" layoutX="7.0" layoutY="6.0" text="Description" wrapText="true" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Label fx:id="ActorsLabel" layoutX="271.0" layoutY="51.0" text="Actors:" />
-      <Label fx:id="GenerLabel" layoutX="269.0" layoutY="75.0" text="Genre:" />
-      <Label fx:id="PriceLabel" layoutX="272.0" layoutY="100.0" text="Price:" />
-      <Label fx:id="ProducaerLabel" layoutX="271.0" layoutY="124.0" text="Producer:" />
+      <Label fx:id="ActorsLabel" layoutX="271.0" layoutY="51.0" text="Actors:" wrapText="true" />
+      <Label fx:id="GenerLabel" layoutX="269.0" layoutY="75.0" text="Genre:" wrapText="true" />
+      <Label fx:id="PriceLabel" layoutX="272.0" layoutY="100.0" text="Price:" wrapText="true" />
+      <Label fx:id="ProducaerLabel" layoutX="271.0" layoutY="124.0" text="Producer:" wrapText="true" />
       <ScrollPane fx:id="screenPane" hbarPolicy="NEVER" layoutX="255.0" layoutY="160.0" prefHeight="81.0" prefWidth="326.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="325.0">
                <children>
-                  <Label fx:id="ScreeningLabel" layoutX="11.0" text="Screening Time:" />
+                  <Label fx:id="ScreeningLabel" layoutX="11.0" text="Screening Time:" wrapText="true" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
+      <Button fx:id="BuyBtn" layoutX="126.0" layoutY="298.0" mnemonicParsing="false" onAction="#OpenBuyWindow" text="Buy Ticket" />
    </children>
 </AnchorPane>

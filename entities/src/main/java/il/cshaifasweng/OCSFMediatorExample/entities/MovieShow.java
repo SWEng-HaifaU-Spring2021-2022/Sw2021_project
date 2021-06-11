@@ -24,6 +24,11 @@ public class MovieShow implements Serializable  {
 	private Theater theater;
 	private String beginTime;
 	private String endTime;
+	//private int hallid;
+	@Lob
+	@Column(name = "seats",columnDefinition = "BLOB")
+	private Seats seats;
+	//private boolean[][]seats;
 	private int maxNumber;
 
 	public MovieShow()
@@ -38,12 +43,11 @@ public class MovieShow implements Serializable  {
 		this.beginTime = beginTime;
 		this.endTime = endTime;
 		this.maxNumber = maxNumber;
+		this.seats=new Seats(maxNumber);
+		//this.hallid=hallid;
 	}
 	public int getMovieShowId() {
 		return movieShowId;
-	}
-	public void setMovieShowId(int movieShowId) {
-		this.movieShowId = movieShowId;
 	}
 	public Movie getMovie() {
 		return movie;
@@ -88,5 +92,13 @@ public class MovieShow implements Serializable  {
 		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation()+"\n";
 		//System.out.println(theater.getLocation());
 		return  str;
+	}
+
+	public Seats getSeats() {
+		return seats;
+	}
+
+	public void setSeats(Seats seats) {
+		this.seats = seats;
 	}
 }

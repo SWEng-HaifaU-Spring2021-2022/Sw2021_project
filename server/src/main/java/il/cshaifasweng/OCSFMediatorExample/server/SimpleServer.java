@@ -493,6 +493,7 @@ public class SimpleServer extends AbstractServer {
 
     private static void AddToDB() {
         try {
+            System.out.println("Theater movie1");
             //Getting the default zone id
             ZoneId defaultZoneId = ZoneId.systemDefault();
 
@@ -518,6 +519,7 @@ public class SimpleServer extends AbstractServer {
             session.save(ms);
             session.flush();
             //___________________________________________________________________________________________
+            System.out.println("Theater movie2");
             String actors2 = " Lewis Tan,Jessica McNamee, Josh Lawson";
             String str2 = "MMA fighter Cole Young seeks out Earth's greatest champions in order to stand against the enemies of Outworld in a high stakes battle for the universe.";
             String imgURL2 = "https://m.media-amazon.com/images/M/MV5BY2ZlNWIxODMtN2YwZi00ZjNmLWIyN2UtZTFkYmZkNDQyNTAyXkEyXkFqcGdeQXVyODkzNTgxMDg@._V1_.jpg";
@@ -538,6 +540,7 @@ public class SimpleServer extends AbstractServer {
             session.save(ms2);
             session.flush();
             //________________________________________________________________________________________________________________
+            System.out.println("Theater movie3");
             String actors3 = " Chris Pratt,Yvonne Strahovski, J.K. Simmons";
             String str3 = "A man is drafted to fight in a future war where the fate of humanity relies on his ability to confront his past.";
             String imgURL3 = "https://images-na.ssl-images-amazon.com/images/I/81qDMksX4PS._RI_.jpg";
@@ -563,11 +566,13 @@ public class SimpleServer extends AbstractServer {
     }
 
     private static void addHomeMovie() {
+        System.out.println("home movie1");
         String actors = " Edward Asner,Jordan Nagai,John Ratzenberger";
         String str = "78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.";
         String imgURL = "https://upload.wikimedia.org/wikipedia/he/8/82/Up_Poster_Israel.jpg";
         HomeMovie hm = new HomeMovie("Up", "למעלה", actors, "Animation,Adventure,Comedy,Thriller", str, "Amazon", imgURL, "https://www.youtube.com/watch?v=ORFWdXl_zJ4", 50);
         session.save(hm);
+        System.out.println("home movie2");
     }
 
     public static void test() {

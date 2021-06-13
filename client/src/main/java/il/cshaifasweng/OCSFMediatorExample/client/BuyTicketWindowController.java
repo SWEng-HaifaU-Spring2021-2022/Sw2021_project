@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
@@ -63,6 +64,8 @@ public class BuyTicketWindowController {
 
     @FXML
     private Label seatInfoLabel;
+
+
 
     @FXML
     void BuyTicket(ActionEvent event) {//TODO: after adding the ticket entity
@@ -157,4 +160,5 @@ public class BuyTicketWindowController {
         System.out.println("setting the label");
         seatInfoLabel.setText(SeatInfo);
     }
+
 }

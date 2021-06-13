@@ -13,6 +13,7 @@ public class App
 
         server.listen();
         System.out.println("Server is up");
+        SchedulerSender.startJobScheduling();
        /* System.out.println("a small test:");
         try {
             SimpleServer.getAllMovies2();

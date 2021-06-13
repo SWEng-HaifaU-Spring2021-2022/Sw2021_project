@@ -127,6 +127,10 @@ public class SimpleClient extends AbstractClient {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+        else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
+				System.out.println("stam stam");
+				Warning newwarning = new Warning("Purchased successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
 		}
 		if (msg.getClass().equals(AdvancedMsg.class)) {

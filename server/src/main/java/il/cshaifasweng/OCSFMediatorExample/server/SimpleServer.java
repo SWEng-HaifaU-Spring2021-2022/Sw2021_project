@@ -109,6 +109,10 @@ public class SimpleServer extends AbstractServer {
         	client.sendToClient(getAllRequests());
             System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
         }
+        else if(msgString.equals("#getAllTickets")) {
+        	client.sendToClient(getAllTickets());
+            System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
+        }
     }
 
     private void update(msgObject msgObj, ConnectionToClient client) {
@@ -233,6 +237,16 @@ public class SimpleServer extends AbstractServer {
         	
         }
         
+        else if (msgObj.getMsg().equals("#deleteTicket")) {
+        	msgObject answer_msg = new msgObject();
+        	Ticket ticket2 = (Ticket)msgObj.getObject();
+        	session.delete((Ticket)msgObj.getObject());
+        	session.getTransaction().commit(); // Save everything
+            answer_msg.setMsg("Ticket deleted");
+            client.sendToClient(answer_msg);
+        	
+        }
+        
         else if (msgObj.getMsg().equals("#addMovieShow"))
         {
             session.save((MovieShow)msgObj.getObject());
@@ -326,6 +340,17 @@ public class SimpleServer extends AbstractServer {
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
+    
+    private static msgObject getAllTickets() throws Exception {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Ticket> query = builder.createQuery(Ticket.class);
+        query.from(Ticket.class);
+        List<Ticket> list = session.createQuery(query).getResultList();
+        msgObject msg = new msgObject("AllTickets", list);
+        return msg;
+    }
+    
+    
     private static msgObject getAllRequests() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<PriceRequest> query = builder.createQuery(PriceRequest.class);
@@ -471,6 +496,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(HomeMovie.class);
         configuration.addAnnotatedClass(PriceRequest.class);
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Ticket.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();

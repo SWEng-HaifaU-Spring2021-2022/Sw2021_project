@@ -119,6 +119,15 @@ public class SimpleClient extends AbstractClient {
 					e.printStackTrace();
 				}
 			}
+			else if (tempmsg.getMsg().equals("AllTickets")) {
+				obj = tempmsg.getObject();
+				try {
+					App.setRoot("CancelTicket");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		if (msg.getClass().equals(AdvancedMsg.class)) {
 			System.out.println("advanced message");

@@ -119,7 +119,15 @@ public class SimpleClient extends AbstractClient {
 					e.printStackTrace();
 				}
 			}
-			else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
+			else if (tempmsg.getMsg().equals("AllTickets")) {
+				obj = tempmsg.getObject();
+				try {
+					App.setRoot("CancelTicket");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
 				System.out.println("stam stam");
 				Warning newwarning = new Warning("Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));

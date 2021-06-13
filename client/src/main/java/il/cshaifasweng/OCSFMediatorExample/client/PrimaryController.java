@@ -27,6 +27,21 @@ public class PrimaryController {
 		System.out.println("message sent to server to get all movies");
 		//App.setRoot("GridCatalog");
 	}
+	
+    @FXML
+    private Button TicketCancel;
+
+    @FXML
+    void OpenCancel(ActionEvent event) {
+    	try {
+    		msgObject msg=new msgObject("#getAllTickets");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all Requests");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 	@FXML
 	void sendWarning(ActionEvent event)  throws IOException {

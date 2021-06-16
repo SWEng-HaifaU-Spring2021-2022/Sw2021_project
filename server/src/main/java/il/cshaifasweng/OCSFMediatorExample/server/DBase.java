@@ -48,7 +48,7 @@ public class DBase {
         ArrayList<HomeLinkTicket> data=(ArrayList<HomeLinkTicket>) session.createQuery(query).getResultList();
         ArrayList<HomeLinkTicket>wantedData=new ArrayList<>();
         for(HomeLinkTicket hlt:data){
-            if(hlt.getLinkDate().equals(LocalDate.now()))
+            if(hlt.getScreeningDate().equals(LocalDate.now()))
                 wantedData.add(hlt);
         }
         System.out.println(wantedData.size());

@@ -70,7 +70,7 @@ public class TicketCancelControl implements Initializable {
 
     @FXML
     void CancelBtn(ActionEvent event) {
-    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    	/*DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     	Ticket ticketSelected = CancelTable.getSelectionModel().getSelectedItem();
     	String ticketDate = ticketSelected.getMovieDate();
     	LocalDateTime date1 = LocalDateTime.parse(ticketDate, dtf);
@@ -96,7 +96,7 @@ public class TicketCancelControl implements Initializable {
 			e.printStackTrace();
 		}
        
-		showStage(toBuyer);
+		showStage(toBuyer);*/
     }
     
     public static void showStage(String Text1){
@@ -115,7 +115,7 @@ public class TicketCancelControl implements Initializable {
     	loadData();
     }
     void loadData() {
-	    System.out.println("load data");
+	   /* System.out.println("load data");
 		List<Ticket> ticketList=(List<Ticket>)SimpleClient.obj;
 		String text = EmailText.getText();
 		try {
@@ -130,7 +130,7 @@ public class TicketCancelControl implements Initializable {
 			ex.printStackTrace();
 		}
 		CancelTable.setItems(list);
-		autoResizeColumns(CancelTable);
+		autoResizeColumns(CancelTable);*/
     }
 	
     public void initCol() {

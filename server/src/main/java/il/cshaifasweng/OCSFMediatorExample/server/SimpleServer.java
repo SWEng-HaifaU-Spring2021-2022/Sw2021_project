@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import com.mysql.cj.xdevapi.Client;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -7,6 +8,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,6 +16,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.sql.Update;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -33,26 +36,46 @@ public class SimpleServer extends AbstractServer {
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-        msgObject msgObj = (msgObject) msg;
-        try {
-            if (msgObj.getMsg().equals("TryLogIn")) {
-                client.sendToClient(tryLogIn((String[]) msgObj.getObject()));
-            }
-            if (msgObj.getMsg().equals("TryLogOut")) {
-                client.sendToClient(tryLogOut((User) msgObj.getObject()));
-            }
+        if(msg.getClass().equals(msgObject.class)){
+            msgObject msgObj = (msgObject) msg;
+            try {
+                if (msgObj.getMsg().equals("TryLogIn")) {
+                    client.sendToClient(tryLogIn((String[]) msgObj.getObject()));
+                }
+                if (msgObj.getMsg().equals("TryLogOut")) {
+                    client.sendToClient(tryLogOut((User) msgObj.getObject()));
+                }
 
-            if (msgObj.getMsg().startsWith("#get")) {
-                get(msgObj, client);
+                if (msgObj.getMsg().startsWith("#get")) {
+                    get(msgObj, client);
+                }
+                if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
+                if (msgObj.getMsg().startsWith("#add")) {
+                    change(msgObj, client);
+                }
+                if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
-            if (msgObj.getMsg().startsWith("#add")) {
-                change(msgObj, client);
+        }else{
+            System.out.println("server received advanced message");
+            AdvancedMsg advcmsg=(AdvancedMsg)msg;
+            if(advcmsg.getMsg().equals("#addTicket")){
+                TheaterTicket theaterticket= (TheaterTicket) advcmsg.getObjectList().get(0);
+                msgObject msg2=new msgObject("#addTicket",theaterticket);
+                try {
+                    change(msg2,client);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+               /* MovieShow movieShow=(MovieShow) advcmsg.getObjectList().get(1);
+                msgObject msg1=new msgObject("#updateMovieShow",movieShow);
+                update(msg1,client);
+
+                */
             }
-            if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
 
@@ -112,7 +135,7 @@ public class SimpleServer extends AbstractServer {
     private void update(msgObject msgObj, ConnectionToClient client) {
         try {
 
-            if (msgObj.getMsg().equals("#updateMovieShow")) {
+            if (msgObj.getMsg().equals("#updateMovieShow")||msgObj.getMsg().equals("#updateMovieShowTicket")) {
                 SessionFactory sessionFactory = getSessionFactory();
                 session = sessionFactory.openSession();
                 session.beginTransaction();
@@ -120,7 +143,9 @@ public class SimpleServer extends AbstractServer {
                 session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
                 try {
-                    client.sendToClient(msgObj);
+                    if(msgObj.getMsg().equals("#updateMovieShow")){
+                        client.sendToClient(msgObj);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -326,6 +351,39 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(answer_msg);
                 e.printStackTrace();
             }
+        }else if(msgObj.getMsg().equals("#addTicket")){
+            TheaterTicket theaterTicket =(TheaterTicket)msgObj.getObject();
+            List<Seat> seatList=theaterTicket.getReservedSeats();
+            MovieShow ms=getMovieShowbyid(theaterTicket.getMovieShowid());
+            boolean isreservedflag=false;
+            for(Seat st:seatList){
+                System.out.println("Row= "+st.getSeatRow()+"Col ="+(st.getSeatCol()));
+                if(ms.getSeats().getSeatInfo(st.getSeatCol(),st.getSeatRow())==true){
+                    isreservedflag=true;
+                }else{
+                    ms.getSeats().ReserveSeat(st.getSeatCol(),st.getSeatRow());
+                }
+            }
+            if(isreservedflag==false){
+                session.save((TheaterTicket)msgObj.getObject());
+                session.flush();
+
+                for (Seat st:seatList){
+                    session.save(st);
+                    session.flush();
+                }
+                session.getTransaction().commit();
+                msgObject msg=new msgObject("#updateMovieShowTicket",ms);
+                update(msg,client);
+                EmailUtil.sendTheatetrTicketEmail(theaterTicket);
+                System.out.println("Theater ticket have been saved successfully to the data base");
+                msgObject answer_msg=new msgObject("Refresh");
+                client.sendToClient(msg);
+            }else{
+                msgObject msg=new msgObject("failed");
+                client.sendToClient(msg);
+            }
+
         }
 
     }
@@ -507,12 +565,17 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Ticket.class);
         configuration.addAnnotatedClass(HomeLinkTicket.class);
+        configuration.addAnnotatedClass(TheaterTicket.class);
+        configuration.addAnnotatedClass(Seat.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
         return configuration.buildSessionFactory(serviceRegistry);
     }
-
+    private MovieShow getMovieShowbyid(int id){
+        MovieShow ms=(MovieShow) session.get(MovieShow.class,id);
+        return ms;
+    }
     public static void AddUsers() {
         try {
             User user = new User("Admin", "admin", "The", "Admin", 5);
@@ -550,7 +613,7 @@ public class SimpleServer extends AbstractServer {
             Date d = new Date(2021 - 1900, 7, 11);
             instant = d.toInstant();
             LocalDate localD1 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms = new MovieShow(m, localD1, th, "20:00", "22:00", 40);
+            MovieShow ms = new MovieShow(m, localD1, th, "20:00", "22:00",String.valueOf(hall.getHallNumber()), hall.getCapacity());
             m.AddMovieShow(ms);
             session.save(ms);
             session.flush();
@@ -565,13 +628,13 @@ public class SimpleServer extends AbstractServer {
             Theater th2 = new Theater("Herzilya");
             session.save(th2);
             session.flush();
-            Hall hall2 = new Hall(40, th2, 1);
+            Hall hall2 = new Hall(50, th2, 1);
             session.save(hall2);
             session.flush();
             Date d2 = new Date(2021 - 1900, 10, 5);
             instant = d2.toInstant();
             LocalDate localD2 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms2 = new MovieShow(m2, localD2, th2, "19:00", "21:00", 60);
+            MovieShow ms2 = new MovieShow(m2, localD2, th2, "19:00", "21:00",String.valueOf(hall2.getHallNumber()), hall2.getCapacity());
             m.AddMovieShow(ms2);
             session.save(ms2);
             session.flush();
@@ -586,13 +649,13 @@ public class SimpleServer extends AbstractServer {
             Theater th3 = new Theater("Tel-Aviv");
             session.save(th3);
             session.flush();
-            Hall hall3 = new Hall(40, th3, 2);
+            Hall hall3 = new Hall(20, th3, 2);
             session.save(hall3);
             session.flush();
             Date d3 = new Date(2021 - 1900, 2, 12);
             instant = d3.toInstant();
             LocalDate localD3 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms3 = new MovieShow(m3, localD3, th3, "12:00", "14:00", 40);
+            MovieShow ms3 = new MovieShow(m3, localD3, th3, "12:00", "14:00",String.valueOf(hall3.getHallNumber()), hall3.getCapacity());
             m.AddMovieShow(ms3);
             session.save(ms3);
             session.flush();

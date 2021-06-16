@@ -133,6 +133,13 @@ public class SimpleClient extends AbstractClient {
 				Warning newwarning = new Warning("Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
+        else  if(tempmsg.getMsg().equals("Refresh")){
+				Warning newwarning = new Warning("Purchased successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+        	Platform.runLater(()->{
+        		RefreshCatalog();
+			});
+			}
 		}
 		if (msg.getClass().equals(AdvancedMsg.class)) {
 			System.out.println("advanced message");

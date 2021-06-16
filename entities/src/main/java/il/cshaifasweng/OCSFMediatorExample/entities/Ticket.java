@@ -4,102 +4,89 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="Ticket")
-public class Ticket implements Serializable {
-	private static final long serialVersionUID = -8224097662914849956L;
+public abstract class Ticket implements Serializable {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	int TicketNumber;
-	String OwnerName;
-	String Email;
-	int MovieID;
-	String HallNumber;
-	String SeatNumber;
-	String MovieDate;
-	int BuyerID;
-	
-	
-	public Ticket() {}
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	int ticketID;
+	String buyerEmail;
+	String movieName;
+	LocalDate screeningDate;
+	String buyerName;
+	String visaNumber;
+	String cvv;
+	int totalCost;
+	public Ticket(){}
 
-	public Ticket(int TicketNumber, String OwnerName, String Email, int MovieID, String HallNumber,
-			String SeatNumber, String MovieDate, int BuyerID) {
-		this.TicketNumber = TicketNumber;
-		this.OwnerName = OwnerName;
-		this.Email = Email;
-		this.MovieID = MovieID;
-		this.HallNumber = HallNumber;
-		this.SeatNumber = SeatNumber;
-		this.MovieDate = MovieDate;
-		this.BuyerID = BuyerID;
+	public Ticket(String buyerEmail, String movieName, LocalDate screeningDate, String buyerName, String visaNumber, String cvv) {
+		this.buyerEmail = buyerEmail;
+		this.movieName = movieName;
+		this.screeningDate = screeningDate;
+		this.buyerName = buyerName;
+		this.visaNumber = visaNumber;
+		this.cvv = cvv;
 	}
-	
-	public int getTicketNumber() {
-		return this.TicketNumber;
+
+
+	public int getTicketID() {
+		return ticketID;
 	}
-	
-	public String getOwnerName() {
-		return this.OwnerName;
+
+	public String getMovieName() {
+		return movieName;
 	}
-	
-	public String getEmail() {
-		return this.Email;
+
+	public void setMovieName(String movieName) {
+		this.movieName = movieName;
 	}
-	
-	public int getMovieID() {
-		return this.MovieID;
+
+	public LocalDate getScreeningDate() {
+		return screeningDate;
 	}
-	
-	public String getHallNumber() {
-		return this.HallNumber;
+
+	public void setScreeningDate(LocalDate screeningDate) {
+		this.screeningDate = screeningDate;
 	}
-	
-	public String getSeatNumber() {
-		return this.SeatNumber;
+
+	public String getBuyerName() {
+		return buyerName;
 	}
-	
-	public String getMovieDate() {
-		return this.MovieDate;
+
+	public void setBuyerName(String buyerName) {
+		this.buyerName = buyerName;
 	}
-	
-	public int getBuyerID() {
-		return this.BuyerID;
+
+	public String getVisaNumber() {
+		return visaNumber;
 	}
-	
-	
-	
-	
-	public void setTicketNumber(int TicketNumber) {
-		this.TicketNumber = TicketNumber;
+
+	public void setVisaNumber(String visaNumber) {
+		this.visaNumber = visaNumber;
 	}
-	
-	public void setOwnerName(String OwnerName) {
-		this.OwnerName = OwnerName;
+
+	public String getCvv() {
+		return cvv;
 	}
-	
-	public void setEmail(String Email) {
-		this.Email = Email;
+
+	public void setCvv(String cvv) {
+		this.cvv = cvv;
 	}
-	
-	public void setMovieID(int MovieID) {
-		this.MovieID = MovieID;
+
+	public String getBuyerEmail() {
+		return buyerEmail;
 	}
-	
-	public void setHallNumber(String HallNumber) {
-		this.HallNumber = HallNumber;
+
+	public void setBuyerEmail(String buyerEmail) {
+		this.buyerEmail = buyerEmail;
 	}
-	
-	public void setSeatNumber(String SeatNumber) {
-		this.SeatNumber = SeatNumber;
+	public int getTotalCost() {
+		return totalCost;
 	}
-	
-	public void setMovieDate(String MovieDate) {
-		this.MovieDate = MovieDate;
+
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
 	}
-	
-	public void setBuyerID(int BuyerID) {
-		this.BuyerID = BuyerID;
-	}
-	
 }

@@ -100,7 +100,8 @@ public class EditTimeController implements Initializable {
         String new_end_time=insendtime.getText();
         Theater th=Theaters_List.getSelectionModel().getSelectedItem();
         LocalDate newLocalDate=NewScreening_Date.getValue();
-        MovieShow newMS=new MovieShow(cur_Movie,newLocalDate,th,new_begin_time,new_end_time,40);
+        Hall hall=Hall_Insert.getValue();
+        MovieShow newMS=new MovieShow(cur_Movie,newLocalDate,th,new_begin_time,new_end_time,String.valueOf(hall.gethallId()),hall.getCapacity());
         msgObject msg=new msgObject("#addMovieShow",newMS);
         try {
             SimpleClient.getClient().sendToServer(msg);

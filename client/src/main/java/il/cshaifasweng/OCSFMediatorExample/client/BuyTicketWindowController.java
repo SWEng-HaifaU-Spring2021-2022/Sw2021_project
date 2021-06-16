@@ -2,7 +2,9 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
@@ -15,17 +17,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class BuyTicketWindowController {
-   // private TheaterMovie curtheaterMovie;
+    private TheaterMovie curtheaterMovie;
     static String SeatInfo;
+    private ArrayList<Seat>choosenSeats=new ArrayList<>();
     @FXML
     private ResourceBundle resources;
 
@@ -68,8 +68,25 @@ public class BuyTicketWindowController {
 
 
     @FXML
-    void BuyTicket(ActionEvent event) {//TODO: after adding the ticket entity
-
+    void BuyTicket(ActionEvent event) throws IOException {//TODO: after adding the ticket entity
+        String buyerName=BuyerNameText.getText();
+        String buyeremail=EmailTExt.getText();
+        LocalDate screeningDate=DatesList.getValue().getShowDate();
+        LocalTime startingTime=LocalTime.parse(DatesList.getValue().getBeginTime());
+        LocalTime endingTime=LocalTime.parse(DatesList.getValue().getEndTime());
+        String visaNumber=VisaText.getText();
+        String cvv=CvvText.getText();
+        String brach=DatesList.getValue().getTheater().getLocation();
+        String hall=DatesList.getValue().getHallnumber();
+        TheaterTicket theaterticket=new TheaterTicket(buyeremail,curtheaterMovie.getEngName(),screeningDate,buyerName,visaNumber,cvv,brach,hall,startingTime,endingTime,DatesList.getSelectionModel().getSelectedItem().getMovieShowId());
+        theaterticket.setReservedSeats(choosenSeats);
+        theaterticket.setTotalCost(choosenSeats.size()*curtheaterMovie.getEntryPrice());
+        AdvancedMsg advcmsg=new AdvancedMsg("#addTicket");
+        advcmsg.addobject(theaterticket);
+        advcmsg.addobject(DatesList.getValue());
+        //msgObject msg=new msgObject("#addTicket",theaterticket);
+        SimpleClient.getClient().sendToServer(advcmsg);
+        System.out.println("sending saving request to the server");
     }
 
     @FXML
@@ -86,7 +103,7 @@ public class BuyTicketWindowController {
 
     }
     public void setDetails(TheaterMovie theatermovie){
-       // curtheaterMovie=theatermovie;
+        curtheaterMovie=theatermovie;
         MovieNameLabel.setText(theatermovie.getEngName()+" / "+ theatermovie.getHebName());
         MovieImage.setImage(theatermovie.getImageProperty());
         TicketPriceLabel.setText(TicketPriceLabel.getText()+" :"+theatermovie.getEntryPrice());
@@ -99,6 +116,7 @@ public class BuyTicketWindowController {
     }
     @FXML
     void openMap(ActionEvent event) throws IOException {
+        //seatInfoLabel.setText("");
         /*FXMLLoader loader=new FXMLLoader(getClass().getResource(("SeatReservation.fxml")));
         Parent parent=loader.load();
         SeatReservationController controller=(SeatReservationController) loader.getController();*/
@@ -115,6 +133,7 @@ public class BuyTicketWindowController {
                 // rootGrid.getChildren().add(seats.getSeat(i,j));
             }
         }
+
         Scene scene=new Scene(rootGrid,500,500);
         Stage stage=new Stage();
         stage.setTitle("Hall Map");
@@ -125,40 +144,65 @@ public class BuyTicketWindowController {
         });
 
     }
-    public Button getSeat(Seats seats, int Row, int Col){
-        Button btn=new Button();
-        btn.setStyle("-fx-max-width: 300");
-        /*btn.setStyle( " -fx-padding: 5px;" +
-                "-fx-border-insets:5px;" +
-                "-fx-background-insets:5px;");*/
-        if(seats.getSeatInfo(Row,Col)==false) {
+
+    public void handelPickingSeat(ActionEvent actionEvent) {
+        System.out.println("setting the label");
+        String reservedSeats="";
+        for(Seat st:choosenSeats){
+            reservedSeats+=st.toString();
+        }
+        seatInfoLabel.setText(reservedSeats);
+    }
+    public CheckBox getSeat(Seats seats, int Row, int Col){//I fliped them by mistake
+        CheckBox CB=new CheckBox();
+        CB.setText("Row: "+Col+" Col: "+ Row);
+        if(seats.getSeatInfo(Col,Row)==false) {
+            if(choosenSeats.size()!=0){
+                for(Seat st:choosenSeats){
+                    if(st.getSeatCol()==Col&& st.getSeatRow()==Row){
+                        CB.setSelected(true);
+                        CB.setText("Row: "+Col+" Col: "+ Row+" selected");
+                    }
+                }
+            }
+            else{
+                CB.setSelected(false);
+                CB.setText("Row: "+Col+" Col: "+ Row);
+            }
             //System.out.println("not reserved");
-            btn.setText("Reserve");
-            btn.setStyle("-fx-fill:black; -fx-font-family: 'Material Icons'; -fx-font-size: 40.0;");
-            btn.setStyle("-fx-background-color:#34eb80");
         }
         else{
             // System.out.println("reserved");
-            btn.setText("Reserved");
-            btn.setStyle("-fx-background-color:red");
-            btn.setDisable(true);
+            CB.setSelected(true);
+            CB.setDisable(true);
+            CB.setText("Reserved");
         }
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        CB.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                BuyTicketWindowController.SeatInfo="Seat, Row: "+Row+" Col: "+Col ;
+                Seat seat=new Seat();
+                seat.setSeatCol(Col);
+                seat.setSeatRow(Row);
+                if(CB.isSelected()){
+                    choosenSeats.add(seat);
+                }else{
+                    for(Seat st:choosenSeats){
+                        if(seat.getSeatCol()==Col&&seat.getSeatRow()==Row){
+                            choosenSeats.remove(st);
+                            System.out.println(st.toString());
+                            System.out.println("Deleted");
+                            break;
+                        }
+                    }
+                }
+              /*  BuyTicketWindowController.SeatInfo="Seat, Row: "+Row+" Col: "+Col ;
                 System.out.println("Seat, Row: "+Row+" Col: "+Col);
                 Node node = (Node) event.getSource();
-                Stage thisStage = (Stage) node.getScene().getWindow();
-                thisStage.close();
+                Stage thisStage = (Stage) node.getScene().getWindow();*/
             }
         });
 
-        return  btn;
-    }
-    public void handelPickingSeat(ActionEvent actionEvent) {
-        System.out.println("setting the label");
-        seatInfoLabel.setText(SeatInfo);
+        return  CB;
     }
 
 }

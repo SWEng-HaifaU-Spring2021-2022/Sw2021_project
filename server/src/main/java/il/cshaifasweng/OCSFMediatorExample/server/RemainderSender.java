@@ -16,7 +16,7 @@ public class RemainderSender implements  Job {
         System.out.println("executing.....");
         ArrayList<HomeLinkTicket> hometickets= DBase.getHomeLinkTicket();
         for(HomeLinkTicket hlt:hometickets){
-            System.out.println(hlt.getBuyerEmail());
+            System.out.println(hlt.getBuyerName());
             LocalTime lt= LocalTime.now();
             System.out.println(lt);
             Long remainingtime=lt.until(hlt.getStartingTime(),MINUTES);

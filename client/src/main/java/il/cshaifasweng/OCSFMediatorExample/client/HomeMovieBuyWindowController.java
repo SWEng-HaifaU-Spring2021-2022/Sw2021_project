@@ -84,11 +84,12 @@ public class HomeMovieBuyWindowController {
         String visaNum=VisaText.getText();
         String cvv=CvvText.getText();
         LocalDate lD=linkDate.getValue();
-        LocalTime lt1=LocalTime.parse(startHour);
-        LocalTime lt2=LocalTime.parse(expirationHour);
-        System.out.println("lt1= "+ lt1);
-        System.out.println("lt2=" + lt2);
-        HomeLinkTicket HLT=new HomeLinkTicket(buyerName,buyerEmail,lD,lt1,lt2,visaNum,cvv,this.homeMovie.getEngName(),this.homeMovie.getLink());
+        LocalTime startingTime=LocalTime.parse(startHour);
+        LocalTime endingTime=LocalTime.parse(expirationHour);
+        System.out.println("lt1= "+ startingTime);
+        System.out.println("lt2=" + endingTime);
+        HomeLinkTicket HLT=new HomeLinkTicket(buyerEmail,homeMovie.getEngName(),lD,buyerName,visaNum,cvv,startingTime,endingTime,homeMovie.getLink());
+        HLT.setTotalCost(homeMovie.getEntryPrice());
         msgObject msg=new msgObject("#addHomeTicket",HLT);
         SimpleClient.getClient().sendToServer(msg);
         BuyerNameText.clear();

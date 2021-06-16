@@ -23,7 +23,7 @@ public class Seats implements Serializable {
         }
     }
     public void ReserveSeat(int Row,int Col){
-        seats[Row][Col]=true;
+        seats[Col][Row]=true;
     }
     public Button getSeat(int Row, int Col){
         Button btn=new Button();
@@ -59,7 +59,7 @@ public class Seats implements Serializable {
         return Rowsnum;
     }
     public boolean getSeatInfo(int Row,int Col){
-        return  seats[Row][Col];
+        return  seats[Col][Row];
     }
     public void setRowsnum(int rowsnum) {
         Rowsnum = rowsnum;

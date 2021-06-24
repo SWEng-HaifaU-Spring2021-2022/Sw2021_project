@@ -30,7 +30,6 @@ public class SimpleClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		// System.out.println("message arrived");
-		System.out.println(msg.getClass().toString());
 		if (msg.getClass().equals(msgObject.class)) {
 			msgObject temp = (msgObject) msg;
 			obj = temp;
@@ -52,7 +51,8 @@ public class SimpleClient extends AbstractClient {
 						e.printStackTrace();
 					}
 				});
-			} else if (tempmsg.getMsg().equals("Theaters Retrived")) {
+			}
+			else if (tempmsg.getMsg().equals("Theaters Retrived")) {
 
 				Platform.runLater(() -> {
 					// CatalogController catalog=new CatalogController();
@@ -68,12 +68,14 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 
-			} else if (tempmsg.getMsg().equals("newmovieShowadd")) {
+			}
+			else if (tempmsg.getMsg().equals("newmovieShowadd")) {
 				System.out.println("an object have been added");
 				Platform.runLater(() -> {
 					RefreshCatalog();
 				});
-			} else if (tempmsg.getMsg().equals("MovieShow Deleted")) {
+			}
+			else if (tempmsg.getMsg().equals("MovieShow Deleted")) {
 				System.out.println("an object have been deleted");
 				Platform.runLater(() -> {
 					MovieGridController MGC = new MovieGridController();
@@ -90,27 +92,48 @@ public class SimpleClient extends AbstractClient {
 					 * EditController=new EditTimeController(); //EditController.reloadTable(MSL);
 					 */
 				});
-			} else if (tempmsg.getMsg().equals("movie show updated")) {
+			}
+			else if (tempmsg.getMsg().equals("movie show updated")) {
 				System.out.println("an object have been updated");
 				Platform.runLater(() -> {
 					RefreshCatalog();
 				});
-			} else if (tempmsg.getMsg().equals("Movie deleted")) {
+			}
+			else if (tempmsg.getMsg().equals("Movie deleted")) {
 				System.out.println("Movie have been deleted");
 				Warning newwarning = new Warning("Movie have been deleted");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 				RefreshCatalog();
-			} else if (tempmsg.getMsg().equals("failed")) {
+			}
+			else if (tempmsg.getMsg().contains("failed")) {
 				Warning newwarning = new Warning("Some thing went wrong");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-			} else if (tempmsg.getMsg().equals("a price request added")) {
+				Platform.runLater(()->{
+					Movie tempmovie=(Movie) tempmsg.getObject();
+					if(tempmsg.getMsg().contains("failed to reserve")){
+						RefreshCatalog();
+						MovieGridController mgc=new MovieGridController();
+						mgc.setMovieGrid(tempmovie);
+						try {
+							System.out.println("opening the buying page");
+							mgc.movie=tempmovie;
+							mgc.reOpenBuyWindow();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+			else if (tempmsg.getMsg().equals("a price request added")) {
 				System.out.println("Price request have been added to the DB");
 				Warning newwarning = new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-			} else if (tempmsg.getMsg().equals("movie added successfully")) {
+			}
+			else if (tempmsg.getMsg().equals("movie added successfully")) {
 				Warning newwarning = new Warning("movie added successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-			} else if (tempmsg.getMsg().equals("AllRequests")) {
+			}
+			else if (tempmsg.getMsg().equals("AllRequests")) {
 				obj = tempmsg.getObject();
 				try {
 					App.setRoot("contentmanagerPrices");
@@ -129,20 +152,20 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
         else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
-				System.out.println("stam stam");
 				Warning newwarning = new Warning("Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
-        else  if(tempmsg.getMsg().equals("Refresh")){
-				Warning newwarning = new Warning("Purchased successfully");
+        else  if(tempmsg.getMsg().equals("purchased Successfully")){
+        	System.out.println("bla bla");
+				Warning newwarning = new Warning("TheaterMovie Ticket Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
         	Platform.runLater(()->{
+
         		RefreshCatalog();
 			});
 			}
 		}
 		if (msg.getClass().equals(AdvancedMsg.class)) {
-			System.out.println("advanced message");
 			AdvancedMsg advMsg = (AdvancedMsg)msg;
 			if (advMsg.getMsg().equals("MovieShow Deleted") || advMsg.getMsg().equals("newmovieShowadd")
 					|| advMsg.getMsg().equals("MovieShow Updated")) {

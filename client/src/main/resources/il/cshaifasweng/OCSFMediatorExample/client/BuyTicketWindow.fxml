@@ -8,38 +8,38 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="783.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyTicketWindowController">
+<AnchorPane prefHeight="891.0" prefWidth="569.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyTicketWindowController">
    <children>
-      <Label fx:id="MovieNameLabel" layoutX="21.0" layoutY="14.0" text="Movie Name" wrapText="true">
+      <Label fx:id="MovieNameLabel" layoutX="23.0" layoutY="70.0" text="Movie Name" wrapText="true">
          <font>
             <Font size="30.0" />
          </font>
       </Label>
-      <ImageView fx:id="MovieImage" fitHeight="200.0" fitWidth="200.0" layoutX="14.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="21.0" layoutY="281.0" text="Buyer Name" />
-      <TextField fx:id="BuyerNameText" layoutX="21.0" layoutY="309.0" />
-      <Label layoutX="21.0" layoutY="348.0" text="Email" />
-      <TextField fx:id="EmailTExt" layoutX="21.0" layoutY="379.0" />
-      <Label layoutX="22.0" layoutY="417.0" text="Choose Screening Date" />
-      <ChoiceBox fx:id="DatesList" layoutX="21.0" layoutY="444.0" prefWidth="150.0" />
-      <Label layoutX="22.0" layoutY="480.0" text="Choose Seat" />
-      <Label layoutX="21.0" layoutY="541.0" text="Visa Number" />
-      <TextField fx:id="VisaText" layoutX="21.0" layoutY="569.0" />
-      <Label layoutX="26.0" layoutY="611.0" text="Cvv" />
-      <TextField fx:id="CvvText" layoutX="22.0" layoutY="642.0" />
-      <Button layoutX="191.0" layoutY="711.0" mnemonicParsing="false" onAction="#BuyTicket" prefHeight="25.0" prefWidth="69.0" text="Buy" />
-      <Label fx:id="TicketPriceLabel" layoutX="225.0" layoutY="69.0" text="Ticket Price">
+      <ImageView fx:id="MovieImage" fitHeight="200.0" fitWidth="200.0" layoutX="16.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="23.0" layoutY="337.0" text="Buyer Name" />
+      <TextField fx:id="BuyerNameText" layoutX="23.0" layoutY="365.0" />
+      <Label layoutX="23.0" layoutY="404.0" text="Email" />
+      <TextField fx:id="EmailTExt" layoutX="23.0" layoutY="435.0" />
+      <Label layoutX="24.0" layoutY="473.0" text="Choose Screening Date" />
+      <ChoiceBox fx:id="DatesList" layoutX="23.0" layoutY="500.0" prefWidth="150.0" />
+      <Label layoutX="24.0" layoutY="536.0" text="Choose Seat" />
+      <Label layoutX="23.0" layoutY="597.0" text="Visa Number" />
+      <TextField fx:id="VisaText" layoutX="23.0" layoutY="625.0" />
+      <Label layoutX="28.0" layoutY="667.0" text="Cvv" />
+      <TextField fx:id="CvvText" layoutX="24.0" layoutY="698.0" />
+      <Button layoutX="235.0" layoutY="767.0" mnemonicParsing="false" onAction="#BuyTicket" prefHeight="25.0" prefWidth="69.0" text="Buy" />
+      <Label fx:id="TicketPriceLabel" layoutX="227.0" layoutY="125.0" text="Ticket Price">
          <font>
             <Font size="23.0" />
          </font>
       </Label>
-      <Button layoutX="21.0" layoutY="502.0" mnemonicParsing="false" onAction="#openMap" text="Choose a seat" />
-      <Label fx:id="messageLabel" layoutX="12.0" layoutY="736.0" textFill="RED">
+      <Button layoutX="23.0" layoutY="558.0" mnemonicParsing="false" onAction="#openMap" text="Choose a seat" />
+      <Label fx:id="messageLabel" layoutX="14.0" layoutY="792.0" textFill="RED">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="186.0" layoutY="506.0" text="Choosen Seats:" />
-      <Label fx:id="seatInfoLabel" layoutX="275.0" layoutY="506.0" />
+      <Label layoutX="188.0" layoutY="562.0" text="Choosen Seats:" />
+      <Label fx:id="seatInfoLabel" layoutX="277.0" layoutY="562.0" />
    </children>
 </AnchorPane>

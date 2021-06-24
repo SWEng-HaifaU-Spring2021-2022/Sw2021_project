@@ -15,11 +15,11 @@ public class MovieShow implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int movieShowId;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "movie_id")
 	private Movie movie;
 	private LocalDate showDate;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne( fetch = FetchType.EAGER)
 	@JoinColumn(name = "theater_id")
 	private Theater theater;
 	private String beginTime;

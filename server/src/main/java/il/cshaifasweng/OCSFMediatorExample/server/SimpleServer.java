@@ -135,7 +135,8 @@ public class SimpleServer extends AbstractServer {
     private void update(msgObject msgObj, ConnectionToClient client) {
         try {
 
-            if (msgObj.getMsg().equals("#updateMovieShow")||msgObj.getMsg().equals("#updateMovieShowTicket")) {
+            if (msgObj.getMsg().equals("#updateMovieShow")||msgObj.getMsg().equals("#updateMovieShowTicket")) {//TODO:Check it here
+                System.out.println(msgObj.getMsg());
                 SessionFactory sessionFactory = getSessionFactory();
                 session = sessionFactory.openSession();
                 session.beginTransaction();
@@ -143,7 +144,8 @@ public class SimpleServer extends AbstractServer {
                 session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
                 try {
-                    if(msgObj.getMsg().equals("#updateMovieShow")){
+                    if(msgObj.getMsg().equals("#updateMovieShow")&&(msgObj.getMsg().equals("#updateMovieShowTicket")==false)){
+                        System.out.println("sending updated movie show message");
                         client.sendToClient(msgObj);
                     }
                 } catch (IOException e) {
@@ -201,7 +203,8 @@ public class SimpleServer extends AbstractServer {
         if (msgObj.getMsg().equals("#updateMovie")) {
             session.update((Movie) msgObj.getObject());
             session.flush();
-        } else if (msgObj.getMsg().equals("#addMovie")) {
+        }
+        else if (msgObj.getMsg().equals("#addMovie")) {
             session.save((Movie) msgObj.getObject());
             session.flush();
             session.getTransaction().commit();
@@ -214,7 +217,8 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(answer_msg);
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#deleteMovie")) {
+        }
+        else if (msgObj.getMsg().equals("#deleteMovie")) {
             msgObject answer_msg = new msgObject();
             try {
                 //TODO:check if it a theater movie
@@ -287,7 +291,8 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(tempmsg);
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#updateMovieShow")) {
+        }
+        else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
             session.update(((MovieShow) msgObj.getObject()));
             session.flush();
             AdvancedMsg tempmsg= new AdvancedMsg("MovieShow Updated");
@@ -295,6 +300,7 @@ public class SimpleServer extends AbstractServer {
             int movieid=ms.getMovie().getMovieId();
             tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
             tempmsg.addobject(getMovie(movieid));
+            System.out.println("problem maker?");
             client.sendToClient(tempmsg);
         }
         else if (msgObj.getMsg().equals("#deleteMovieShow"))
@@ -327,20 +333,22 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#addPriceRequest")) {
+        }
+        else if (msgObj.getMsg().equals("#addPriceRequest")) {
             session.save(((PriceRequest) msgObj.getObject()));
             session.flush();
             session.getTransaction().commit();
             System.out.println("a new price change request have been added");
             msgObject answer_msg = new msgObject("a price request added", null);
             client.sendToClient(answer_msg);
-        }else if(msgObj.getMsg().equals("#addHomeTicket")){
+        }
+        else if(msgObj.getMsg().equals("#addHomeTicket")){
             try {
                 HomeLinkTicket HLT=(HomeLinkTicket)msgObj.getObject();
                 session.save((HomeLinkTicket)msgObj.getObject());
                 session.flush();
                 session.getTransaction().commit();
-                System.out.println("home movie ticket have been buyed");
+                System.out.println("home movie ticket have been bought");
                 msgObject answer_msg=new msgObject("HomeMoviePurchasedSuccessfully",null);
                 client.sendToClient(answer_msg);
                 EmailUtil.sendEmailHomeTicket(HLT );
@@ -351,7 +359,8 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(answer_msg);
                 e.printStackTrace();
             }
-        }else if(msgObj.getMsg().equals("#addTicket")){
+        }
+        else if(msgObj.getMsg().equals("#addTicket")){
             TheaterTicket theaterTicket =(TheaterTicket)msgObj.getObject();
             List<Seat> seatList=theaterTicket.getReservedSeats();
             MovieShow ms=getMovieShowbyid(theaterTicket.getMovieShowid());
@@ -377,10 +386,14 @@ public class SimpleServer extends AbstractServer {
                 update(msg,client);
                 EmailUtil.sendTheatetrTicketEmail(theaterTicket);
                 System.out.println("Theater ticket have been saved successfully to the data base");
-                msgObject answer_msg=new msgObject("Refresh");
-                client.sendToClient(msg);
+                msgObject answer_msg=new msgObject("purchased Successfully");
+                client.sendToClient(answer_msg);
+                System.out.println("sending confirmation");
             }else{
-                msgObject msg=new msgObject("failed");
+
+                msgObject msg=new msgObject("failed to reserve");
+                Movie m=getMovie(ms.getMovie().getMovieId());
+                msg.setObject(m);
                 client.sendToClient(msg);
             }
 
@@ -443,6 +456,14 @@ public class SimpleServer extends AbstractServer {
                 }
             }
             else if(m.getMovieId() == id) {
+                if(m.getClass().equals(TheaterMovie.class)){
+                    TheaterMovie TH=(TheaterMovie) m;
+                   List<MovieShow>msl= TH.getMSList();
+                   for (MovieShow ms:msl){
+                       ms.getMovie();
+                       ms.getTheater();
+                   }
+                }
             	return m;
             }
 

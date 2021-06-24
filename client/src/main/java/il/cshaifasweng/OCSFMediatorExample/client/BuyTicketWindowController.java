@@ -14,18 +14,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class BuyTicketWindowController {
     private TheaterMovie curtheaterMovie;
     static String SeatInfo;
     private ArrayList<Seat>choosenSeats=new ArrayList<>();
+   // public static Stage mapStage;
     @FXML
     private ResourceBundle resources;
 
@@ -87,6 +91,9 @@ public class BuyTicketWindowController {
         //msgObject msg=new msgObject("#addTicket",theaterticket);
         SimpleClient.getClient().sendToServer(advcmsg);
         System.out.println("sending saving request to the server");
+       Stage thisStage = (Stage) MovieNameLabel.getScene().getWindow();
+       thisStage.close();
+
     }
 
     @FXML
@@ -125,19 +132,38 @@ public class BuyTicketWindowController {
             return;
         }
         GridPane rootGrid=new GridPane();
+        VBox MapButtons = new VBox(50);
 
         Seats seats=DatesList.getSelectionModel().getSelectedItem().getSeats();
-        for(int i=0;i<10;++i){
-            for (int j=0;j<seats.getRowsnum();++j){
-                rootGrid.add(getSeat(seats,i,j),i,j);
-                // rootGrid.getChildren().add(seats.getSeat(i,j));
+        for (int i=0;i<seats.getRowsnum();++i){
+            HBox ButtonRow=new HBox(50);
+            for(int j=0;j<10;++j){
+                ButtonRow.getChildren().add(getSeat2(seats,j,i));
             }
+            MapButtons.getChildren().add(ButtonRow);
         }
-
+        HBox closingbtnHbox=new HBox(50);
+        Button closingbtn=new Button();
+        closingbtn.setText("close Hall Map");
+        closingbtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage thisStage = (Stage)  closingbtn.getScene().getWindow();
+                thisStage.close();
+            }
+        });
+        closingbtnHbox.getChildren().add(closingbtn);//adding the close button to the last row
+        closingbtnHbox.setAlignment(Pos.CENTER);
+        MapButtons.getChildren().add(closingbtnHbox);
+        rootGrid.getChildren().add(MapButtons);
+        rootGrid.setAlignment(Pos.CENTER);
+        //opening the map
         Scene scene=new Scene(rootGrid,500,500);
         Stage stage=new Stage();
         stage.setTitle("Hall Map");
         stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.setFullScreen(true);
         stage.show();
         stage.setOnHiding((e) -> {
             handelPickingSeat(new ActionEvent());
@@ -153,7 +179,7 @@ public class BuyTicketWindowController {
         }
         seatInfoLabel.setText(reservedSeats);
     }
-    public CheckBox getSeat(Seats seats, int Row, int Col){//I fliped them by mistake
+   /* public CheckBox getSeat(Seats seats, int Row, int Col){//I fliped them by mistake
         CheckBox CB=new CheckBox();
         CB.setText("Row: "+Col+" Col: "+ Row);
         if(seats.getSeatInfo(Col,Row)==false) {
@@ -195,14 +221,68 @@ public class BuyTicketWindowController {
                         }
                     }
                 }
-              /*  BuyTicketWindowController.SeatInfo="Seat, Row: "+Row+" Col: "+Col ;
+              *//*  BuyTicketWindowController.SeatInfo="Seat, Row: "+Row+" Col: "+Col ;
                 System.out.println("Seat, Row: "+Row+" Col: "+Col);
                 Node node = (Node) event.getSource();
-                Stage thisStage = (Stage) node.getScene().getWindow();*/
+                Stage thisStage = (Stage) node.getScene().getWindow();*//*
             }
         });
 
         return  CB;
-    }
+    }*/
+    public Button getSeat2(Seats seats, int Row, int Col){//I fliped them by mistake
+        Button btn=new Button();
+        btn.setMinWidth(133);
+        btn.setMinHeight(25);
+        btn.setText("Row: "+Col+" Col: "+ Row);
+        if(seats.getSeatInfo(Col,Row)==false) {
+            btn.setText("Row: "+Col+" Col: "+ Row);
+            btn.setStyle("-fx-background-color: #34eb6e; ");
+            if(choosenSeats.size()!=0){
+                for(Seat st:choosenSeats){
+                    if(st.getSeatCol()==Col&& st.getSeatRow()==Row){
+                        btn.setStyle("-fx-background-color: #ebc934; ");
+                        btn.setText("Row: "+Col+" Col: "+ Row+" selected");
+                    }
+                }
+            }
+            else{
+                btn.setText("Row: "+Col+" Col: "+ Row);
+                btn.setStyle("-fx-background-color: #34eb6e; ");
+            }
+        }
+        else{
+            // System.out.println("reserved");
 
+            btn.setDisable(true);
+            btn.setStyle("-fx-background-color: #eb5f34; ");
+            btn.setText("Reserved");
+        }
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Seat seat=new Seat();
+                seat.setSeatCol(Col);
+                seat.setSeatRow(Row);
+                if(btn.getText().contains("selected")){
+                    btn.setText("Row: "+Col+" Col: "+ Row);
+                    btn.setStyle("-fx-background-color: #34eb6e; ");
+                    for(Seat st:choosenSeats) {
+                        if (seat.getSeatCol() == Col && seat.getSeatRow() == Row) {
+                            choosenSeats.remove(st);
+                            System.out.println(st.toString());
+                            System.out.println("Deleted");
+                            break;
+                        }
+                    }
+                }else{
+                    choosenSeats.add(seat);
+                    btn.setStyle("-fx-background-color: #ebc934; ");
+                    btn.setText("Row: "+Col+" Col: "+ Row+" selected");
+                }
+            }
+        });
+
+        return  btn;
+    }
 }

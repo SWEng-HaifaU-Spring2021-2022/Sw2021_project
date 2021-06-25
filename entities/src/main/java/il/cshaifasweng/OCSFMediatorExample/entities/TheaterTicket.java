@@ -14,7 +14,7 @@ public class TheaterTicket extends  Ticket implements Serializable {
     String hall;
     LocalTime startingTime;
     LocalTime endingTime;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ticket")
     List<Seat>reservedSeats;
     int movieShowid;
     public TheaterTicket(){}
@@ -26,6 +26,7 @@ public class TheaterTicket extends  Ticket implements Serializable {
         this.endingTime = endingTime;
         this.reservedSeats = new ArrayList<>();
         this.movieShowid=movieShowid;
+        this.reservedSeats=new ArrayList<>();
     }
 
     public String getBranch() {
@@ -65,7 +66,10 @@ public class TheaterTicket extends  Ticket implements Serializable {
     }
 
     public void setReservedSeats(List<Seat> reservedSeats) {
-        this.reservedSeats = reservedSeats;
+        for (Seat st:reservedSeats){
+            this.reservedSeats.add(st);
+            st.setTicket(this);
+        }
     }
 
     public int getMovieShowid() {
@@ -74,5 +78,19 @@ public class TheaterTicket extends  Ticket implements Serializable {
 
     public void setMovieShowid(int movieShowid) {
         this.movieShowid = movieShowid;
+    }
+
+    @Override
+    public String toString(){
+        String str="";
+        str="Movie: "+this.getMovieName()+"\n";
+        str+="At"+ this.getBranch()+" Branch \n";
+        str+="At Hall"+ this.getHall()+"\n";
+        str+="Screening Date: "+this.getScreeningDate().toString()+"\n";
+        str+="The reserved seats:\n";
+        for (Seat Rseats:reservedSeats){
+            str+=Rseats.toString();
+        }
+        return  str;
     }
 }

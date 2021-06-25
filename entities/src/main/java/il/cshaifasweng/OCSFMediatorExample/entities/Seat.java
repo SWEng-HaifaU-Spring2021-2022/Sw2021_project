@@ -52,4 +52,12 @@ public class Seat implements Serializable {
     public void setState(int state) {
         this.state = state;
     }
+
+    public TheaterTicket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(TheaterTicket ticket) {
+        this.ticket = ticket;
+    }
 }

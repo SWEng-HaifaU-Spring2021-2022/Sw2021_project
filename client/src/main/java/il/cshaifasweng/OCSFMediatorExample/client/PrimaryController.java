@@ -34,9 +34,7 @@ public class PrimaryController {
     @FXML
     void OpenCancel(ActionEvent event) {
     	try {
-    		msgObject msg=new msgObject("#getAllTickets");
-			SimpleClient.getClient().sendToServer(msg);
-			System.out.println("message sent to server to get all Requests");
+    		App.setRoot("CancelTicket");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

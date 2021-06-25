@@ -18,6 +18,7 @@ public class SimpleClient extends AbstractClient {
 	private static SimpleClient client = null;
 	public static Object obj = null;
 	private static User user = null;
+	public static  List<Ticket> ticketlist=null;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -143,7 +144,7 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
 			else if (tempmsg.getMsg().equals("AllTickets")) {
-				obj = tempmsg.getObject();
+				ticketlist = (List<Ticket>) tempmsg.getObject();
 				try {
 					App.setRoot("CancelTicket");
 				} catch (IOException e) {

@@ -24,6 +24,10 @@ public class Seats implements Serializable {
         int index=Row*10+Col;
         seats[index]=true;
     }
+    public void unReserveSeat(int Row,int Col){
+        int index=Row*10+Col;
+        seats[index]=false;
+    }
     public int getRowsnum() {
         return Rowsnum;
     }

@@ -228,31 +228,15 @@ public class MovieGridController {
     @FXML
     void OpenBuyWindow(ActionEvent event)  {
         try{
-            System.out.println("test4");
             if(movie.getClass().equals(TheaterMovie.class)){
-                System.out.println("test5");
                 FXMLLoader loader=new FXMLLoader(getClass().getResource(("BuyTicketWindow.fxml")));
-                System.out.println("test7");
                 Parent parent=loader.load();
-                System.out.println("test8");
                 BuyTicketWindowController controller=(BuyTicketWindowController) loader.getController();
-                System.out.println("test9");
-                if(movie==null){
-                    System.out.println("NULL BLYAT");
-                }
-                else{
-                    System.out.println("BLYAT");
-                }
                 controller.setDetails((TheaterMovie) movie);
-                System.out.println("test10");
                 Stage stage=new Stage();
-                System.out.println("test11");
                 stage.setTitle("Buy Ticket "+movie.getEngName());
-                System.out.println("test12");
                 stage.setScene(new Scene(parent));
-                System.out.println("test13");
                 stage.show();
-                System.out.println("test14");
             }
             else if (movie.getClass().equals(HomeMovie.class)){
                 FXMLLoader loader=new FXMLLoader(getClass().getResource(("HomeMovieBuyWindow.fxml")));

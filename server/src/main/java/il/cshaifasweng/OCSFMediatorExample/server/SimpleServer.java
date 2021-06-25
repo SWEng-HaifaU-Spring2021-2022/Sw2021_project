@@ -7,6 +7,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -74,11 +75,52 @@ public class SimpleServer extends AbstractServer {
 
                 */
             }
+            else if(advcmsg.getMsg().equals("#deleteTheaterTicket")){
+                System.out.println("deleting theater ticket");
+                DeleteTheaterTicket(advcmsg,client);
+            }
         }
 
     }
 
+    public void DeleteTheaterTicket(AdvancedMsg msg,ConnectionToClient client){
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            TheaterTicket theaterticket=(TheaterTicket) msg.getObjectList().get(0);
+            EmailUtil.sendTheatetrTicketEmailCancelation(theaterticket,(double)msg.getObjectList().get(1));
+            MovieShow ms=getMovieShowbyid(theaterticket.getMovieShowid());
+            Seats seats=ms.getSeats();
+            List<Seat>seatList=theaterticket.getReservedSeats();
+            for (Seat st:seatList){
+                seats.unReserveSeat(st.getSeatCol(),st.getSeatRow());
+                session.delete(st);
+                session.flush();
+            }
+            ms.setSeats(seats);
+            session.update(ms);
+            session.flush();
+            session.delete(theaterticket);
+            session.getTransaction().commit();
+            try {
+                client.sendToClient(getAllTickets(theaterticket.getBuyerEmail()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("An error occurred, changes have been rolled back.");
+            exception.printStackTrace();
+        }
+       if(session!=null){
+           session.close();
+       }
 
+    }
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
@@ -126,9 +168,9 @@ public class SimpleServer extends AbstractServer {
         	client.sendToClient(getAllRequests());
             System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
         }
-        else if(msgString.equals("#getAllTickets")) {
-        	client.sendToClient(getAllTickets());
-            System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
+        else if(msgString.equals("#getTickets")) {
+        	client.sendToClient(getAllTickets((String) msgobject.getObject()));
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
         }
     }
 
@@ -398,6 +440,17 @@ public class SimpleServer extends AbstractServer {
             }
 
         }
+        else if(msgObj.getMsg().equals("#deleteHomeTicket")){
+            EmailUtil.sendHomeTicketEmailCancelation((HomeLinkTicket)msgObj.getObject());
+            session.delete((HomeLinkTicket)msgObj.getObject());
+            HomeLinkTicket hlt=(HomeLinkTicket)msgObj.getObject();
+            try {
+                client.sendToClient(getAllTickets(hlt.getBuyerEmail()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
+        }
 
     }
 
@@ -421,13 +474,23 @@ public class SimpleServer extends AbstractServer {
         return msg;
     }
     
-    private static msgObject getAllTickets() throws Exception {
+    private static msgObject getAllTickets(String BuyerEmail) throws Exception {
+        if(BuyerEmail.isEmpty()){
+            return  new msgObject();
+        }
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Ticket> query = builder.createQuery(Ticket.class);
-        query.from(Ticket.class);
-        List<Ticket> list = session.createQuery(query).getResultList();
-        msgObject msg = new msgObject("AllTickets", list);
-        return msg;
+        Root<Ticket>root=query.from(Ticket.class);
+        query.select(root).where(builder.equal(root.get("buyerEmail"),BuyerEmail));
+        ArrayList<Ticket> Data=(ArrayList<Ticket>)session.createQuery(query).getResultList();
+        for(Ticket t:Data){
+            if(t.getClass().equals(TheaterTicket.class)){
+                TheaterTicket tk=(TheaterTicket) t;
+                tk.getReservedSeats();
+            }
+        }
+        msgObject msg_Answer=new msgObject("AllTickets",Data);
+        return  msg_Answer;
     }
     
     

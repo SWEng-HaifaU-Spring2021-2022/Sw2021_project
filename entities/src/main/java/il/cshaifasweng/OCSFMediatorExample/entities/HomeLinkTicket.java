@@ -53,4 +53,13 @@ public class HomeLinkTicket  extends Ticket  implements  Serializable{
     public void setSent(boolean sent) {
         isSent = sent;
     }
+
+    @Override
+    public String toString(){
+        String str="";
+        str="Movie: "+this.getMovieName()+"\n";
+        str+="Screening Date: "+this.getScreeningDate().toString()+"\n";
+        str+="Starts at:"+this.getStartingTime()+ " ends at: "+this.getExpirationTime();
+        return str;
+    }
 }

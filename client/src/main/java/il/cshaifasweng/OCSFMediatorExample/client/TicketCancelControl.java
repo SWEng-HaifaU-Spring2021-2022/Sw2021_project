@@ -130,7 +130,7 @@ public class TicketCancelControl implements Initializable {
 					try {
 						Warning newwarning = new Warning("You will get a %50 refund ("+selctedticket.getTotalCost()/2+") an email will be sent");
 						EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-						SimpleClient.getClient().sendToServer(msg);
+						SimpleClient.getClient().sendToServer(msgobj);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

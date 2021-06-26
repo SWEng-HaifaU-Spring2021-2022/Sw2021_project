@@ -37,7 +37,7 @@ public class App extends Application {
         EventBus.getDefault().register(this);
         client = SimpleClient.getClient();
         client.openConnection();
-        scene = new Scene(loadFXML("BuyBundle"));
+        scene = new Scene(loadFXML("primary"));
         //scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
         JMetro jMetro = new JMetro(Style.LIGHT);
         jMetro.setScene(scene);

@@ -1,11 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
-
 import il.cshaifasweng.OCSFMediatorExample.entities.HomeLinkTicket;
 import il.cshaifasweng.OCSFMediatorExample.entities.Seat;
 import il.cshaifasweng.OCSFMediatorExample.entities.TheaterTicket;
-
 import java.util.Date;
-
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;

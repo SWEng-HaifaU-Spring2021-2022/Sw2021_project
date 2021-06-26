@@ -5,12 +5,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="216.0" prefWidth="396.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
+<VBox alignment="CENTER" prefHeight="168.0" prefWidth="396.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
       <Label text="Welcome You'r Connected" />
       <Button mnemonicParsing="false" onAction="#sendWarning" text="Show movie catalog" />
       <Button fx:id="pricespage" mnemonicParsing="false" onAction="#openpricess" text="prices" />
       <Button fx:id="grid" mnemonicParsing="false" onAction="#open_grid" text="Grid" />
+      <Button mnemonicParsing="false" onAction="#buyBundle" text="Buy Bundles" />
+      <Button mnemonicParsing="false" onAction="#showBundles" text="Show My Bundles" />
       <Button fx:id="TicketCancel" mnemonicParsing="false" onAction="#OpenCancel" text="Ticket Cancel" />
    </children>
    <padding>

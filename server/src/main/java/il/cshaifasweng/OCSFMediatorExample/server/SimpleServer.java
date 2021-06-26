@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -47,7 +48,10 @@ public class SimpleServer extends AbstractServer {
             if (msgObj.getMsg().equals("TryLogOut")) {
                 client.sendToClient(tryLogOut((User) msgObj.getObject()));
             }
-
+            if (msgObj.getMsg().equals("BuyBundle")) {
+                System.out.println("BuyBundle");
+                buyBundle(msgObj, client);
+            }
             if (msgObj.getMsg().startsWith("#get")) {
                 get(msgObj, client);
             }
@@ -56,11 +60,23 @@ public class SimpleServer extends AbstractServer {
                 change(msgObj, client);
             }
             if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
+            if (msgObj.getMsg().startsWith("#check")) check(msgObj, client);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void check(msgObject msg, ConnectionToClient client) {
+        if (msg.getMsg().equals("#checkHallMaxPeopleNum")) {
+            String[] data = msg.getObject().toString().split("-");
+            msgObject result = new msgObject("HallMaxPeopleNum");
+            result.setObject(checkHallMaxPeople(Integer.parseInt(data[0]),
+                    Integer.parseInt(data[1])));
+
+
+        }
+
+    }
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
@@ -104,9 +120,8 @@ public class SimpleServer extends AbstractServer {
             }
             System.out.format("Sent movies Show of movies id " + id + " to client %s\n", client.getInetAddress().getHostAddress());
 
-        }
-        else if(msgString.equals("#getAllPriceRequests")) {
-        	client.sendToClient(getAllRequests());
+        } else if (msgString.equals("#getAllPriceRequests")) {
+            client.sendToClient(getAllRequests());
             System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
         }
     }
@@ -127,24 +142,24 @@ public class SimpleServer extends AbstractServer {
                     e.printStackTrace();
                 }
             }
-            
-            if(msgObj.getMsg().equals("#updatePrice")){
+
+            if (msgObj.getMsg().equals("#updatePrice")) {
                 SessionFactory sessionFactory = getSessionFactory();
                 session = sessionFactory.openSession();
                 session.beginTransaction();
-                PriceRequest pr=(PriceRequest)msgObj.getObject();
-                Movie movie=getMovie(pr.getMovieID());
+                PriceRequest pr = (PriceRequest) msgObj.getObject();
+                Movie movie = getMovie(pr.getMovieID());
                 System.out.println(pr.getMovieID());
                 System.out.println(movie.getEngName());
-                if(movie.getClass().equals(TheaterMovie.class)) {
-                	TheaterMovie Tm=(TheaterMovie)movie;
-                	Tm.setEntryPrice(pr.getNewPrice());
-                	movie = Tm;
-                }else if(movie.getClass().equals(HomeMovie.class)){
-                	HomeMovie Hm = (HomeMovie)movie;
-                	Hm.setEntryprice(pr.getNewPrice());
-                	movie = Hm;
-                	
+                if (movie.getClass().equals(TheaterMovie.class)) {
+                    TheaterMovie Tm = (TheaterMovie) movie;
+                    Tm.setEntryPrice(pr.getNewPrice());
+                    movie = Tm;
+                } else if (movie.getClass().equals(HomeMovie.class)) {
+                    HomeMovie Hm = (HomeMovie) movie;
+                    Hm.setEntryprice(pr.getNewPrice());
+                    movie = Hm;
+
                 }
                 session.update(movie);
                 session.delete(pr);
@@ -222,27 +237,23 @@ public class SimpleServer extends AbstractServer {
 
             }
 
-        }
-        else if (msgObj.getMsg().equals("#deleteRequest")) {
-        	msgObject answer_msg = new msgObject();
-        	PriceRequest price = (PriceRequest)msgObj.getObject();
-        	session.delete((PriceRequest)msgObj.getObject());
-        	session.getTransaction().commit(); // Save everything
+        } else if (msgObj.getMsg().equals("#deleteRequest")) {
+            msgObject answer_msg = new msgObject();
+            PriceRequest price = (PriceRequest) msgObj.getObject();
+            session.delete((PriceRequest) msgObj.getObject());
+            session.getTransaction().commit(); // Save everything
             answer_msg.setMsg("PriceRequest deleted");
             client.sendToClient(answer_msg);
-        	
-        }
-        
-        else if (msgObj.getMsg().equals("#addMovieShow"))
-        {
-            session.save((MovieShow)msgObj.getObject());
+
+        } else if (msgObj.getMsg().equals("#addMovieShow")) {
+            session.save((MovieShow) msgObj.getObject());
             session.flush();
             session.getTransaction().commit();
             System.out.println("a new movie show added");
-            AdvancedMsg tempmsg=new AdvancedMsg("newmovieShowadd");
-            MovieShow ms=(MovieShow)msgObj.getObject();
-            int movieid=ms.getMovie().getMovieId();
-            tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
+            AdvancedMsg tempmsg = new AdvancedMsg("newmovieShowadd");
+            MovieShow ms = (MovieShow) msgObj.getObject();
+            int movieid = ms.getMovie().getMovieId();
+            tempmsg.addobject((List<Theater>) getAllTheatres().getObject());
             tempmsg.addobject(getMovie(movieid));
             session.close();
 
@@ -257,18 +268,16 @@ public class SimpleServer extends AbstractServer {
         } else if (msgObj.getMsg().equals("#updateMovieShow")) {
             session.update(((MovieShow) msgObj.getObject()));
             session.flush();
-            AdvancedMsg tempmsg= new AdvancedMsg("MovieShow Updated");
-            MovieShow ms=(MovieShow)msgObj.getObject();
-            int movieid=ms.getMovie().getMovieId();
-            tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
+            AdvancedMsg tempmsg = new AdvancedMsg("MovieShow Updated");
+            MovieShow ms = (MovieShow) msgObj.getObject();
+            int movieid = ms.getMovie().getMovieId();
+            tempmsg.addobject((List<Theater>) getAllTheatres().getObject());
             tempmsg.addobject(getMovie(movieid));
             client.sendToClient(tempmsg);
-        }
-        else if (msgObj.getMsg().equals("#deleteMovieShow"))
-        {
+        } else if (msgObj.getMsg().equals("#deleteMovieShow")) {
             System.out.println("deleting a movie show");
-            try{
-                session.delete(((MovieShow)msgObj.getObject()));
+            try {
+                session.delete(((MovieShow) msgObj.getObject()));
                 session.getTransaction().commit();
             } catch (HibernateException e) {
                 e.printStackTrace();
@@ -326,14 +335,16 @@ public class SimpleServer extends AbstractServer {
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
+
     private static msgObject getAllRequests() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<PriceRequest> query = builder.createQuery(PriceRequest.class);
         query.from(PriceRequest.class);
-        List<PriceRequest> list= session.createQuery(query).getResultList();
-        msgObject msg=new msgObject("AllRequests",list);
+        List<PriceRequest> list = session.createQuery(query).getResultList();
+        msgObject msg = new msgObject("AllRequests", list);
         return msg;
     }
+
     private static Movie getMovie(int id) throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
@@ -349,9 +360,8 @@ public class SimpleServer extends AbstractServer {
                     }
                     return m;
                 }
-            }
-            else if(m.getMovieId() == id) {
-            	return m;
+            } else if (m.getMovieId() == id) {
+                return m;
             }
 
         }
@@ -426,18 +436,18 @@ public class SimpleServer extends AbstractServer {
 
     private static msgObject tryLogOut(User user) {
         msgObject msg = new msgObject("");
-            try {
-                user.setConnected(false);
-                SessionFactory sessionFactory = getSessionFactory();
-                session = sessionFactory.openSession();
-                session.beginTransaction();
-                session.update(user);
-                session.getTransaction().commit(); // Save everything.
-                msg.setMsg("LOUTLoggedOut");
-            } catch (HibernateException e) {
-                e.printStackTrace();
-                msg.setMsg("LOUTUnknownLogOutError");
-            }
+        try {
+            user.setConnected(false);
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.update(user);
+            session.getTransaction().commit(); // Save everything.
+            msg.setMsg("LOUTLoggedOut");
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            msg.setMsg("LOUTUnknownLogOutError");
+        }
 
         return msg;
     }
@@ -471,6 +481,9 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(HomeMovie.class);
         configuration.addAnnotatedClass(PriceRequest.class);
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Bundle.class);
+        configuration.addAnnotatedClass(PurpleCard.class);
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -615,5 +628,73 @@ public class SimpleServer extends AbstractServer {
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
+
+    void buyBundle (msgObject msg, ConnectionToClient client)
+    {
+        Bundle bundle = (Bundle) msg.getObject();
+        msgObject m = new msgObject("BundleBought");
+
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(bundle);
+            session.flush();
+            session.getTransaction().commit(); // Save everything.
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("BuyingBundleError");
+            m.setMsg("BuyingBundleError");
+            exception.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        try {
+            client.sendToClient(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    int checkHallMaxPeople(int hallId, int movieId) {
+        int x, y=0;
+
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        String sqlQ1 = "FROM Hall U WHERE U.id = :hall_id";
+        Query query1 = session.createQuery(sqlQ1);
+        query1.setParameter("hall_id", hallId);
+
+        String sqlQ2 = "FROM Movie U WHERE U.id = :movie_id";
+        Query query2 = session.createQuery(sqlQ2);
+        query2.setParameter("movie_id", movieId);
+        List<Hall> HallList = query1.list();
+        List<Movie> MovieList = query2.list();
+
+       // MovieList
+
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<PurpleCard> query = builder.createQuery(PurpleCard.class);
+        query.from(PurpleCard.class);
+        List<PurpleCard> list = session.createQuery(query).getResultList();
+        for (PurpleCard P : list) {
+            y=P.getMaxCap();
+        }
+
+        if (!MovieList.isEmpty())
+            if (!HallList.isEmpty()) {
+            x = HallList.get(0).getCapacity();
+                if (1.2 * y < x) return y;
+                if (x > 0.8 * y) return (int) (0.8 * y);
+                return (int) (x / 2);
+            }
+
+        return -1;
+    }
+
 
 }

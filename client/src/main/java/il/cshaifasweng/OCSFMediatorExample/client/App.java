@@ -1,4 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
+
 import il.cshaifasweng.OCSFMediatorExample.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -8,21 +9,26 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-/**
- * JavaFX App
- */
+
 public class App extends Application {
 
     private static Scene scene;
     private static SimpleClient client;
+
     //private static Stage stage=new Stage();
-    public static void setScene(Scene newscene){
-        scene=newscene;
+    public static void setScene(Scene newscene) {
+        scene = newscene;
 
     }
 
@@ -31,8 +37,11 @@ public class App extends Application {
         EventBus.getDefault().register(this);
         client = SimpleClient.getClient();
         client.openConnection();
-        scene = new Scene(loadFXML("Primary"));
-        scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
+        scene = new Scene(loadFXML("BuyBundle"));
+        //scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
+        JMetro jMetro = new JMetro(Style.LIGHT);
+        jMetro.setScene(scene);
+        scene.setFill(Color.WHITE);
         stage.setScene(scene);
         stage.show();
     }
@@ -50,6 +59,10 @@ public class App extends Application {
     @Override
     public void stop() throws Exception {
         // TODO Auto-generated method stub
+       if (SimpleClient.getUser() != null) SimpleClient.RequestLogOut();
+        while (SimpleClient.getUser() != null) {
+            System.out.println("Logging out");
+        }
         EventBus.getDefault().unregister(this);
         super.stop();
     }

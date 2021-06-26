@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="308.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyBundleController">
+<AnchorPane onKeyPressed="#onEnter" prefHeight="308.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyBundleController">
    <children>
       <Button fx:id="checkOutBtn" layoutX="295.0" layoutY="255.0" mnemonicParsing="false" onAction="#checkOut" prefHeight="31.0" prefWidth="82.0" text="Check out" />
       <Label fx:id="mainlabel" layoutX="61.0" layoutY="29.0" text="Buy Tickets Bundle" textAlignment="JUSTIFY" wrapText="true">
@@ -17,7 +17,7 @@
       </Label>
       <Label layoutX="82.0" layoutY="211.0" text="Amount to pay:" />
       <Label fx:id="toPayAmount" layoutX="174.0" layoutY="211.0" text="20" />
-      <Label layoutX="26.0" layoutY="105.0" prefHeight="31.0" prefWidth="348.0" text="Please enter your payment informationn to procced:" textAlignment="JUSTIFY" wrapText="true">
+      <Label fx:id="instLabel" layoutX="26.0" layoutY="105.0" prefHeight="31.0" prefWidth="348.0" text="Please enter your payment informationn to procced:" textAlignment="JUSTIFY" wrapText="true">
          <font>
             <Font size="15.0" />
          </font></Label>

@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 public class BuyBundleController {
@@ -32,7 +34,9 @@ public class BuyBundleController {
     @FXML // fx:id="email"
     private TextField email; // Value injected by FXMLLoader
     @FXML // fx:id="mainlabel"
-    private static Label mainlabel; // Value injected by FXMLLoader
+    private Label mainlabel; // Value injected by FXMLLoader
+    @FXML
+    private Label instLabel;
 
     @FXML
         // This method is called by the FXMLLoader when initialization is complete
@@ -44,7 +48,7 @@ public class BuyBundleController {
         assert fName != null : "fx:id=\"fName\" was not injected: check your FXML file 'BuyBundle.fxml'.";
         assert lName != null : "fx:id=\"lName\" was not injected: check your FXML file 'BuyBundle.fxml'.";
         assert email != null : "fx:id=\"email\" was not injected: check your FXML file 'BuyBundle.fxml'.";
-        toPayAmount.setText( price + "₪.");
+        toPayAmount.setText(price + "₪.");
     /*    assert amountList != null : "fx:id=\"amountList\" was not injected: check your FXML file 'BuyBundle.fxml'.";
 
         amountList.getItems().add("Amount to buy");
@@ -65,6 +69,12 @@ public class BuyBundleController {
     }
 
     @FXML
+    void onEnter(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) checkOut(null);
+    }
+
+
+    @FXML
     void checkOut(ActionEvent event) {
         Bundle bundle = new Bundle(email.getText(), fName.getText(), lName.getText());
         msgObject msg = new msgObject();
@@ -72,24 +82,32 @@ public class BuyBundleController {
         msg.setObject(bundle);
         try {
             SimpleClient.getClient().sendToServer(msg);
+            while (SimpleClient.obj==null ||
+                    !(((msgObject) SimpleClient.obj).getMsg().equals("BundleBought") ||
+                    ((msgObject) SimpleClient.obj).getMsg().equals("BuyingBundleError"))) {
+                instLabel.setText("Making payment.");
+                instLabel.setText("Making payment..");
+                instLabel.setText("Making payment...");
+            }
+            if (((msgObject) SimpleClient.obj).getMsg().equals("BundleBought")) {
+                instLabel.setTextFill(Color.color(0, 0.7, 0.3));
+                instLabel.setText("Bundle bought successfully!");
+            } else {
+                instLabel.setTextFill(Color.color(0.8, 0, 0.2));
+                instLabel.setText("An error occured, try later!");
+
+            }
+
         } catch (IOException e) {
 
             e.printStackTrace();
         }
-    }
 
-    public static void showMsg(boolean s)
-    {
-        if (s) {
-            mainlabel.setTextFill(Color.color(0, 0.7, 0.3));
-            mainlabel.setText("Bundle bought successfully!");
+        try {
+            App.setRoot("GridCatalog");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else {
-            mainlabel.setTextFill(Color.color(0.8, 0, 0.2));
-            mainlabel.setText("An error occured, try later!");
-
-        }
-
     }
 
 }

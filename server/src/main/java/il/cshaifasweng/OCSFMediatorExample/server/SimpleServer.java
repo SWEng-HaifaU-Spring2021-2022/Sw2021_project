@@ -46,6 +46,10 @@ public class SimpleServer extends AbstractServer {
                 if (msgObj.getMsg().equals("TryLogOut")) {
                     client.sendToClient(tryLogOut((User) msgObj.getObject()));
                 }
+            if (msgObj.getMsg().equals("BuyBundle")) {
+                System.out.println("BuyBundle");
+                buyBundle(msgObj, client);
+            }
 
                 if (msgObj.getMsg().startsWith("#get")) {
                     get(msgObj, client);
@@ -72,7 +76,6 @@ public class SimpleServer extends AbstractServer {
                /* MovieShow movieShow=(MovieShow) advcmsg.getObjectList().get(1);
                 msgObject msg1=new msgObject("#updateMovieShow",movieShow);
                 update(msg1,client);
-
                 */
             }
             else if(advcmsg.getMsg().equals("#deleteTheaterTicket")){
@@ -674,6 +677,39 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
+
+    void buyBundle (msgObject msg, ConnectionToClient client)
+    {
+        Bundle bundle = (Bundle) msg.getObject();
+        msgObject m = new msgObject("BundleBought");
+
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(bundle);
+            session.flush();
+            session.getTransaction().commit(); // Save everything.
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("BuyingBundleError");
+            m.setMsg("BuyingBundleError");
+            exception.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        try {
+            client.sendToClient(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private static void AddToDB() {
         try {
             System.out.println("Theater movie1");
@@ -792,7 +828,6 @@ public class SimpleServer extends AbstractServer {
             /*List<MovieShow> temp= m.getMSList();
             for (MovieShow ms:temp){
                 System.out.println(ms.getTheater());
-
             }*/
         }
         msgObject msg = new msgObject("AllMovies", list);

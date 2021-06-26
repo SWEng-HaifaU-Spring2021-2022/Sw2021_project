@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javax.xml.catalog.Catalog;
 
 public class SimpleClient extends AbstractClient {
+
 	private static SimpleClient client = null;
 	public static Object obj = null;
 	private static User user = null;
@@ -267,4 +268,5 @@ public class SimpleClient extends AbstractClient {
 			GridCatalogController.setRetVal(-1);
 
 	}
+
 }

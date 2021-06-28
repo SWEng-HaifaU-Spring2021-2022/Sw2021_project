@@ -23,6 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -85,6 +86,7 @@ public class TicketCancelControl implements Initializable {
 	@FXML
 	private Label ticketDetailsLabel;
 
+
     @FXML
     void CancelBtn(ActionEvent event) {
 		int index = CancelTable.getSelectionModel().getSelectedIndex();
@@ -130,7 +132,7 @@ public class TicketCancelControl implements Initializable {
 					try {
 						Warning newwarning = new Warning("You will get a %50 refund ("+selctedticket.getTotalCost()/2+") an email will be sent");
 						EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-						SimpleClient.getClient().sendToServer(msg);
+						SimpleClient.getClient().sendToServer(msgobj);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -225,18 +227,20 @@ public class TicketCancelControl implements Initializable {
     
     @FXML
     void goHome(ActionEvent event) {
-    	try {
-    		if (SimpleClient.ticketlist!=null){
-				SimpleClient.ticketlist.clear();
-				list.clear();
-				CancelTable.getItems().clear();
-			}
-			App.setRoot("primary");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (SimpleClient.ticketlist!=null){
+			SimpleClient.ticketlist.clear();
+			list.clear();
+			CancelTable.getItems().clear();
 		}
-    }
+		try {
+			msgObject msg=new msgObject("#getAllMovies");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all movies");
+		} catch (IOException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+	}
 
 	@FXML
 	void ShowDetails(MouseEvent event){

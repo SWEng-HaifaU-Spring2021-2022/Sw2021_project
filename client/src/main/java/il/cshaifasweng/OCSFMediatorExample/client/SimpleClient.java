@@ -151,6 +151,16 @@ public class SimpleClient extends AbstractClient {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}else if(tempmsg.getMsg().equals("branch revenue")){
+				Warning newwarning = new Warning("the branch revenue for the last month is"+(int)tempmsg.getObject());
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}else if(tempmsg.getMsg().equals("openReportPage")){
+				try {
+					obj=tempmsg.getObject();
+					App.setRoot("Reports");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
         else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
 				Warning newwarning = new Warning("Purchased successfully");

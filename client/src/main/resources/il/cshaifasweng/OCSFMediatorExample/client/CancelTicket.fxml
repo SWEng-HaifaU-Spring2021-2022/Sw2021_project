@@ -5,13 +5,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TicketCancelControl">
    <children>
-      <TableView fx:id="CancelTable" layoutX="114.0" layoutY="66.0" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="352.0">
+      <TableView fx:id="CancelTable" layoutX="222.0" layoutY="82.0" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="352.0">
         <columns>
           <TableColumn fx:id="MovieCol" prefWidth="75.0" text="Movie" />
           <TableColumn fx:id="DateCol" prefWidth="75.0" text="Date" />
@@ -19,15 +17,11 @@
             <TableColumn fx:id="VisaCol" prefWidth="85.0" text="Visa Number" />
         </columns>
       </TableView>
-      <TextField fx:id="EmailText" layoutX="146.0" layoutY="33.0" promptText="E-mail" />
-      <Button fx:id="CancelButton" layoutX="262.0" layoutY="284.0" mnemonicParsing="false" onAction="#CancelBtn" text="Cancel" />
-      <Button fx:id="ShowMovies" layoutX="353.0" layoutY="33.0" mnemonicParsing="false" onAction="#ShowBtn" text="Show Movies" />
-      <Button fx:id="goHome" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
-      <Text fill="#f31313" layoutX="248.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Important: If you cancel before 3 Hours of playing date, You will recieve 100% Refund, If you cancel between 1-3 Hours before, You will recieve 50% refund, Otherwise you will not get any refund." wrappingWidth="366.40869140625">
-         <effect>
-            <Shadow blurType="ONE_PASS_BOX" height="0.0" radius="0.0" width="0.0" />
-         </effect>
-      </Text>
-      <Label fx:id="ticketDetailsLabel" layoutX="25.0" layoutY="321.0" wrapText="true" />
+      <TextField fx:id="EmailText" layoutX="254.0" layoutY="49.0" promptText="E-mail" />
+      <Button fx:id="CancelButton" layoutX="370.0" layoutY="300.0" mnemonicParsing="false" onAction="#CancelBtn" text="Cancel" />
+      <Button fx:id="ShowMovies" layoutX="461.0" layoutY="49.0" mnemonicParsing="false" onAction="#ShowBtn" text="Show Movies" />
+      <Button fx:id="goHome" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
+      <Label fx:id="ticketDetailsLabel" layoutX="14.0" layoutY="349.0" prefHeight="17.0" prefWidth="0.0" wrapText="true" />
+      <Label layoutX="179.0" layoutY="469.0" text="Important: If you cancel before 3 Hours of playing date,&#10;You will recieve 100% Refund, If you cancel between 1-3 Hours before,&#10; You will recieve 50% refund, Otherwise you will not get any refund." textFill="WHITE" />
    </children>
 </AnchorPane>

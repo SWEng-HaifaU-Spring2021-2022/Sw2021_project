@@ -10,12 +10,12 @@
 
 <AnchorPane onKeyPressed="#onEnter" prefHeight="370.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.LogInScreenController">
    <children>
-      <Label layoutX="71.0" layoutY="52.0" text="User Log In" textAlignment="CENTER">
+      <Label layoutX="71.0" layoutY="52.0" text="User Log In" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Calibri Light" size="48.0" />
          </font>
       </Label>
-      <Label fx:id="instructions" layoutX="71.0" layoutY="126.0" prefHeight="38.0" prefWidth="216.0" text="Please enter your username and password to proceed" textAlignment="JUSTIFY" wrapText="true">
+      <Label fx:id="instructions" layoutX="71.0" layoutY="126.0" prefHeight="38.0" prefWidth="216.0" text="Please enter your username and password to proceed" textAlignment="JUSTIFY" textFill="#0bb9ee" wrapText="true">
          <font>
             <Font name="Calibri" size="14.0" />
          </font>

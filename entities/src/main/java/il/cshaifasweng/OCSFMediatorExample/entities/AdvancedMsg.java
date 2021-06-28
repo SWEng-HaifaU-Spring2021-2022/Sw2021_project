@@ -8,6 +8,7 @@ public class AdvancedMsg implements Serializable{
     String msg;
     List<Object> objectList;
     public AdvancedMsg(){
+        objectList=new ArrayList<>();
     }
 
     public String getMsg() {

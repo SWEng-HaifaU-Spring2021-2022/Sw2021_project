@@ -14,6 +14,11 @@ import javax.xml.catalog.Catalog;
 public class SimpleClient extends AbstractClient {
 
 	private static SimpleClient client = null;
+	public static Object obj = null;
+	private static User user = null;
+	public static  List<Ticket> ticketlist=null;
+
+	private static SimpleClient client = null;
 	public static Object obj=null;
     private static User user = null;
 	private SimpleClient(String host, int port) {
@@ -22,10 +27,14 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		//System.out.println("message arrived");
-		msgObject temp=(msgObject)msg;
-		//System.out.println(temp.getMsg());
-		if(msg.getClass().equals(msgObject.class)) {
+		// System.out.println("message arrived");
+		if (msg.getClass().equals(msgObject.class)) {
+			msgObject temp = (msgObject) msg;
+			obj = temp;
+			if (temp.getMsg().startsWith("LIN"))
+				ProceedLogIn();
+			if (temp.getMsg().startsWith("LOUT"))
+				ProceedLogOut();
 			System.out.println("msg arrived");
 			msgObject tempmsg=(msgObject)msg;
 			System.out.println(tempmsg.getMsg());
@@ -41,8 +50,7 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 			}
-			else if(tempmsg.getMsg().equals("Theaters Retrived")) {
-
+			else if (tempmsg.getMsg().equals("Theaters Retrived")) {
 				Platform.runLater(()->{
 					//CatalogController catalog=new CatalogController();
 					MovieGridController MovieGrid=new MovieGridController();
@@ -58,13 +66,15 @@ public class SimpleClient extends AbstractClient {
 				});
 
 			}
-			else if(tempmsg.getMsg().equals("newmovieShowadd")){
+
+			else if (tempmsg.getMsg().equals("newmovieShowadd")) {
 				System.out.println("an object have been added");
 				Platform.runLater(()->{
 					RefreshCatalog();
 				});
 			}
-			else if(tempmsg.getMsg().equals("MovieShow Deleted")){
+
+			else if (tempmsg.getMsg().equals("MovieShow Deleted")) {
 				System.out.println("an object have been deleted");
 				Platform.runLater(()->{
 					MovieGridController MGC=new MovieGridController();
@@ -81,32 +91,96 @@ public class SimpleClient extends AbstractClient {
 					//EditController.reloadTable(MSL);*/
 				});
 			}
-			else if(tempmsg.getMsg().equals("movie show updated")){
+			else if (tempmsg.getMsg().equals("movie show updated")) {
 				System.out.println("an object have been updated");
 				Platform.runLater(()->{
 					RefreshCatalog();
 				});
 			}
-			else if(tempmsg.getMsg().equals("Movie deleted")){
+			else if (tempmsg.getMsg().equals("Movie deleted")) {
 				System.out.println("Movie have been deleted");
 				Warning newwarning=new Warning("Movie have been deleted");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 				RefreshCatalog();
 			}
-			else if(tempmsg.getMsg().equals("failed")){
-				Warning newwarning=new Warning("Some thing went wrong");
-				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+
+			else if (tempmsg.getMsg().contains("failed")) {
+				Warning newwarning = new Warning("Some thing went wrong");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+				Platform.runLater(()->{
+					Movie tempmovie=(Movie) tempmsg.getObject();
+					if(tempmsg.getMsg().contains("failed to reserve")){
+						RefreshCatalog();
+						MovieGridController mgc=new MovieGridController();
+						mgc.setMovieGrid(tempmovie);
+						try {
+							System.out.println("opening the buying page");
+							mgc.movie=tempmovie;
+							mgc.reOpenBuyWindow();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
-			else if(tempmsg.getMsg().equals("a price request added")){
+			else if (tempmsg.getMsg().equals("a price request added")) {
 				System.out.println("Price request have been added to the DB");
+				Warning newwarning = new Warning("The request successfully sent");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}
+			else if (tempmsg.getMsg().equals("movie added successfully")) {
+				Warning newwarning = new Warning("movie added successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}
+			else if (tempmsg.getMsg().equals("AllRequests")) {
+				obj = tempmsg.getObject();
+				try {
+					App.setRoot("AnswerComplaints");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				});
+			}
+			else if(tempmsg.getMsg().equals("an answer to complaint added"))
+			{
+				System.out.println("an answer to complaint have been added to the DB");
 				Warning newwarning=new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
-			else if(tempmsg.getMsg().equals("movie added successfully")){
-				Warning newwarning=new Warning("movie added successfully");
-				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			else if (tempmsg.getMsg().equals("AllTickets")) {
+				ticketlist = (List<Ticket>) tempmsg.getObject();
+				try {
+					App.setRoot("CancelTicket");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else if(tempmsg.getMsg().equals("branch revenue")){
+				Warning newwarning = new Warning("the branch revenue for the last month is"+(int)tempmsg.getObject());
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}else if(tempmsg.getMsg().equals("openReportPage")){
+				try {
+					obj=tempmsg.getObject();
+					App.setRoot("Reports");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			else if(tempmsg.getMsg().equals("a Complaint added")){
+        else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
+				Warning newwarning = new Warning("Purchased successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}
+        else  if(tempmsg.getMsg().equals("purchased Successfully")){
+        	System.out.println("bla bla");
+				Warning newwarning = new Warning("TheaterMovie Ticket Purchased successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+        	Platform.runLater(()->{
+
+        		RefreshCatalog();
+			});
+			}
+    else if(tempmsg.getMsg().equals("a Complaint added")){
 				Warning newwarning=new Warning("Your complaint has been sent ");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
@@ -132,15 +206,17 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
 		}
-		if(msg.getClass().equals(AdvancedMsg.class)){
-			System.out.println("advanced message");
-			AdvancedMsg advMsg=new AdvancedMsg();
-			if(advMsg.getMsg().equals("MovieShow Deleted")){
-				Platform.runLater(()->{
-					List<Theater>TL=(List<Theater>) advMsg.getObjectList().get(0);
-					//List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
-					Movie movie=(Movie)advMsg.getObjectList().get(1);
-					MovieGridController MGC=new MovieGridController();
+
+		if (msg.getClass().equals(AdvancedMsg.class)) {
+			AdvancedMsg advMsg = (AdvancedMsg)msg;
+			if (advMsg.getMsg().equals("MovieShow Deleted") || advMsg.getMsg().equals("newmovieShowadd")
+					|| advMsg.getMsg().equals("MovieShow Updated")) {
+				System.out.println("advanced message2" + advMsg.getMsg());
+				Platform.runLater(() -> {
+					List<Theater> TL = (List<Theater>) advMsg.getObjectList().get(0);
+					// List<MovieShow>MSL=(List<MovieShow>) advMsg.getObjectList().get(1);
+					Movie movie = (Movie) advMsg.getObjectList().get(1);
+					MovieGridController MGC = new MovieGridController();
 					try {
 						MGC.reopenEditpage(TL,movie);
 					} catch (IOException e) {
@@ -230,4 +306,5 @@ public class SimpleClient extends AbstractClient {
 			GridCatalogController.setRetVal(-1);
 
 	}
+
 }

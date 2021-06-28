@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onKeyPressed="#onEnter" prefHeight="308.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyBundleController">
+   <children>
+      <Button fx:id="checkOutBtn" layoutX="295.0" layoutY="255.0" mnemonicParsing="false" onAction="#checkOut" prefHeight="31.0" prefWidth="82.0" text="Check out" />
+      <Label fx:id="mainlabel" layoutX="61.0" layoutY="29.0" text="Buy Tickets Bundle" textAlignment="JUSTIFY" wrapText="true">
+         <font>
+            <Font name="Calibri Light" size="37.0" />
+         </font>
+      </Label>
+      <Label layoutX="82.0" layoutY="211.0" text="Amount to pay:" />
+      <Label fx:id="toPayAmount" layoutX="174.0" layoutY="211.0" text="20" />
+      <Label fx:id="instLabel" layoutX="26.0" layoutY="105.0" prefHeight="31.0" prefWidth="348.0" text="Please enter your payment informationn to procced:" textAlignment="JUSTIFY" wrapText="true">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <TextField fx:id="fName" layoutX="23.0" layoutY="143.0" prefHeight="25.0" prefWidth="173.0" promptText="First Name" />
+      <TextField fx:id="lName" layoutX="205.0" layoutY="143.0" prefHeight="25.0" prefWidth="173.0" promptText="Last Name" />
+      <TextField fx:id="email" layoutX="23.0" layoutY="175.0" prefHeight="25.0" prefWidth="173.0" promptText="E-mail" />
+      <TextField layoutX="205.0" layoutY="175.0" prefHeight="25.0" prefWidth="173.0" promptText="Credit Card No." />
+      <TextField layoutX="23.0" layoutY="207.0" prefHeight="25.0" prefWidth="52.0" promptText="CVV" />
+      <Line disable="true" endX="244.0" layoutX="130.0" layoutY="98.0" startX="-103.0" />
+      <Line disable="true" endX="244.0" layoutX="130.0" layoutY="244.0" startX="-103.0" />
+   </children>
+</AnchorPane>

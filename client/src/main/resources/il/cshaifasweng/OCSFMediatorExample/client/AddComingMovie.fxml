@@ -33,6 +33,7 @@
       <Label fx:id="priceLabel" layoutX="22.0" layoutY="220.0" text="Entry Price" visible="false" />
       <Label fx:id="linkLabel" layoutX="210.0" layoutY="221.0" text="Link" visible="false" />
       <TextField fx:id="MovieLink" layoutX="210.0" layoutY="244.0" visible="false" />
-      <ChoiceBox fx:id="MovieType" layoutX="20.0" layoutY="28.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="MovieType" layoutX="187.0" layoutY="27.0" prefWidth="150.0" />
+      <Button layoutX="19.0" layoutY="28.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
    </children>
 </AnchorPane>

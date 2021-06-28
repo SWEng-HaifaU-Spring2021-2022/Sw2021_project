@@ -15,35 +15,41 @@ public class MovieShow implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int movieShowId;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "movie_id")
 	private Movie movie;
 	private LocalDate showDate;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne( fetch = FetchType.EAGER)
 	@JoinColumn(name = "theater_id")
 	private Theater theater;
 	private String beginTime;
 	private String endTime;
-	private int maxNumber;
+	private String  hallnumber;
+	@Lob
+	@Column(name = "seats",columnDefinition = "BLOB")
+	private Seats seats;
+	//private boolean[][]seats;
+	private int Capacity;
+
+
 
 	public MovieShow()
 	{
 
 	}
-	public MovieShow(Movie movie, LocalDate showDate, Theater theater,String beginTime, String endTime,int maxNumber)
+	public MovieShow(Movie movie, LocalDate showDate, Theater theater,String beginTime, String endTime,String  hallnumber,int Capacity)
 	{
 		setMovie(movie);
 		this.showDate = showDate;
 		setTheater(theater);
 		this.beginTime = beginTime;
 		this.endTime = endTime;
-		this.maxNumber = maxNumber;
+		this.Capacity =Capacity;
+		this.seats=new Seats(Capacity);
+		this.hallnumber=hallnumber;
 	}
 	public int getMovieShowId() {
 		return movieShowId;
-	}
-	public void setMovieShowId(int movieShowId) {
-		this.movieShowId = movieShowId;
 	}
 	public Movie getMovie() {
 		return movie;
@@ -75,12 +81,6 @@ public class MovieShow implements Serializable  {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-	public int getMaxNumber() {
-		return maxNumber;
-	}
-	public void setMaxNumber(int maxNumber) {
-		this.maxNumber = maxNumber;
-	}
 	@Override
 	public String toString(){
 		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -88,5 +88,23 @@ public class MovieShow implements Serializable  {
 		String str=""+strDate+"-begins at:"+beginTime+"-end at:"+endTime+" at theater :"+theater.getLocation()+"\n";
 		//System.out.println(theater.getLocation());
 		return  str;
+	}
+	public Seats getSeats() {
+		return seats;
+	}
+	public void setSeats(Seats seats) {
+		this.seats = seats;
+	}
+	public String getHallnumber() {
+		return hallnumber;
+	}
+	public void setHallnumber(String hallnumber) {
+		this.hallnumber = hallnumber;
+	}
+	public int getCapacity() {
+		return Capacity;
+	}
+	public void setCapacity(int capacity) {
+		Capacity = capacity;
 	}
 }

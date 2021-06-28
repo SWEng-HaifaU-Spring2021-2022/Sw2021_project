@@ -16,8 +16,7 @@ public class PrimaryController {
 	@FXML // fx:id="grid"
 	private Button grid; // Value injected by FXMLLoader
 
-	@FXML // fx:id="pricespage"
-	private Button pricespage; // Value injected by FXMLLoader
+
 
 	@FXML
 	void open_grid(ActionEvent event) throws IOException {
@@ -27,6 +26,8 @@ public class PrimaryController {
 		// App.setRoot("GridCatalog");
 	}
 
+
+
 	@FXML
 	void sendWarning(ActionEvent event) throws IOException {
 		try {
@@ -34,7 +35,9 @@ public class PrimaryController {
 			msgObject msg = new msgObject("#getAllMovies");
 			SimpleClient.getClient().sendToServer(msg);
 			System.out.println("message sent to server to get all movies");
-
+	void buyBundle(ActionEvent event) {
+		try {
+			App.setRoot("BuyBundle");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,17 +45,31 @@ public class PrimaryController {
 	}
 
 	@FXML
-	void openpricess(ActionEvent event) {
+	void PCard(ActionEvent event) {
 		try {
-			msgObject msg = new msgObject("#getAllPriceRequests");
-			SimpleClient.getClient().sendToServer(msg);
-			System.out.println("message sent to server to get all Requests");
-			// App.setRoot("contentmanagerPrices");
+			App.setRoot("PurpleCard");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void showBundles(ActionEvent event) {
+		try {
+			App.setRoot("ViewBundles");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 	@FXML
 	void open_Complaint(ActionEvent event) throws IOException {
@@ -68,5 +85,6 @@ public class PrimaryController {
 		//App.setRoot("AnswerComplaints");
 
 	}
+
 
 }

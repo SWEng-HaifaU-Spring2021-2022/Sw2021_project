@@ -92,18 +92,35 @@ public class SimpleServer extends AbstractServer {
 
     }
 
-    public void DeleteTheaterTicket(AdvancedMsg msg, ConnectionToClient client) {
+    private void DeleteTheaterTicket(TheaterTicket theaterTicket,MovieShow ms){
+        if(!theaterTicket.getScreeningDate().isBefore(LocalDate.now())){
+            EmailUtil.sendTheatetrTicketEmailMScancel(theaterTicket,1.0);
+        }
+        Seats seats=ms.getSeats();
+        List<Seat>seatList=theaterTicket.getReservedSeats();
+        for (Seat st:seatList){
+            seats.unReserveSeat(st.getSeatCol(),st.getSeatRow());
+            session.delete(st);
+            session.flush();
+        }
+        session.delete(theaterTicket);
+        session.flush();
+    }
+    public void DeleteTheaterTicket(AdvancedMsg msg,ConnectionToClient client){
         try {
-            SessionFactory sessionFactory = getSessionFactory();
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            TheaterTicket theaterticket = (TheaterTicket) msg.getObjectList().get(0);
-            EmailUtil.sendTheatetrTicketEmailCancelation(theaterticket, (double) msg.getObjectList().get(1));
-            MovieShow ms = getMovieShowbyid(theaterticket.getMovieShowid());
-            Seats seats = ms.getSeats();
-            List<Seat> seatList = theaterticket.getReservedSeats();
-            for (Seat st : seatList) {
-                seats.unReserveSeat(st.getSeatCol(), st.getSeatRow());
+            if(session==null){
+                SessionFactory sessionFactory = getSessionFactory();
+                session = sessionFactory.openSession();
+                session.beginTransaction();
+            }
+            TheaterTicket theaterticket=(TheaterTicket) msg.getObjectList().get(0);
+            EmailUtil.sendTheatetrTicketEmailCancelation(theaterticket,(double)msg.getObjectList().get(1));
+            MovieShow ms=getMovieShowbyid(theaterticket.getMovieShowid());
+            Seats seats=ms.getSeats();
+            List<Seat>seatList=theaterticket.getReservedSeats();
+            for (Seat st:seatList){
+                seats.unReserveSeat(st.getSeatCol(),st.getSeatRow());
+
                 session.delete(st);
                 session.flush();
             }
@@ -179,19 +196,37 @@ public class SimpleServer extends AbstractServer {
         } else if (msgString.equals("#getTickets")) {
             client.sendToClient(getAllTickets((String) msgobject.getObject()));
             System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
+        }else if(msgString.equals("#getSalesReport")){
+            int sales=getcinemarevenue((int)msgobject.getObject());
+            msgObject answer_msg=new msgObject("branch revenue",sales);
+            client.sendToClient(answer_msg);
+            System.out.println("branch sales sent to client");
+        }
+        else if(msgString.equals("#getDataForReports")) {
+            msgObject answer_msg=getAllTheatres();
+            answer_msg.setMsg("openReportPage");
+            client.sendToClient(answer_msg);
+            System.out.format("Theaters sent to client to open report page client  %s\n", client.getInetAddress().getHostAddress());
         }
     }
 
     private void update(msgObject msgObj, ConnectionToClient client) {
         try {
 
-            if (msgObj.getMsg().equals("#updateMovieShow") || msgObj.getMsg().equals("#updateMovieShowTicket")) {//TODO:Check it here
+
+            if (msgObj.getMsg().equals("#updateMovieShow")||msgObj.getMsg().equals("#updateMovieShowTicket")) {
+
                 System.out.println(msgObj.getMsg());
                 SessionFactory sessionFactory = getSessionFactory();
+                System.out.println("test1");
                 session = sessionFactory.openSession();
+                System.out.println("test2");
                 session.beginTransaction();
+                System.out.println("test3");
                 change(msgObj, client);
-                session.getTransaction().commit(); // Save everything.
+                System.out.println("test4");
+                //session.getTransaction().commit(); // Save everything.
+                System.out.println("test5");
                 msgObj.setMsg("movie show updated");
                 try {
                     if (msgObj.getMsg().equals("#updateMovieShow") && (msgObj.getMsg().equals("#updateMovieShowTicket") == false)) {
@@ -333,20 +368,31 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(tempmsg);
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
-            session.update(((MovieShow) msgObj.getObject()));
+
+        }
+        else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
+            System.out.println("test update1");
+         session.update(((MovieShow) msgObj.getObject()));
+            System.out.println("test update1");
             session.flush();
-            AdvancedMsg tempmsg = new AdvancedMsg("MovieShow Updated");
-            MovieShow ms = (MovieShow) msgObj.getObject();
-            int movieid = ms.getMovie().getMovieId();
-            tempmsg.addobject((List<Theater>) getAllTheatres().getObject());
+
+            System.out.println("test update1");
+            AdvancedMsg tempmsg= new AdvancedMsg("MovieShow Updated");
+            MovieShow ms=(MovieShow)msgObj.getObject();
+            int movieid=ms.getMovie().getMovieId();
+            tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
+
             tempmsg.addobject(getMovie(movieid));
-            System.out.println("problem maker?");
             client.sendToClient(tempmsg);
         } else if (msgObj.getMsg().equals("#deleteMovieShow")) {
             System.out.println("deleting a movie show");
-            try {
-                session.delete(((MovieShow) msgObj.getObject()));
+            try{
+                List<TheaterTicket> theaterTicketList=gettheaterticketbymovieshowid(((MovieShow)msgObj.getObject()).getMovieShowId());
+                for(TheaterTicket tt:theaterTicketList){
+                    DeleteTheaterTicket(tt,(MovieShow)msgObj.getObject());
+                }
+                session.delete(((MovieShow)msgObj.getObject()));
+
                 session.getTransaction().commit();
             } catch (HibernateException e) {
                 e.printStackTrace();
@@ -372,7 +418,47 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#addPriceRequest")) {
+
+            /*System.out.println("deleting a movie show");
+            MovieShow ms=(MovieShow)msgObj.getObject();
+            try{
+                List<TheaterTicket> theaterTicketList=gettheaterticketbymovieshowid(ms.getMovieShowId());
+                for(TheaterTicket tt:theaterTicketList){
+                   DeleteTheaterTicket(tt,ms);
+                }
+                ms=getMovieShowbyid(ms.getMovieShowId());
+                System.out.println(ms.getMovieShowId());
+                session.delete(ms);
+                session.flush();
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                e.printStackTrace();
+                session.getTransaction().rollback();
+            }
+            System.out.println("MovieShow Deleted");
+            AdvancedMsg tempmsg = new AdvancedMsg("MovieShow Deleted");
+            try {
+                int movieid = ms.getMovie().getMovieId();
+                tempmsg.addobject((List<Theater>) getAllTheatres().getObject());
+                tempmsg.addobject(getMovie(movieid));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            session.close();
+            try {
+                if(((TheaterMovie)ms.getMovie()).getMSList().size()!=0){
+                    System.out.println("message sent to reopen edit page from the if");
+                }
+                System.out.println(tempmsg.getMsg());
+                System.out.println(tempmsg.getClass().toString());
+                client.sendToClient(tempmsg);
+                System.out.println("message sent to reopen edit page");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+        }
+        else if (msgObj.getMsg().equals("#addPriceRequest")) {
+
             session.save(((PriceRequest) msgObj.getObject()));
             session.flush();
             session.getTransaction().commit();
@@ -431,11 +517,13 @@ public class SimpleServer extends AbstractServer {
                 msg.setObject(m);
                 client.sendToClient(msg);
             }
+        }
+        else if(msgObj.getMsg().equals("#deleteHomeTicket")){
+            EmailUtil.sendHomeTicketEmailCancelation((HomeLinkTicket)msgObj.getObject());
+            session.delete((HomeLinkTicket)msgObj.getObject());
+            session.flush();
+            HomeLinkTicket hlt=(HomeLinkTicket)msgObj.getObject();
 
-        } else if (msgObj.getMsg().equals("#deleteHomeTicket")) {
-            EmailUtil.sendHomeTicketEmailCancelation((HomeLinkTicket) msgObj.getObject());
-            session.delete((HomeLinkTicket) msgObj.getObject());
-            HomeLinkTicket hlt = (HomeLinkTicket) msgObj.getObject();
             try {
                 client.sendToClient(getAllTickets(hlt.getBuyerEmail()));
             } catch (Exception e) {
@@ -443,6 +531,7 @@ public class SimpleServer extends AbstractServer {
             }
             System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
         }
+       // session.getTransaction().commit();
 
     }
 
@@ -485,6 +574,15 @@ public class SimpleServer extends AbstractServer {
         return msg_Answer;
     }
 
+    private List<TheaterTicket> gettheaterticketbymovieshowid(int movieshowid){
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<TheaterTicket> query = builder.createQuery(TheaterTicket.class);
+        Root<TheaterTicket>root=query.from(TheaterTicket.class);
+        query.select(root).where(builder.equal(root.get("movieShowid"),movieshowid));
+        ArrayList<TheaterTicket> Data=(ArrayList<TheaterTicket>)session.createQuery(query).getResultList();
+        return Data;
+    }
+    
 
     private static msgObject getAllRequests() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -628,6 +726,21 @@ public class SimpleServer extends AbstractServer {
 
     }
 
+    private int getcinemarevenue(int branchid){
+        int sum=0;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<TheaterTicket> query = builder.createQuery(TheaterTicket.class);
+        Root<TheaterTicket>root=query.from(TheaterTicket.class);
+        query.select(root).where(builder.equal(root.get("branchid"),branchid));
+        ArrayList<TheaterTicket> Data=(ArrayList<TheaterTicket>)session.createQuery(query).getResultList();
+        for (TheaterTicket tt:Data){
+            if(tt.getScreeningDate().getMonth().getValue()==LocalDate.now().getMonth().getValue())
+                sum+=tt.getTotalCost();
+        }
+        return sum;
+    }
+
+
     private static SessionFactory getSessionFactory() throws HibernateException {
         Configuration configuration = new Configuration();
         // Add ALL of your entities here. You can also try adding a whole package.
@@ -645,6 +758,8 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(Seat.class);
         configuration.addAnnotatedClass(Bundle.class);
         configuration.addAnnotatedClass(PurpleCard.class);
+        configuration.addAnnotatedClass(CinemaManager.class);
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -669,6 +784,19 @@ public class SimpleServer extends AbstractServer {
 
         }
     }
+    public static  void addCinemaManager(){
+        try {
+            CinemaManager CM = new CinemaManager("Wajeeh", "9e1f0bda8", "wajeeh", "atrash", 4,1);
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(CM);
+            session.getTransaction().commit(); // Save everything.
+        } catch (HibernateException e) {
+            e.printStackTrace();
+  }
+    }
+
 
     void getBundles(msgObject msg, ConnectionToClient client) {
         String Email = msg.getObject().toString();
@@ -722,7 +850,7 @@ public class SimpleServer extends AbstractServer {
 
     }
 
-
+      
     private static void AddToDB() {
         try {
             System.out.println("Theater movie1");

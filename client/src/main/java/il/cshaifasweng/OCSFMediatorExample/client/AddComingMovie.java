@@ -133,5 +133,15 @@ public class AddComingMovie implements Initializable {
         Stage stage=(Stage)AddBtn.getScene().getWindow();
         stage.close();
     }
+    @FXML
+    void goHome(ActionEvent event) {
+        msgObject msg=new msgObject("#getAllMovies");
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to get all movies");
+    }
 
 }

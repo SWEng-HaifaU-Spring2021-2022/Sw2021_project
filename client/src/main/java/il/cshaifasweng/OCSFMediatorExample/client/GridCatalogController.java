@@ -88,6 +88,9 @@ public class GridCatalogController implements Initializable {
     private Button nextPageBtn; // Value injected by FXMLLoader
 
     @FXML
+    private Button priceRequestBtn;
+
+    @FXML
     private Button addBtn;
 
     @FXML
@@ -95,6 +98,9 @@ public class GridCatalogController implements Initializable {
 
     @FXML
     private Label logInStatusLB;
+
+    @FXML
+    private Button Reportbtn;
 
     static int retVal = 10;
 
@@ -133,10 +139,20 @@ public class GridCatalogController implements Initializable {
         if (SimpleClient.getUser() != null) {
             LogBtn.setText("Log Out");
             logInStatusLB.setText("Logged in as: " + SimpleClient.getUser().getFirstName() + " " + SimpleClient.getUser().getLastName() + ".");
+            if(SimpleClient.getUser().getPermission()>=4){
+                Reportbtn.setVisible(true);
+            }
+            if (SimpleClient.getUser().getPermission()>=5){
+             priceRequestBtn.setVisible(true);
+            }
         } else {
             addBtn.setVisible(false);
             logInStatusLB.setText("");
             LogBtn.setText("Log In");
+
+            Reportbtn.setVisible(false);
+            priceRequestBtn.setVisible(false);
+
         }
         try {
             fillGrids();
@@ -144,31 +160,9 @@ public class GridCatalogController implements Initializable {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
+
         retVal=10;
-		/*pages = movieList.size() / 4 + 1;
-		 pagesLabel.setText("page " + page + " out of " + pages);
-		Platform.runLater(() -> {
-			CatalogGrid.getChildren().clear();
-			for (int i = 0; i < rowsNum; i++) {
-				for (int j = 0; j < colsNum; j++) {
-					Pair<Parent, Object> viewData = null;
-					try {
-						viewData = LayoutManager.getInstance().getFXML("MovieGrid");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					Node itemCell = viewData.getKey();
-					MovieGridController controller = (MovieGridController) viewData.getValue();
-					int index = (page - 1) * colsNum * rowsNum + i * colsNum + j;
-					if (index >= movieList.size())
-						break;
-					Movie item = movieList.get(index);
-					controller.setMovieGrid(item);
-					controller.setDisplay();
-					CatalogGrid.add(itemCell, j, i);
-				}
-			}
-		});*/
+
         movieType.getItems().add("All Movies");
         movieType.setValue("All Movies");
         movieType.getItems().add("Coming Soon");
@@ -292,8 +286,36 @@ public class GridCatalogController implements Initializable {
     }
 
     @FXML
+    void openPriceRequest(ActionEvent event) {
+        try {
+            msgObject msg=new msgObject("#getAllPriceRequests");
+            SimpleClient.getClient().sendToServer(msg);
+            System.out.println("message sent to server to get all Requests");
+            //App.setRoot("contentmanagerPrices");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void openCancelTicket(ActionEvent event) {
+        try {
+            App.setRoot("CancelTicket");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     void addNewMovie(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddComingMovie.fxml"));
+        try {
+            App.setRoot("AddComingMovie");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       /* FXMLLoader loader = new FXMLLoader(getClass().getResource("AddComingMovie.fxml"));
         Parent parent = null;
         try {
             parent = loader.load();
@@ -304,7 +326,7 @@ public class GridCatalogController implements Initializable {
         Stage stage = new Stage();
         stage.setTitle("add coming soon movie");
         stage.setScene(new Scene(parent));
-        stage.show();
+        stage.show();*/
         /*
          * stage.setOnHiding((e) -> { handleRefresh(new ActionEvent()); });
          */
@@ -365,6 +387,20 @@ public class GridCatalogController implements Initializable {
             fillGrids();
         } catch (IOException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void openReportPage(ActionEvent event) {
+        try {
+            if(SimpleClient.getUser().getPermission()==5){
+                msgObject msg=new msgObject("#getDataForReports");
+                SimpleClient.getClient().sendToServer(msg);
+            }else{
+                App.setRoot("Reports");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

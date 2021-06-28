@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class MovieGridController {
-    private  Movie movie;
+    public  Movie movie;
     private static Movie clickedMovie;
     @FXML // fx:id="MovieImage"
     private ImageView MovieImage; // Value injected by FXMLLoader
@@ -226,29 +226,42 @@ public class MovieGridController {
         });*/
     }
     @FXML
-    void OpenBuyWindow(ActionEvent event) throws IOException {
-        if(movie.getClass().equals(TheaterMovie.class)){
-            FXMLLoader loader=new FXMLLoader(getClass().getResource(("BuyTicketWindow.fxml")));
-            Parent parent=loader.load();
-            BuyTicketWindowController controller=(BuyTicketWindowController) loader.getController();
-            controller.setDetails((TheaterMovie) movie);
-            Stage stage=new Stage();
-            stage.setTitle("Buy Ticket "+movie.getEngName());
-            stage.setScene(new Scene(parent));
-            stage.show();
-        }
-        else if (movie.getClass().equals(HomeMovie.class)){
-            FXMLLoader loader=new FXMLLoader(getClass().getResource(("HomeMovieBuyWindow.fxml")));
-            Parent parent=loader.load();
-            HomeMovieBuyWindowController controller=(HomeMovieBuyWindowController)loader.getController();
-            controller.setDetails((HomeMovie) movie);
+    void OpenBuyWindow(ActionEvent event)  {
+        try{
+            if(movie.getClass().equals(TheaterMovie.class)){
+                FXMLLoader loader=new FXMLLoader(getClass().getResource(("BuyTicketWindow.fxml")));
+                Parent parent=loader.load();
+                BuyTicketWindowController controller=(BuyTicketWindowController) loader.getController();
+                controller.setDetails((TheaterMovie) movie);
+                Stage stage=new Stage();
+                stage.setTitle("Buy Ticket "+movie.getEngName());
+                stage.setScene(new Scene(parent));
+                stage.show();
+            }
+            else if (movie.getClass().equals(HomeMovie.class)){
+                FXMLLoader loader=new FXMLLoader(getClass().getResource(("HomeMovieBuyWindow.fxml")));
+                Parent parent=loader.load();
+                HomeMovieBuyWindowController controller=(HomeMovieBuyWindowController)loader.getController();
+                controller.setDetails((HomeMovie) movie);
            /* BuyTicketWindowController controller=(BuyTicketWindowController) loader.getController();
             controller.setDetails((TheaterMovie) movie);*/
-            Stage stage=new Stage();
-            stage.setTitle("Buy Ticket "+movie.getEngName());
-            stage.setScene(new Scene(parent));
-            stage.show();
+                Stage stage=new Stage();
+                stage.setTitle("Buy Ticket "+movie.getEngName());
+                stage.setScene(new Scene(parent));
+                stage.show();
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
+
+    }
+    public void reOpenBuyWindow() throws IOException {
+        System.out.println("test1");
+        ActionEvent event=new ActionEvent();
+        System.out.println("test2");
+        OpenBuyWindow(event);
+        System.out.println("test3");
     }
 }

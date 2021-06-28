@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Bundle;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
@@ -92,6 +93,7 @@ public class BuyBundleController {
             if (((msgObject) SimpleClient.obj).getMsg().equals("BundleBought")) {
                 instLabel.setTextFill(Color.color(0, 0.7, 0.3));
                 instLabel.setText("Bundle bought successfully!");
+
             } else {
                 instLabel.setTextFill(Color.color(0.8, 0, 0.2));
                 instLabel.setText("An error occured, try later!");
@@ -104,10 +106,16 @@ public class BuyBundleController {
         }
 
         try {
-            App.setRoot("GridCatalog");
+            TimeUnit.SECONDS.sleep(1);
+            instLabel.setText("Rediricting to main page");
+            TimeUnit.SECONDS.sleep(1);
+            App.setRoot("primary");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
 
 }

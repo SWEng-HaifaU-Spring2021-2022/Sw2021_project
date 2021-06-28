@@ -1,28 +1,25 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import com.mysql.cj.xdevapi.Client;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.hibernate.query.internal.QueryImpl;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.sql.Update;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,40 +37,96 @@ public class SimpleServer extends AbstractServer {
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-        msgObject msgObj = (msgObject) msg;
-        try {
-            if (msgObj.getMsg().equals("TryLogIn")) {
-                client.sendToClient(tryLogIn((String[]) msgObj.getObject()));
+        if (msg.getClass().equals(msgObject.class)) {
+            msgObject msgObj = (msgObject) msg;
+            try {
+                if (msgObj.getMsg().equals("TryLogIn")) {
+                    client.sendToClient(tryLogIn((String[]) msgObj.getObject()));
+                }
+                if (msgObj.getMsg().equals("TryLogOut")) {
+                    client.sendToClient(tryLogOut((User) msgObj.getObject()));
+                }
+                if (msgObj.getMsg().equals("BuyBundle")) {
+                    System.out.println("BuyBundle");
+                    buyBundle(msgObj, client);
+                }
+                if (msgObj.getMsg().equals("getBundles"))
+                    getBundles(msgObj, client);
+                if (msgObj.getMsg().equals("getAllInstructions"))
+                    getAllInstructions(msgObj, client);
+                if (msgObj.getMsg().equals("AddInstruction") ||
+                        msgObj.getMsg().equals("UpdateInstruction") ||
+                        msgObj.getMsg().equals("DeleteInstruction"))
+                    EditInstruction(msgObj, client);
+                if (msgObj.getMsg().startsWith("#get")) {
+                    get(msgObj, client);
+                }
+                if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
+                if (msgObj.getMsg().startsWith("#add")) {
+                    change(msgObj, client);
+                }
+                if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (msgObj.getMsg().equals("TryLogOut")) {
-                client.sendToClient(tryLogOut((User) msgObj.getObject()));
+        } else {
+            System.out.println("server received advanced message");
+            AdvancedMsg advcmsg = (AdvancedMsg) msg;
+            if (advcmsg.getMsg().equals("#addTicket")) {
+                TheaterTicket theaterticket = (TheaterTicket) advcmsg.getObjectList().get(0);
+                msgObject msg2 = new msgObject("#addTicket", theaterticket);
+                try {
+                    change(msg2, client);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+               /* MovieShow movieShow=(MovieShow) advcmsg.getObjectList().get(1);
+                msgObject msg1=new msgObject("#updateMovieShow",movieShow);
+                update(msg1,client);
+                */
+            } else if (advcmsg.getMsg().equals("#deleteTheaterTicket")) {
+                System.out.println("deleting theater ticket");
+                DeleteTheaterTicket(advcmsg, client);
             }
-            if (msgObj.getMsg().equals("BuyBundle")) {
-                System.out.println("BuyBundle");
-                buyBundle(msgObj, client);
-            }
-            if (msgObj.getMsg().startsWith("#get")) {
-                get(msgObj, client);
-            }
-            if (msgObj.getMsg().startsWith("#update")) update(msgObj, client);
-            if (msgObj.getMsg().startsWith("#add")) {
-                change(msgObj, client);
-            }
-            if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
-            if (msgObj.getMsg().startsWith("#check")) check(msgObj, client);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
-    private void check(msgObject msg, ConnectionToClient client) {
-        if (msg.getMsg().equals("#checkHallMaxPeopleNum")) {
-            String[] data = msg.getObject().toString().split("-");
-            msgObject result = new msgObject("HallMaxPeopleNum");
-            result.setObject(checkHallMaxPeople(Integer.parseInt(data[0]),
-                    Integer.parseInt(data[1])));
-
-
+    public void DeleteTheaterTicket(AdvancedMsg msg, ConnectionToClient client) {
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            TheaterTicket theaterticket = (TheaterTicket) msg.getObjectList().get(0);
+            EmailUtil.sendTheatetrTicketEmailCancelation(theaterticket, (double) msg.getObjectList().get(1));
+            MovieShow ms = getMovieShowbyid(theaterticket.getMovieShowid());
+            Seats seats = ms.getSeats();
+            List<Seat> seatList = theaterticket.getReservedSeats();
+            for (Seat st : seatList) {
+                seats.unReserveSeat(st.getSeatCol(), st.getSeatRow());
+                session.delete(st);
+                session.flush();
+            }
+            ms.setSeats(seats);
+            session.update(ms);
+            session.flush();
+            session.delete(theaterticket);
+            session.getTransaction().commit();
+            try {
+                client.sendToClient(getAllTickets(theaterticket.getBuyerEmail()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("An error occurred, changes have been rolled back.");
+            exception.printStackTrace();
+        }
+        if (session != null) {
+            session.close();
         }
 
     }
@@ -123,13 +176,17 @@ public class SimpleServer extends AbstractServer {
         } else if (msgString.equals("#getAllPriceRequests")) {
             client.sendToClient(getAllRequests());
             System.out.format("Sent all requests to client %s\n", client.getInetAddress().getHostAddress());
+        } else if (msgString.equals("#getTickets")) {
+            client.sendToClient(getAllTickets((String) msgobject.getObject()));
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
         }
     }
 
     private void update(msgObject msgObj, ConnectionToClient client) {
         try {
 
-            if (msgObj.getMsg().equals("#updateMovieShow")) {
+            if (msgObj.getMsg().equals("#updateMovieShow") || msgObj.getMsg().equals("#updateMovieShowTicket")) {//TODO:Check it here
+                System.out.println(msgObj.getMsg());
                 SessionFactory sessionFactory = getSessionFactory();
                 session = sessionFactory.openSession();
                 session.beginTransaction();
@@ -137,7 +194,10 @@ public class SimpleServer extends AbstractServer {
                 session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
                 try {
-                    client.sendToClient(msgObj);
+                    if (msgObj.getMsg().equals("#updateMovieShow") && (msgObj.getMsg().equals("#updateMovieShowTicket") == false)) {
+                        System.out.println("sending updated movie show message");
+                        client.sendToClient(msgObj);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -245,6 +305,14 @@ public class SimpleServer extends AbstractServer {
             answer_msg.setMsg("PriceRequest deleted");
             client.sendToClient(answer_msg);
 
+        } else if (msgObj.getMsg().equals("#deleteTicket")) {
+            msgObject answer_msg = new msgObject();
+            Ticket ticket2 = (Ticket) msgObj.getObject();
+            session.delete((Ticket) msgObj.getObject());
+            session.getTransaction().commit(); // Save everything
+            answer_msg.setMsg("Ticket deleted");
+            client.sendToClient(answer_msg);
+
         } else if (msgObj.getMsg().equals("#addMovieShow")) {
             session.save((MovieShow) msgObj.getObject());
             session.flush();
@@ -265,7 +333,7 @@ public class SimpleServer extends AbstractServer {
                 client.sendToClient(tempmsg);
                 e.printStackTrace();
             }
-        } else if (msgObj.getMsg().equals("#updateMovieShow")) {
+        } else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
             session.update(((MovieShow) msgObj.getObject()));
             session.flush();
             AdvancedMsg tempmsg = new AdvancedMsg("MovieShow Updated");
@@ -273,6 +341,7 @@ public class SimpleServer extends AbstractServer {
             int movieid = ms.getMovie().getMovieId();
             tempmsg.addobject((List<Theater>) getAllTheatres().getObject());
             tempmsg.addobject(getMovie(movieid));
+            System.out.println("problem maker?");
             client.sendToClient(tempmsg);
         } else if (msgObj.getMsg().equals("#deleteMovieShow")) {
             System.out.println("deleting a movie show");
@@ -306,12 +375,73 @@ public class SimpleServer extends AbstractServer {
         } else if (msgObj.getMsg().equals("#addPriceRequest")) {
             session.save(((PriceRequest) msgObj.getObject()));
             session.flush();
-            ;
             session.getTransaction().commit();
-            ;
             System.out.println("a new price change request have been added");
             msgObject answer_msg = new msgObject("a price request added", null);
             client.sendToClient(answer_msg);
+        } else if (msgObj.getMsg().equals("#addHomeTicket")) {
+            try {
+                HomeLinkTicket HLT = (HomeLinkTicket) msgObj.getObject();
+                session.save((HomeLinkTicket) msgObj.getObject());
+                session.flush();
+                session.getTransaction().commit();
+                System.out.println("home movie ticket have been bought");
+                msgObject answer_msg = new msgObject("HomeMoviePurchasedSuccessfully", null);
+                client.sendToClient(answer_msg);
+                EmailUtil.sendEmailHomeTicket(HLT);
+                System.out.println("Sending an email to the client");
+            } catch (Exception e) {
+                msgObject answer_msg = new msgObject("failed", null);
+                client.sendToClient(answer_msg);
+                e.printStackTrace();
+            }
+        } else if (msgObj.getMsg().equals("#addTicket")) {
+            TheaterTicket theaterTicket = (TheaterTicket) msgObj.getObject();
+            List<Seat> seatList = theaterTicket.getReservedSeats();
+            MovieShow ms = getMovieShowbyid(theaterTicket.getMovieShowid());
+            boolean isreservedflag = false;
+            for (Seat st : seatList) {
+                System.out.println("Row= " + st.getSeatRow() + "Col =" + (st.getSeatCol()));
+                if (ms.getSeats().getSeatInfo(st.getSeatCol(), st.getSeatRow()) == true) {
+                    isreservedflag = true;
+                } else {
+                    ms.getSeats().ReserveSeat(st.getSeatCol(), st.getSeatRow());
+                }
+            }
+            if (isreservedflag == false) {
+                session.save((TheaterTicket) msgObj.getObject());
+                session.flush();
+
+                for (Seat st : seatList) {
+                    session.save(st);
+                    session.flush();
+                }
+                session.getTransaction().commit();
+                msgObject msg = new msgObject("#updateMovieShowTicket", ms);
+                update(msg, client);
+                EmailUtil.sendTheatetrTicketEmail(theaterTicket);
+                System.out.println("Theater ticket have been saved successfully to the data base");
+                msgObject answer_msg = new msgObject("purchased Successfully");
+                client.sendToClient(answer_msg);
+                System.out.println("sending confirmation");
+            } else {
+
+                msgObject msg = new msgObject("failed to reserve");
+                Movie m = getMovie(ms.getMovie().getMovieId());
+                msg.setObject(m);
+                client.sendToClient(msg);
+            }
+
+        } else if (msgObj.getMsg().equals("#deleteHomeTicket")) {
+            EmailUtil.sendHomeTicketEmailCancelation((HomeLinkTicket) msgObj.getObject());
+            session.delete((HomeLinkTicket) msgObj.getObject());
+            HomeLinkTicket hlt = (HomeLinkTicket) msgObj.getObject();
+            try {
+                client.sendToClient(getAllTickets(hlt.getBuyerEmail()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
         }
 
     }
@@ -335,6 +465,26 @@ public class SimpleServer extends AbstractServer {
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
+
+    private static msgObject getAllTickets(String BuyerEmail) throws Exception {
+        if (BuyerEmail.isEmpty()) {
+            return new msgObject();
+        }
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Ticket> query = builder.createQuery(Ticket.class);
+        Root<Ticket> root = query.from(Ticket.class);
+        query.select(root).where(builder.equal(root.get("buyerEmail"), BuyerEmail));
+        ArrayList<Ticket> Data = (ArrayList<Ticket>) session.createQuery(query).getResultList();
+        for (Ticket t : Data) {
+            if (t.getClass().equals(TheaterTicket.class)) {
+                TheaterTicket tk = (TheaterTicket) t;
+                tk.getReservedSeats();
+            }
+        }
+        msgObject msg_Answer = new msgObject("AllTickets", Data);
+        return msg_Answer;
+    }
+
 
     private static msgObject getAllRequests() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -361,6 +511,14 @@ public class SimpleServer extends AbstractServer {
                     return m;
                 }
             } else if (m.getMovieId() == id) {
+                if (m.getClass().equals(TheaterMovie.class)) {
+                    TheaterMovie TH = (TheaterMovie) m;
+                    List<MovieShow> msl = TH.getMSList();
+                    for (MovieShow ms : msl) {
+                        ms.getMovie();
+                        ms.getTheater();
+                    }
+                }
                 return m;
             }
 
@@ -373,7 +531,7 @@ public class SimpleServer extends AbstractServer {
         session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Hall> query = builder.createQuery(Hall.class);
-        query.from(Movie.class);
+        query.from(Hall.class);
         List<Hall> data = session.createQuery(query).getResultList();
         return data;
     }
@@ -481,13 +639,21 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(HomeMovie.class);
         configuration.addAnnotatedClass(PriceRequest.class);
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Ticket.class);
+        configuration.addAnnotatedClass(HomeLinkTicket.class);
+        configuration.addAnnotatedClass(TheaterTicket.class);
+        configuration.addAnnotatedClass(Seat.class);
         configuration.addAnnotatedClass(Bundle.class);
         configuration.addAnnotatedClass(PurpleCard.class);
-
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
         return configuration.buildSessionFactory(serviceRegistry);
+    }
+
+    private MovieShow getMovieShowbyid(int id) {
+        MovieShow ms = (MovieShow) session.get(MovieShow.class, id);
+        return ms;
     }
 
     public static void AddUsers() {
@@ -503,6 +669,59 @@ public class SimpleServer extends AbstractServer {
 
         }
     }
+
+    void getBundles(msgObject msg, ConnectionToClient client) {
+        String Email = msg.getObject().toString();
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        String sqlQ = "FROM Bundle U WHERE U.email = :u_email";
+        Query query = session.createQuery(sqlQ);
+        query.setParameter("u_email", Email);
+        List<Bundle> list = query.list();
+        msg.setMsg("SentYourBundles");
+        msg.setObject(list);
+        try {
+            client.sendToClient(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+    }
+
+    void buyBundle(msgObject msg, ConnectionToClient client) {
+        Bundle bundle = (Bundle) msg.getObject();
+        msgObject m = new msgObject("BundleBought");
+
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(bundle);
+            session.flush();
+            session.getTransaction().commit(); // Save everything.
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("BuyingBundleError");
+            m.setMsg("BuyingBundleError");
+            exception.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        try {
+            client.sendToClient(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        EmailUtil.sendEmail(bundle.getEmail(), "Cinema Bundle", "Your bundle has been bought successfully, thanks for using our services!");
+
+    }
+
 
     private static void AddToDB() {
         try {
@@ -527,7 +746,7 @@ public class SimpleServer extends AbstractServer {
             Date d = new Date(2021 - 1900, 7, 11);
             instant = d.toInstant();
             LocalDate localD1 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms = new MovieShow(m, localD1, th, "20:00", "22:00", 40);
+            MovieShow ms = new MovieShow(m, localD1, th, "20:00", "22:00", String.valueOf(hall.getHallNumber()), hall.getCapacity());
             m.AddMovieShow(ms);
             session.save(ms);
             session.flush();
@@ -542,13 +761,13 @@ public class SimpleServer extends AbstractServer {
             Theater th2 = new Theater("Herzilya");
             session.save(th2);
             session.flush();
-            Hall hall2 = new Hall(40, th2, 1);
+            Hall hall2 = new Hall(50, th2, 1);
             session.save(hall2);
             session.flush();
             Date d2 = new Date(2021 - 1900, 10, 5);
             instant = d2.toInstant();
             LocalDate localD2 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms2 = new MovieShow(m2, localD2, th2, "19:00", "21:00", 60);
+            MovieShow ms2 = new MovieShow(m2, localD2, th2, "19:00", "21:00", String.valueOf(hall2.getHallNumber()), hall2.getCapacity());
             m.AddMovieShow(ms2);
             session.save(ms2);
             session.flush();
@@ -563,13 +782,13 @@ public class SimpleServer extends AbstractServer {
             Theater th3 = new Theater("Tel-Aviv");
             session.save(th3);
             session.flush();
-            Hall hall3 = new Hall(40, th3, 2);
+            Hall hall3 = new Hall(20, th3, 2);
             session.save(hall3);
             session.flush();
             Date d3 = new Date(2021 - 1900, 2, 12);
             instant = d3.toInstant();
             LocalDate localD3 = instant.atZone(defaultZoneId).toLocalDate();
-            MovieShow ms3 = new MovieShow(m3, localD3, th3, "12:00", "14:00", 40);
+            MovieShow ms3 = new MovieShow(m3, localD3, th3, "12:00", "14:00", String.valueOf(hall3.getHallNumber()), hall3.getCapacity());
             m.AddMovieShow(ms3);
             session.save(ms3);
             session.flush();
@@ -622,78 +841,68 @@ public class SimpleServer extends AbstractServer {
             /*List<MovieShow> temp= m.getMSList();
             for (MovieShow ms:temp){
                 System.out.println(ms.getTheater());
-
             }*/
         }
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
 
-    void buyBundle (msgObject msg, ConnectionToClient client)
-    {
-        Bundle bundle = (Bundle) msg.getObject();
-        msgObject m = new msgObject("BundleBought");
-
+    void EditInstruction(msgObject msg, ConnectionToClient client) {
+        PurpleCard card = (PurpleCard) msg.getObject();
+        String s = msg.getMsg();
         try {
             SessionFactory sessionFactory = getSessionFactory();
             session = sessionFactory.openSession();
             session.beginTransaction();
-            session.save(bundle);
+            if (s.equals("AddInstruction"))
+                session.save(card);
+            else if (s.equals("UpdateInstruction"))
+                session.update(card);
+            else if (s.equals("DeleteInstruction"))
+                session.delete(card);
             session.flush();
             session.getTransaction().commit(); // Save everything.
         } catch (Exception exception) {
             if (session != null) {
                 session.getTransaction().rollback();
             }
-            System.err.println("BuyingBundleError");
-            m.setMsg("BuyingBundleError");
+            System.err.println("An error occurred, changes have been rolled back.");
             exception.printStackTrace();
         } finally {
             if (session != null)
                 session.close();
         }
+        msg.setObject(null);
+        if (s.equals("AddInstruction"))
+            msg.setMsg("AddedInstruction");
+        else if (s.equals("UpdateInstruction"))
+            msg.setMsg("UpdatedInstruction");
+        else if (s.equals("DeleteInstruction"))
+            msg.setMsg("DeletedInstruction");
+
         try {
-            client.sendToClient(m);
+            client.sendToClient(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    int checkHallMaxPeople(int hallId, int movieId) {
-        int x, y=0;
-
+    void getAllInstructions(msgObject msg, ConnectionToClient client) {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
-        String sqlQ1 = "FROM Hall U WHERE U.id = :hall_id";
-        Query query1 = session.createQuery(sqlQ1);
-        query1.setParameter("hall_id", hallId);
-
-        String sqlQ2 = "FROM Movie U WHERE U.id = :movie_id";
-        Query query2 = session.createQuery(sqlQ2);
-        query2.setParameter("movie_id", movieId);
-        List<Hall> HallList = query1.list();
-        List<Movie> MovieList = query2.list();
-
-       // MovieList
-
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<PurpleCard> query = builder.createQuery(PurpleCard.class);
-        query.from(PurpleCard.class);
-        List<PurpleCard> list = session.createQuery(query).getResultList();
-        for (PurpleCard P : list) {
-            y=P.getMaxCap();
+        String sqlQ = "FROM PurpleCard";
+        Query query = session.createQuery(sqlQ);
+        List<PurpleCard> list = query.list();
+        msg.setMsg("SentPurpleCards");
+        msg.setObject(list);
+        try {
+            client.sendToClient(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
-
-        if (!MovieList.isEmpty())
-            if (!HallList.isEmpty()) {
-            x = HallList.get(0).getCapacity();
-                if (1.2 * y < x) return y;
-                if (x > 0.8 * y) return (int) (0.8 * y);
-                return (int) (x / 2);
-            }
-
-        return -1;
     }
 
 

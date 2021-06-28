@@ -4,8 +4,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.HomeMovie;
-import il.cshaifasweng.OCSFMediatorExample.entities.Movie;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
 
 import java.io.IOException;
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.HomeMovie;
-import il.cshaifasweng.OCSFMediatorExample.entities.MovieShow;
-import il.cshaifasweng.OCSFMediatorExample.entities.TheaterMovie;
 
 import javax.security.auth.RefreshFailedException;
 import javax.security.auth.Refreshable;
@@ -29,7 +26,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -97,6 +93,12 @@ public class GridCatalogController implements Initializable {
     private Button LogBtn;
 
     @FXML
+    private Button purpleBtn;
+
+    @FXML
+    private Button answercomplaintBtn;
+
+    @FXML
     private Label logInStatusLB;
 
     @FXML
@@ -142,17 +144,21 @@ public class GridCatalogController implements Initializable {
             if(SimpleClient.getUser().getPermission()>=4){
                 Reportbtn.setVisible(true);
             }
-            if (SimpleClient.getUser().getPermission()>=5){
+            if (SimpleClient.getUser().getPermission()==5){
              priceRequestBtn.setVisible(true);
+            }
+            if(SimpleClient.getUser().getPermission()==2){
+                answercomplaintBtn.setVisible(true);
+                purpleBtn.setVisible(true);
             }
         } else {
             addBtn.setVisible(false);
             logInStatusLB.setText("");
             LogBtn.setText("Log In");
-
+            answercomplaintBtn.setVisible(false);
             Reportbtn.setVisible(false);
             priceRequestBtn.setVisible(false);
-
+            purpleBtn.setVisible(false);
         }
         try {
             fillGrids();
@@ -291,7 +297,6 @@ public class GridCatalogController implements Initializable {
             msgObject msg=new msgObject("#getAllPriceRequests");
             SimpleClient.getClient().sendToServer(msg);
             System.out.println("message sent to server to get all Requests");
-            //App.setRoot("contentmanagerPrices");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -403,6 +408,33 @@ public class GridCatalogController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    void openSComplaint(ActionEvent event) {
+        try {
+            App.setRoot("Complaint");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void openPurple(ActionEvent event) {
+        try {
+            App.setRoot("PurpleCard");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void openAnswerComplaint(ActionEvent event) {
+        msgObject msg = new msgObject("#getAllComplaints");
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to get all Complaints");
     }
 }
 

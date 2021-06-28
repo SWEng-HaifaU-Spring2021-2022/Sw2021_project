@@ -68,7 +68,7 @@ public class AnsweringComplaintController implements Initializable{
 	        {
 	        	if(!table_Comp.getSelectionModel().getSelectedItem().getAnswer().isEmpty()) {
 	        		Answer_text.setText(table_Comp.getSelectionModel().getSelectedItem().getAnswer());
-	        		//Answer_text.disabledProperty();
+	        		Answer_text.setEditable(false);
 	        	}
 	        }
 	    }
@@ -84,12 +84,7 @@ public class AnsweringComplaintController implements Initializable{
 	        tb.setStatus("Answered");
 	        msgObject msg=new msgObject("#updateAnswerToComplaint",tb);
 	        try {
-	        	 System.out.println("test1");
 	            SimpleClient.getClient().sendToServer(msg);
-	            System.out.println("test2");
-	            Node node = (Node) event.getSource();
-	            Stage thisStage = (Stage) node.getScene().getWindow();
-	            thisStage.close();
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
@@ -152,5 +147,17 @@ public class AnsweringComplaintController implements Initializable{
 				column.setPrefWidth( max + 10.0d );
 			} );
 		}
+
+
+	@FXML
+	void goCatalog(ActionEvent event) {
+		msgObject msg = new msgObject("#getAllMovies");
+		try {
+			SimpleClient.getClient().sendToServer(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("message sent to server to get all movies");
+	}
 	    
 }

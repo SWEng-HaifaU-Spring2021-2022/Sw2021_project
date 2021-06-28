@@ -285,6 +285,8 @@ public class SimpleServer extends AbstractServer {
 				session.update(((Complaint) msgObj.getObject()));
 				session.flush();
 				session.getTransaction().commit();
+				msgObject answer_msg=new msgObject("Complaint answered successfully");
+				client.sendToClient(answer_msg);
 				/*
 				 * try { System.out.println("a I'm in the server for answer");
 				 * session.update(((Complaint)msgObj.getObject())); session.flush();;
@@ -811,6 +813,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(Bundle.class);
         configuration.addAnnotatedClass(PurpleCard.class);
         configuration.addAnnotatedClass(CinemaManager.class);
+        configuration.addAnnotatedClass(Complaint.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -846,9 +849,32 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().commit(); // Save everything.
         } catch (HibernateException e) {
             e.printStackTrace();
-  }
+         }
     }
-
+    public static  void addserviceWorker(){
+        try {
+            User serviceWorker= new User("Yaseen", "9e1f0bda8", "Yaseen", "AbedElhalim", 2);
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(serviceWorker);
+            session.getTransaction().commit(); // Save everything.
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+    }
+    public static  void addcontentworker(){
+        try {
+            User serviceWorker= new User("Yamen", "9e1f0bda8", "yamen", "masallha", 3);
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(serviceWorker);
+            session.getTransaction().commit(); // Save everything.
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+    }
 
     void getBundles(msgObject msg, ConnectionToClient client) {
         String Email = msg.getObject().toString();

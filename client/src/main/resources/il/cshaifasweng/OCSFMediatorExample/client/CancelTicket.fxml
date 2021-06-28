@@ -6,8 +6,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TicketCancelControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="905.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TicketCancelControl">
    <children>
       <TableView fx:id="CancelTable" layoutX="222.0" layoutY="82.0" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="352.0">
         <columns>
@@ -22,6 +23,9 @@
       <Button fx:id="ShowMovies" layoutX="461.0" layoutY="49.0" mnemonicParsing="false" onAction="#ShowBtn" text="Show Movies" />
       <Button fx:id="goHome" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
       <Label fx:id="ticketDetailsLabel" layoutX="14.0" layoutY="349.0" prefHeight="17.0" prefWidth="0.0" wrapText="true" />
-      <Label layoutX="179.0" layoutY="469.0" text="Important: If you cancel before 3 Hours of playing date,&#10;You will recieve 100% Refund, If you cancel between 1-3 Hours before,&#10; You will recieve 50% refund, Otherwise you will not get any refund." textFill="WHITE" />
+      <Label layoutX="182.0" layoutY="431.0" text="Important: If you cancel before 3 Hours of playing date,&#10;You will recieve 100% Refund, If you cancel between 1-3 Hours before,&#10; You will recieve 50% refund, Otherwise you will not get any refund." textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
    </children>
 </AnchorPane>

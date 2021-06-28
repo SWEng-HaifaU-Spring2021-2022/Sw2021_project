@@ -17,10 +17,6 @@ public class SimpleClient extends AbstractClient {
 	public static Object obj = null;
 	private static User user = null;
 	public static  List<Ticket> ticketlist=null;
-
-	private static SimpleClient client = null;
-	public static Object obj=null;
-    private static User user = null;
 	private SimpleClient(String host, int port) {
 		super(host, port);
 	}
@@ -135,12 +131,12 @@ public class SimpleClient extends AbstractClient {
 			else if (tempmsg.getMsg().equals("AllRequests")) {
 				obj = tempmsg.getObject();
 				try {
-					App.setRoot("AnswerComplaints");
+					App.setRoot("contentmanagerPrices");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				});
+
 			}
 			else if(tempmsg.getMsg().equals("an answer to complaint added"))
 			{
@@ -156,10 +152,12 @@ public class SimpleClient extends AbstractClient {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}else if(tempmsg.getMsg().equals("branch revenue")){
+			}
+			else if(tempmsg.getMsg().equals("branch revenue")){
 				Warning newwarning = new Warning("the branch revenue for the last month is"+(int)tempmsg.getObject());
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-			}else if(tempmsg.getMsg().equals("openReportPage")){
+			}
+			else if(tempmsg.getMsg().equals("openReportPage")){
 				try {
 					obj=tempmsg.getObject();
 					App.setRoot("Reports");
@@ -204,6 +202,10 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("an answer to complaint have been added to the DB");
 				Warning newwarning=new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
+			}
+			else if(tempmsg.getMsg().equals("Complaint answered successfully")){
+				Warning newwarning = new Warning("Complaint answered successfully");
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
 		}
 

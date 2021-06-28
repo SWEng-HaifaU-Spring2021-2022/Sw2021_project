@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AnsweringComplaintController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="736.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AnsweringComplaintController">
    <children>
       <TableView fx:id="table_Comp" layoutX="14.0" layoutY="27.0" onMouseClicked="#getSelected" prefHeight="202.0" prefWidth="658.0">
         <columns>
@@ -23,5 +23,6 @@
       <Label layoutX="14.0" layoutY="403.0" text="Answer" />
       <TextArea fx:id="Answer_text" layoutX="13.0" layoutY="421.0" prefHeight="108.0" prefWidth="560.0" />
       <Button fx:id="Answer_btn" layoutX="267.0" layoutY="568.0" mnemonicParsing="false" onAction="#sendAnswerToComplaint" text="Answer" />
+      <Button layoutX="184.0" layoutY="568.0" mnemonicParsing="false" onAction="#goCatalog" text="Catalog" />
    </children>
 </AnchorPane>

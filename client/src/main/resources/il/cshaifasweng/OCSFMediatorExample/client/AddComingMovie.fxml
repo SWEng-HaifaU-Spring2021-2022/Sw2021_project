@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="361.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AddComingMovie">
+<AnchorPane prefHeight="361.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AddComingMovie" stylesheets="@../CSSFiles/bootstrap3.css">
    <children>
       <TextField fx:id="MovieEng" layoutX="14.0" layoutY="161.0" />
       <Label layoutX="14.0" layoutY="133.0" text="Movie English name" />

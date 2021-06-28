@@ -43,6 +43,8 @@ public class ComplaintController {
     	msg.setObject(comp);
     	System.out.println("sending to server a new complaint");
     	SimpleClient.getClient().sendToServer(msg);
+    	email_txt.clear();
+    	content_txt.clear();
     }
 
     @FXML
@@ -51,5 +53,15 @@ public class ComplaintController {
         assert content_txt != null : "fx:id=\"content_txt\" was not injected: check your FXML file 'Complaint.fxml'.";
         assert send_btn != null : "fx:id=\"send_btn\" was not injected: check your FXML file 'Complaint.fxml'.";
 
+    }
+    @FXML
+    void goCatalog(ActionEvent event) {
+        msgObject msg = new msgObject("#getAllMovies");
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to get all movies");
     }
 }

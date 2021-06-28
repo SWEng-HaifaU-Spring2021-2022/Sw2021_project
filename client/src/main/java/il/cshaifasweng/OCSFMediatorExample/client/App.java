@@ -16,8 +16,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
+/*import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;*/
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -39,9 +39,9 @@ public class App extends Application {
         client.openConnection();
         scene = new Scene(loadFXML("primary"));
         //scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
-        JMetro jMetro = new JMetro(Style.LIGHT);
-        jMetro.setScene(scene);
-        scene.setFill(Color.WHITE);
+        /*JMetro jMetro = new JMetro(Style.LIGHT);
+        jMetro.setScene(scene);*/
+       // scene.setFill(Color.WHITE);
         stage.setScene(scene);
         stage.show();
     }

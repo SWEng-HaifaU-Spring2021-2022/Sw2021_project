@@ -12,27 +12,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-
 public class PrimaryController {
 	@FXML // fx:id="grid"
 	private Button grid; // Value injected by FXMLLoader
-	
+
 	@FXML // fx:id="pricespage"
-    private Button pricespage; // Value injected by FXMLLoader
+	private Button pricespage; // Value injected by FXMLLoader
 
 	@FXML
 	void open_grid(ActionEvent event) throws IOException {
-		msgObject msg=new msgObject("#getAllMovies");
+		msgObject msg = new msgObject("#getAllMovies");
 		SimpleClient.getClient().sendToServer(msg);
 		System.out.println("message sent to server to get all movies");
-		//App.setRoot("GridCatalog");
+		// App.setRoot("GridCatalog");
 	}
 
 	@FXML
-	void sendWarning(ActionEvent event)  throws IOException {
+	void sendWarning(ActionEvent event) throws IOException {
 		try {
-			//SimpleClient.getClient().sendToServer("#warning");
-			msgObject msg=new msgObject("#getAllMovies");
+			// SimpleClient.getClient().sendToServer("#warning");
+			msgObject msg = new msgObject("#getAllMovies");
 			SimpleClient.getClient().sendToServer(msg);
 			System.out.println("message sent to server to get all movies");
 
@@ -41,17 +40,33 @@ public class PrimaryController {
 			e.printStackTrace();
 		}
 	}
+
 	@FXML
-    void openpricess(ActionEvent event) {
+	void openpricess(ActionEvent event) {
 		try {
-			msgObject msg=new msgObject("#getAllPriceRequests");
+			msgObject msg = new msgObject("#getAllPriceRequests");
 			SimpleClient.getClient().sendToServer(msg);
 			System.out.println("message sent to server to get all Requests");
-			//App.setRoot("contentmanagerPrices");
+			// App.setRoot("contentmanagerPrices");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
+
+	@FXML
+	void open_Complaint(ActionEvent event) throws IOException {
+		App.setRoot("Complaint");
+	}
+
+	@FXML
+	void openanswerComp(ActionEvent event) throws IOException {
+		msgObject msg = new msgObject("#getAllComplaints");
+		SimpleClient.getClient().sendToServer(msg);
+		System.out.println("message sent to server to get all Complaints");
+		
+		//App.setRoot("AnswerComplaints");
+
+	}
 
 }

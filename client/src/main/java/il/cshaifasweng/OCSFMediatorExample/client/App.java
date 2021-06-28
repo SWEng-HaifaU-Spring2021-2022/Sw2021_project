@@ -31,7 +31,7 @@ public class App extends Application {
         EventBus.getDefault().register(this);
         client = SimpleClient.getClient();
         client.openConnection();
-        scene = new Scene(loadFXML("Primary"));
+        scene = new Scene(loadFXML("primary"));
         scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
         stage.setScene(scene);
         stage.show();

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ComplaintController">
+   <children>
+      <Text id="email_label" layoutX="41.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="enter yor email :" />
+      <TextField id="email_txt" fx:id="email_txt" layoutX="146.0" layoutY="54.0" />
+      <Text id="content_label" layoutX="41.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Complaint's content :" />
+      <TextArea id="bu" fx:id="content_txt" layoutX="31.0" layoutY="207.0" prefHeight="218.0" prefWidth="634.0" />
+      <Button id="send_btn" fx:id="send_btn" layoutX="339.0" layoutY="477.0" mnemonicParsing="false" onAction="#sendComplaint" text="Send" />
+   </children>
+</AnchorPane>

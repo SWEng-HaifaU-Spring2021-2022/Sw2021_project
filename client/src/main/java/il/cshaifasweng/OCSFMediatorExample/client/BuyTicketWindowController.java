@@ -82,7 +82,7 @@ public class BuyTicketWindowController {
         String cvv=CvvText.getText();
         String brach=DatesList.getValue().getTheater().getLocation();
         String hall=DatesList.getValue().getHallnumber();
-        TheaterTicket theaterticket=new TheaterTicket(buyeremail,curtheaterMovie.getEngName(),screeningDate,buyerName,visaNumber,cvv,brach,hall,startingTime,endingTime,DatesList.getSelectionModel().getSelectedItem().getMovieShowId());
+        TheaterTicket theaterticket=new TheaterTicket(buyeremail,curtheaterMovie.getEngName(),screeningDate,buyerName,visaNumber,cvv,brach,hall,startingTime,endingTime,DatesList.getSelectionModel().getSelectedItem().getMovieShowId(),DatesList.getSelectionModel().getSelectedItem().getTheater().getTheaterId());
         theaterticket.setReservedSeats(choosenSeats);
         theaterticket.setTotalCost(choosenSeats.size()*curtheaterMovie.getEntryPrice());
         AdvancedMsg advcmsg=new AdvancedMsg("#addTicket");

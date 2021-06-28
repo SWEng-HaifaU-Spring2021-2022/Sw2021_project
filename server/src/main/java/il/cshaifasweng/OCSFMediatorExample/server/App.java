@@ -10,7 +10,7 @@ public class App
 
         //server.test();
       // server.AddUsers();
-
+      // server.addCinemaManager();
         server.listen();
         System.out.println("Server is up");
         SchedulerSender.startJobScheduling();

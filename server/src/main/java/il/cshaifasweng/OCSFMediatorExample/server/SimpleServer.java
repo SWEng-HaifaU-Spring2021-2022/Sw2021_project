@@ -83,8 +83,9 @@ public class SimpleServer extends AbstractServer {
 
     }
     private void DeleteTheaterTicket(TheaterTicket theaterTicket,MovieShow ms){
-        EmailUtil.sendTheatetrTicketEmailMScancel(theaterTicket,1.0);
-
+        if(!theaterTicket.getScreeningDate().isBefore(LocalDate.now())){
+            EmailUtil.sendTheatetrTicketEmailMScancel(theaterTicket,1.0);
+        }
         Seats seats=ms.getSeats();
         List<Seat>seatList=theaterTicket.getReservedSeats();
         for (Seat st:seatList){
@@ -185,6 +186,17 @@ public class SimpleServer extends AbstractServer {
         else if(msgString.equals("#getTickets")) {
         	client.sendToClient(getAllTickets((String) msgobject.getObject()));
             System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
+        }else if(msgString.equals("#getSalesReport")){
+            int sales=getcinemarevenue((int)msgobject.getObject());
+            msgObject answer_msg=new msgObject("branch revenue",sales);
+            client.sendToClient(answer_msg);
+            System.out.println("branch sales sent to client");
+        }
+        else if(msgString.equals("#getDataForReports")) {
+            msgObject answer_msg=getAllTheatres();
+            answer_msg.setMsg("openReportPage");
+            client.sendToClient(answer_msg);
+            System.out.format("Theaters sent to client to open report page client  %s\n", client.getInetAddress().getHostAddress());
         }
     }
 
@@ -708,6 +720,21 @@ public class SimpleServer extends AbstractServer {
 
     }
 
+    private int getcinemarevenue(int branchid){
+        int sum=0;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<TheaterTicket> query = builder.createQuery(TheaterTicket.class);
+        Root<TheaterTicket>root=query.from(TheaterTicket.class);
+        query.select(root).where(builder.equal(root.get("branchid"),branchid));
+        ArrayList<TheaterTicket> Data=(ArrayList<TheaterTicket>)session.createQuery(query).getResultList();
+        for (TheaterTicket tt:Data){
+            if(tt.getScreeningDate().getMonth().getValue()==LocalDate.now().getMonth().getValue())
+                sum+=tt.getTotalCost();
+        }
+        return sum;
+    }
+
+
     private static SessionFactory getSessionFactory() throws HibernateException {
         Configuration configuration = new Configuration();
         // Add ALL of your entities here. You can also try adding a whole package.
@@ -723,6 +750,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(HomeLinkTicket.class);
         configuration.addAnnotatedClass(TheaterTicket.class);
         configuration.addAnnotatedClass(Seat.class);
+        configuration.addAnnotatedClass(CinemaManager.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -745,7 +773,19 @@ public class SimpleServer extends AbstractServer {
 
         }
     }
+    public static  void addCinemaManager(){
+        try {
+            CinemaManager CM = new CinemaManager("Wajeeh", "9e1f0bda8", "wajeeh", "atrash", 4,1);
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(CM);
+            session.getTransaction().commit(); // Save everything.
+        } catch (HibernateException e) {
+            e.printStackTrace();
 
+        }
+    }
     private static void AddToDB() {
         try {
             System.out.println("Theater movie1");

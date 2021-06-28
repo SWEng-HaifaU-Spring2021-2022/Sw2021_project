@@ -98,7 +98,9 @@ public class PriceChangeController implements Initializable {
     @FXML
     void goHome(ActionEvent event) {
     	try {
-			App.setRoot("primary");
+			msgObject msg=new msgObject("#getAllMovies");
+			SimpleClient.getClient().sendToServer(msg);
+			System.out.println("message sent to server to get all movies");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

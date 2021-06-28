@@ -11,6 +11,7 @@ import java.util.List;
 @Table(name="Ticket")
 public class TheaterTicket extends  Ticket implements Serializable {
     String branch;
+    int branchid;
     String hall;
     LocalTime startingTime;
     LocalTime endingTime;
@@ -18,7 +19,7 @@ public class TheaterTicket extends  Ticket implements Serializable {
     List<Seat>reservedSeats;
     int movieShowid;
     public TheaterTicket(){}
-    public TheaterTicket(String buyerEmail, String movieName, LocalDate screeningDate, String buyerName, String visaNumber, String cvv, String branch, String hall, LocalTime startingTime, LocalTime endingTime,int movieShowid) {
+    public TheaterTicket(String buyerEmail, String movieName, LocalDate screeningDate, String buyerName, String visaNumber, String cvv, String branch, String hall, LocalTime startingTime, LocalTime endingTime,int movieShowid,int branchid) {
         super(buyerEmail, movieName, screeningDate, buyerName, visaNumber, cvv);
         this.branch = branch;
         this.hall = hall;
@@ -27,6 +28,7 @@ public class TheaterTicket extends  Ticket implements Serializable {
         this.reservedSeats = new ArrayList<>();
         this.movieShowid=movieShowid;
         this.reservedSeats=new ArrayList<>();
+        this.branchid=branchid;
     }
 
     public String getBranch() {

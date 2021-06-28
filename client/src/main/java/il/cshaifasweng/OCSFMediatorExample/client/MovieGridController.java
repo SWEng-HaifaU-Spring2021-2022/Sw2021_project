@@ -75,7 +75,7 @@ public class MovieGridController {
         return this.movie;
     }
     public void setDisplay(){
-        if(SimpleClient.getUser()==null || (SimpleClient.getUser()!=null && SimpleClient.getUser().getPermission()<3))
+        if(SimpleClient.getUser()==null || (SimpleClient.getUser()!=null && SimpleClient.getUser().getPermission()!=3))
         {
             EditBtn.setVisible(false);
             DeleteBtn.setVisible(false);

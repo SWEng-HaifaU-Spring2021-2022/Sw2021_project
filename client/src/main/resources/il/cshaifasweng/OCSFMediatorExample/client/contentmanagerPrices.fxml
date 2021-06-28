@@ -16,6 +16,6 @@
       </TableView>
       <Button fx:id="AcceptBtn" layoutX="12.0" layoutY="270.0" mnemonicParsing="false" onAction="#accept" text="Accept" />
       <Button fx:id="RejectBtn" layoutX="100.0" layoutY="270.0" mnemonicParsing="false" onAction="#reject" text="Reject" />
-      <Button fx:id="Home" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
+      <Button fx:id="Home" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#goHome" text="Catalog" />
    </children>
 </AnchorPane>

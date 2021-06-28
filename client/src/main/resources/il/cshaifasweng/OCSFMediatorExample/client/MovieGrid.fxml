@@ -8,37 +8,37 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="410.0" prefWidth="593.0" style="-fx-border-color: black; -fx-border-width: 3px;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.MovieGridController">
+<AnchorPane prefHeight="410.0" prefWidth="593.0" style="-fx-border-color: #fc7703; -fx-border-width: 3px;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.MovieGridController">
    <children>
       <ImageView fx:id="MovieImage" fitHeight="268.0" fitWidth="223.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="EditBtn" layoutX="14.0" layoutY="298.0" mnemonicParsing="false" onAction="#EditBtn" text="Edit" />
       <Button fx:id="DeleteBtn" layoutX="63.0" layoutY="298.0" mnemonicParsing="false" onAction="#DeleteMovie" text="Delete" />
       <Button fx:id="sendBtn" layoutX="186.0" layoutY="355.0" mnemonicParsing="false" onAction="#sendRequest" text="Send" />
       <TextField fx:id="PriceField" layoutX="14.0" layoutY="355.0" />
-      <Label fx:id="priceRequestLabel" layoutX="14.0" layoutY="331.0" text="Send Price Change Request" />
-      <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title" wrapText="true">
+      <Label fx:id="priceRequestLabel" layoutX="14.0" layoutY="331.0" text="Send Price Change Request" textFill="WHITE" />
+      <Label fx:id="MovieTitle" layoutX="249.0" layoutY="14.0" maxWidth="500.0" prefHeight="30.0" prefWidth="333.0" text="Movie Title" textFill="WHITE" wrapText="true">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <ScrollPane layoutX="254.0" layoutY="254.0" prefHeight="113.0" prefWidth="333.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="170.0" prefWidth="342.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="162.0" prefWidth="312.0">
                <children>
-                  <Label fx:id="descriptionLabel" layoutX="7.0" layoutY="6.0" text="Description" wrapText="true" />
+                  <Label fx:id="descriptionLabel" layoutX="7.0" layoutY="6.0" maxWidth="300.0" text="Description" wrapText="true" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Label fx:id="ActorsLabel" layoutX="271.0" layoutY="51.0" text="Actors:" wrapText="true" />
-      <Label fx:id="GenerLabel" layoutX="269.0" layoutY="75.0" text="Genre:" wrapText="true" />
-      <Label fx:id="PriceLabel" layoutX="272.0" layoutY="100.0" text="Price:" wrapText="true" />
-      <Label fx:id="ProducaerLabel" layoutX="271.0" layoutY="124.0" text="Producer:" wrapText="true" />
+      <Label fx:id="ActorsLabel" layoutX="260.0" layoutY="53.0" maxWidth="300.0" text="Actors:" textFill="WHITE" wrapText="true" />
+      <Label fx:id="GenerLabel" layoutX="261.0" layoutY="91.0" maxWidth="300.0" text="Genre:" textFill="WHITE" wrapText="true" />
+      <Label fx:id="PriceLabel" layoutX="264.0" layoutY="123.0" maxWidth="300.0" text="Price:" textFill="WHITE" wrapText="true" />
+      <Label fx:id="ProducaerLabel" layoutX="264.0" layoutY="140.0" maxWidth="300.0" text="Producer:" textFill="WHITE" wrapText="true" />
       <ScrollPane fx:id="screenPane" hbarPolicy="NEVER" layoutX="255.0" layoutY="160.0" prefHeight="81.0" prefWidth="326.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="325.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="296.0">
                <children>
-                  <Label fx:id="ScreeningLabel" layoutX="11.0" text="Screening Time:" wrapText="true" />
+                  <Label fx:id="ScreeningLabel" layoutX="11.0" maxWidth="300.0" text="Screening Time:" wrapText="true" />
                </children>
             </AnchorPane>
         </content>

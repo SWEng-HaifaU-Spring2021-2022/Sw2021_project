@@ -52,6 +52,12 @@ public class SimpleServer extends AbstractServer {
                 }
                 if (msgObj.getMsg().equals("getBundles"))
                     getBundles(msgObj, client);
+                if (msgObj.getMsg().equals("getAllInstructions"))
+                    getAllInstructions(msgObj, client);
+                if (msgObj.getMsg().equals("AddInstruction") ||
+                        msgObj.getMsg().equals("UpdateInstruction") ||
+                        msgObj.getMsg().equals("DeleteInstruction"))
+                    EditInstruction(msgObj, client);
                 if (msgObj.getMsg().startsWith("#get")) {
                     get(msgObj, client);
                 }
@@ -840,5 +846,64 @@ public class SimpleServer extends AbstractServer {
         msgObject msg = new msgObject("AllMovies", list);
         return msg;
     }
+
+    void EditInstruction(msgObject msg, ConnectionToClient client) {
+        PurpleCard card = (PurpleCard) msg.getObject();
+        String s = msg.getMsg();
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            if (s.equals("AddInstruction"))
+                session.save(card);
+            else if (s.equals("UpdateInstruction"))
+                session.update(card);
+            else if (s.equals("DeleteInstruction"))
+                session.delete(card);
+            session.flush();
+            session.getTransaction().commit(); // Save everything.
+        } catch (Exception exception) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("An error occurred, changes have been rolled back.");
+            exception.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        msg.setObject(null);
+        if (s.equals("AddInstruction"))
+            msg.setMsg("AddedInstruction");
+        else if (s.equals("UpdateInstruction"))
+            msg.setMsg("UpdatedInstruction");
+        else if (s.equals("DeleteInstruction"))
+            msg.setMsg("DeletedInstruction");
+
+        try {
+            client.sendToClient(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getAllInstructions(msgObject msg, ConnectionToClient client) {
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        String sqlQ = "FROM PurpleCard";
+        Query query = session.createQuery(sqlQ);
+        List<PurpleCard> list = query.list();
+        msg.setMsg("SentPurpleCards");
+        msg.setObject(list);
+        try {
+            client.sendToClient(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+    }
+
 
 }

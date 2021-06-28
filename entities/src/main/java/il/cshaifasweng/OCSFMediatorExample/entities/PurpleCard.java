@@ -1,12 +1,17 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyProperty;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(name="PurpleCard")
-public class PurpleCard {
+@Table(name = "PurpleCard")
+public class PurpleCard implements Serializable {
+    private static final long serialVersionUID = -8224097662914849956L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,10 +60,36 @@ public class PurpleCard {
         this.maxCap = maxCap;
     }
 
-    public boolean isProjAllowed() {
+    public Boolean isProjAllowed() {
         return projAllowed;
     }
 
+    public Boolean getProjAllowed() {
+        return projAllowed;
+    }
+
+    public ReadOnlyProperty<Boolean> ProjAllowProperty() {
+        return new ReadOnlyObjectWrapper<Boolean>(projAllowed);
+    }
+
+    public Boolean getprojAllowed() {
+        return projAllowed;
+    }
+
+    /*public String isProjAllowed() {
+            return Boolean.toString(projAllowed);
+        }
+
+        public String getProjAllowed() {
+            return Boolean.toString(projAllowed);
+        }
+
+        public String getprojAllowed() {
+            return Boolean.toString(projAllowed);
+        }
+        public String ProjAllowedProperty(){
+            return Boolean.toString(projAllowed);
+        }*/
     public void setProjAllowed(boolean projAllowed) {
         this.projAllowed = projAllowed;
     }

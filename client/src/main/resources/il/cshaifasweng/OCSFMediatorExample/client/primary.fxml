@@ -13,6 +13,7 @@
       <Button fx:id="grid" mnemonicParsing="false" onAction="#open_grid" text="Grid" />
       <Button mnemonicParsing="false" onAction="#buyBundle" text="Buy Bundles" />
       <Button mnemonicParsing="false" onAction="#showBundles" text="Show My Bundles" />
+      <Button mnemonicParsing="false" onAction="#PCard" text="PurbleCard" />
       <Button fx:id="TicketCancel" mnemonicParsing="false" onAction="#OpenCancel" text="Ticket Cancel" />
    </children>
    <padding>

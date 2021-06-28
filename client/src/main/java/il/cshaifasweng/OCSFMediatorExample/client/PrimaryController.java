@@ -52,6 +52,15 @@ public class PrimaryController {
 	}
 
 	@FXML
+	void PCard(ActionEvent event) {
+		try {
+			App.setRoot("PurpleCard");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
 	void showBundles(ActionEvent event) {
 		try {
 			App.setRoot("ViewBundles");

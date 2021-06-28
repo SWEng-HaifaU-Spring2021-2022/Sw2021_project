@@ -4,53 +4,67 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="363.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PurpleCardController">
+<AnchorPane prefHeight="426.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PurpleCardController">
    <children>
-      <TabPane prefHeight="415.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="TabPane" prefHeight="426.0" prefWidth="460.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Add Instruction">
+          <Tab fx:id="AddInstTab" text="Add Instruction">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="547.0">
                      <children>
-                        <Label layoutX="27.0" layoutY="70.0" prefHeight="53.0" prefWidth="138.0" text="What is the duration of the new Instructions?" wrapText="true">
+                        <Label layoutX="29.0" layoutY="24.0" prefHeight="53.0" prefWidth="348.0" text="What is the duration of the new Instructions?" wrapText="true">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="AddSDate" layoutX="200.0" layoutY="84.0" promptText="Start date" />
-                        <DatePicker fx:id="AddEDate" layoutX="200.0" layoutY="131.0" promptText="End Date" />
-                        <CheckBox fx:id="AddFScreening" layoutX="27.0" layoutY="222.0" mnemonicParsing="false" prefWidth="16.0" />
-                        <Label layoutX="53.0" layoutY="209.0" prefHeight="43.0" prefWidth="122.0" text="Is frontal screenings are allowed?" wrapText="true">
+                        <DatePicker fx:id="AddSDate" layoutX="43.0" layoutY="85.0" promptText="Start date" />
+                        <DatePicker fx:id="AddEDate" layoutX="43.0" layoutY="133.0" promptText="End Date" />
+                        <CheckBox fx:id="AddFScreening" layoutX="43.0" layoutY="212.0" mnemonicParsing="false" onAction="#AddFrontCB" prefWidth="16.0" />
+                        <Label layoutX="69.0" layoutY="199.0" prefHeight="43.0" prefWidth="122.0" text="Is frontal screenings are allowed?" wrapText="true">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="AddCap" layoutX="200.0" layoutY="218.0" prefHeight="25.0" prefWidth="173.0" promptText="Whats the max capacity?" />
-                        <Button fx:id="Add" layoutX="276.0" layoutY="338.0" mnemonicParsing="false" text="Add Insrtruction" />
+                        <TextField fx:id="AddCap" layoutX="44.0" layoutY="273.0" prefHeight="25.0" prefWidth="173.0" promptText="Whats the max capacity?" />
+                        <Button fx:id="Add" layoutX="276.0" layoutY="338.0" mnemonicParsing="false" onAction="#addInst" text="Add Insrtruction" />
+                        <Label fx:id="AddMsgLabel" layoutX="29.0" layoutY="342.0" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Edit Instruction">
+          <Tab fx:id="EditInstTab" text="Edit Instruction">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="360.0" prefWidth="403.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="401.0" prefWidth="400.0">
                      <children>
-                        <ListView fx:id="EditInstList" prefHeight="220.0" prefWidth="400.0" />
-                        <DatePicker fx:id="EditSDate" layoutX="19.0" layoutY="253.0" prefHeight="25.0" prefWidth="164.0" promptText="Start date" />
-                        <DatePicker fx:id="EditEDate" layoutX="217.0" layoutY="253.0" prefHeight="25.0" prefWidth="164.0" promptText="End Date" />
-                        <CheckBox fx:id="EditFScreening" layoutX="19.0" layoutY="302.0" mnemonicParsing="false" prefWidth="16.0" />
-                        <Label layoutX="42.0" layoutY="302.0" text="Frontal screening" />
-                        <TextField fx:id="EditCap" layoutX="217.0" layoutY="310.0" prefHeight="25.0" prefWidth="165.0" />
-                        <Label layoutX="217.0" layoutY="286.0" text="Capacity" />
-                        <Label layoutX="21.0" layoutY="229.0" text="Start &amp; end date on instructions" />
-                        <Button fx:id="EditApply" layoutX="330.0" layoutY="347.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Apply" />
+                        <TableView fx:id="InstTable" layoutY="8.0" prefHeight="213.0" prefWidth="460.0">
+                          <columns>
+                            <TableColumn fx:id="sDateCol" prefWidth="75.0" text="Start Date" />
+                            <TableColumn fx:id="eDateCol" prefWidth="75.0" text="End Date" />
+                              <TableColumn fx:id="ProjCol" prefWidth="75.0" text="Projection" />
+                              <TableColumn fx:id="mCapCol" prefWidth="75.0" text="Max Capacity" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <DatePicker fx:id="EditSDate" layoutX="29.0" layoutY="252.0" prefHeight="25.0" prefWidth="164.0" promptText="Start date" />
+                        <DatePicker fx:id="EditEDate" layoutX="266.0" layoutY="252.0" prefHeight="25.0" prefWidth="164.0" promptText="End Date" />
+                        <CheckBox fx:id="EditFScreening" layoutX="35.0" layoutY="301.0" mnemonicParsing="false" onAction="#EditFScreeningCB" prefWidth="16.0" />
+                        <Label layoutX="58.0" layoutY="301.0" text="Frontal screening" />
+                        <TextField fx:id="EditCap" layoutX="266.0" layoutY="309.0" prefHeight="25.0" prefWidth="165.0" />
+                        <Label layoutX="266.0" layoutY="284.0" text="Capacity" />
+                        <Label layoutX="31.0" layoutY="228.0" text="Start &amp; end date on instructions" />
+                        <Label fx:id="EditMsgLabel" layoutX="36.0" layoutY="336.0" prefHeight="47.0" prefWidth="193.0" wrapText="true" />
+                        <Button fx:id="DeleteBtn" layoutX="272.0" layoutY="346.0" mnemonicParsing="false" onAction="#DeleteInstruction" text="Delete" />
+                        <Button fx:id="EditApply" layoutX="334.0" layoutY="346.0" mnemonicParsing="false" onAction="#applyEdit" prefHeight="25.0" prefWidth="97.0" text="Apply Change" />
                      </children>
                   </AnchorPane>
             </content>

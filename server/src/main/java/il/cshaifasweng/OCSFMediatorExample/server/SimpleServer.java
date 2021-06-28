@@ -4,7 +4,6 @@ import com.mysql.cj.xdevapi.Client;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -18,7 +17,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.sql.Update;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +26,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 public class SimpleServer extends AbstractServer {
-
     private static Session session;
 
     public SimpleServer(int port) {
@@ -208,6 +205,17 @@ public class SimpleServer extends AbstractServer {
             client.sendToClient(answer_msg);
             System.out.format("Theaters sent to client to open report page client  %s\n", client.getInetAddress().getHostAddress());
         }
+      else if (msgString.equals("#getAllComplaints")) {
+			try {
+				client.sendToClient(getAllComplaints());
+				System.out.println("retrived Complaints");
+				System.out.format("Sent Complaints to client %s\n", client.getInetAddress().getHostAddress());
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		}
     }
 
     private void update(msgObject msgObj, ConnectionToClient client) {
@@ -267,6 +275,27 @@ public class SimpleServer extends AbstractServer {
                     e.printStackTrace();
                 }
             }
+          else if (msgObj.getMsg().equals("#updateAnswerToComplaint")) {
+				SessionFactory sessionFactory = getSessionFactory();
+				session = sessionFactory.openSession();
+				session.beginTransaction();
+				System.out.println("a I'm in the server for answer");
+				Complaint cmp=(Complaint) msgObj.getObject();
+				System.out.println(cmp.getAnswer());
+				session.update(((Complaint) msgObj.getObject()));
+				session.flush();
+				session.getTransaction().commit();
+				/*
+				 * try { System.out.println("a I'm in the server for answer");
+				 * session.update(((Complaint)msgObj.getObject())); session.flush();;
+				 * session.getTransaction().commit();;
+				 * System.out.println("a new answer to complaint have been added"); msgObject
+				 * answer_msg=new msgObject("an answer to complaint added",null);
+				 * client.sendToClient(answer_msg); } catch(IOException e) { msgObject
+				 * answer_msg=new msgObject("failed",null); client.sendToClient(answer_msg); }
+				 */
+
+			}
 
         } catch (Exception exception) {
             if (session != null) {
@@ -531,6 +560,20 @@ public class SimpleServer extends AbstractServer {
             }
             System.out.format("Tickets have been sent to the client  %s\n", client.getInetAddress().getHostAddress());
         }
+      else if (msgObj.getMsg().equals("#addComplaint")) {
+			try {
+				session.save((Complaint) msgObj.getObject());
+				session.flush();
+				session.getTransaction().commit();
+				System.out.println("a new complaint have been added");
+				msgObject answer_msg = new msgObject("a Complaint added", null);
+				client.sendToClient(answer_msg);
+			} catch (IOException e) {
+				msgObject answer_msg = new msgObject("failed", null);
+				client.sendToClient(answer_msg);
+			}
+
+		}
        // session.getTransaction().commit();
 
     }
@@ -650,7 +693,16 @@ public class SimpleServer extends AbstractServer {
         msgObject newmsg = new msgObject("Theaters Retrived", data);
         return newmsg;
     }
-
+  
+  private static msgObject getAllComplaints() throws Exception {
+		System.out.println("getting All Complaints");
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Complaint> query = builder.createQuery(Complaint.class);
+		query.from(Complaint.class);
+		ArrayList<Complaint> data = (ArrayList<Complaint>) session.createQuery(query).getResultList();
+		msgObject msg = new msgObject("Complaints", data);
+		return msg;
+	}
     private static msgObject tryLogIn(String[] data) {
         String userName = data[0];
         String password = data[1];

@@ -29,6 +29,35 @@ public class PrimaryController {
 
 
 	@FXML
+	void buyBundle(ActionEvent event) {
+		try {
+			App.setRoot("BuyBundle");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void PCard(ActionEvent event) {
+		try {
+			App.setRoot("PurpleCard");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void showBundles(ActionEvent event) {
+		try {
+			App.setRoot("ViewBundles");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
 	void sendWarning(ActionEvent event)  throws IOException {
 		try {
 			//SimpleClient.getClient().sendToServer("#warning");

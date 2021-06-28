@@ -13,20 +13,27 @@
 	<artifactId>client</artifactId>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.jfxtras/jmetro -->
+		<dependency>
+			<groupId>org.jfxtras</groupId>
+			<artifactId>jmetro</artifactId>
+			<version>11.6.15</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
-			<version>${javafx.version}</version>
+			<version>16</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
+			<version>16</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>${javafx.version}</version>
+			<version>16</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -46,6 +53,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>entities</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>15.0.1</version>
 		</dependency>
 
 	</dependencies>

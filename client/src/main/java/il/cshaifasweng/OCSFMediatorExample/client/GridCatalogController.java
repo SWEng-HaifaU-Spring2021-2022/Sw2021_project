@@ -132,6 +132,7 @@ public class GridCatalogController implements Initializable {
             e.printStackTrace();
             logInStatusLB.setText("An unknown error occurred! try again later.");
         }
+        retVal=10;
     }
 
     public void initialize(URL url, ResourceBundle rb) {
@@ -148,16 +149,20 @@ public class GridCatalogController implements Initializable {
             addBtn.setVisible(false);
             logInStatusLB.setText("");
             LogBtn.setText("Log In");
+
             Reportbtn.setVisible(false);
             priceRequestBtn.setVisible(false);
-        }
 
+        }
         try {
             fillGrids();
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
+
+        retVal=10;
+
         movieType.getItems().add("All Movies");
         movieType.setValue("All Movies");
         movieType.getItems().add("Coming Soon");

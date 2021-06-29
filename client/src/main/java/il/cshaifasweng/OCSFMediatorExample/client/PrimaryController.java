@@ -27,7 +27,6 @@ public class PrimaryController {
 	}
 
 
-
 	@FXML
 	void sendWarning(ActionEvent event) throws IOException {
 		try {
@@ -35,6 +34,11 @@ public class PrimaryController {
 			msgObject msg = new msgObject("#getAllMovies");
 			SimpleClient.getClient().sendToServer(msg);
 			System.out.println("message sent to server to get all movies");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@FXML
 	void buyBundle(ActionEvent event) {
 		try {
 			App.setRoot("BuyBundle");
@@ -43,7 +47,6 @@ public class PrimaryController {
 			e.printStackTrace();
 		}
 	}
-
 	@FXML
 	void PCard(ActionEvent event) {
 		try {
@@ -64,12 +67,6 @@ public class PrimaryController {
 	}
 
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 
 	@FXML
 	void open_Complaint(ActionEvent event) throws IOException {
@@ -81,7 +78,7 @@ public class PrimaryController {
 		msgObject msg = new msgObject("#getAllComplaints");
 		SimpleClient.getClient().sendToServer(msg);
 		System.out.println("message sent to server to get all Complaints");
-		
+
 		//App.setRoot("AnswerComplaints");
 
 	}

@@ -8,9 +8,10 @@ public class App
     {
         server = new SimpleServer(3000);
 
-        //server.test();
-      // server.AddUsers();
-      // server.addCinemaManager();
+        server.test();
+        server.AddUsers();
+        server.addCinemaManager();
+        server.addserviceWorker();
         server.listen();
         System.out.println("Server is up");
         SchedulerSender.startJobScheduling();

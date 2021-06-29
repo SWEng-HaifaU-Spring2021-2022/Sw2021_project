@@ -138,6 +138,7 @@ public class BuyTicketWindowController {
         for (int i=0;i<seats.getRowsnum();++i){
             HBox ButtonRow=new HBox(50);
             for(int j=0;j<10;++j){
+                if(j+(i*10)>=seats.getNumofSeats()) break;
                 ButtonRow.getChildren().add(getSeat2(seats,j,i));
             }
             MapButtons.getChildren().add(ButtonRow);

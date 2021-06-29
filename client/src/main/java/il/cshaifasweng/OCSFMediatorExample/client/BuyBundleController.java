@@ -82,6 +82,7 @@ public class BuyBundleController {
         msg.setMsg("BuyBundle");
         msg.setObject(bundle);
         try {
+            SimpleClient.obj=null;
             SimpleClient.getClient().sendToServer(msg);
             while (SimpleClient.obj==null ||
                     !(((msgObject) SimpleClient.obj).getMsg().equals("BundleBought") ||

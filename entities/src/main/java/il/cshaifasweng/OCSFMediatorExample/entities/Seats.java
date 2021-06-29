@@ -38,4 +38,29 @@ public class Seats implements Serializable {
     public void setRowsnum(int rowsnum) {
         Rowsnum = rowsnum;
     }
+
+    public Boolean[] getSeats() {
+        return seats;
+    }
+
+    public int getNumofSeats()
+    {
+        return seats.length;
+    }
+
+    public void setSeats(Boolean[] seats) {
+        this.seats = seats;
+    }
+
+    public int getResSeats()
+    {
+        int count =0;
+        int n = seats.length;
+
+        for(int i=0; i<n; i++)
+            if(seats[i]) count++;
+
+        return count;
+    }
+
 }

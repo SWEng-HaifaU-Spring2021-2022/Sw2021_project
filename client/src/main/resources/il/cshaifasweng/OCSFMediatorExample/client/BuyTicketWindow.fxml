@@ -33,7 +33,7 @@
             <Font size="23.0" />
          </font>
       </Label>
-      <Button layoutX="23.0" layoutY="558.0" mnemonicParsing="false" onAction="#openMap" text="Choose a seat" />
+      <Button layoutX="23.0" layoutY="558.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openMap" text="Choose a seat" wrapText="true" />
       <Label fx:id="messageLabel" layoutX="14.0" layoutY="792.0" textFill="RED">
          <font>
             <Font size="20.0" />

@@ -5,13 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchor" prefHeight="521.0" prefWidth="869.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReportsController">
+<AnchorPane fx:id="mainAnchor" prefHeight="608.0" prefWidth="944.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReportsController">
    <children>
       <ChoiceBox fx:id="TheaterList" layoutX="14.0" layoutY="109.0" prefWidth="150.0" />
-      <Label fx:id="infolabel" layoutX="14.0" layoutY="68.0" text="Info:" />
+      <Label fx:id="infolabel" layoutX="34.0" layoutY="165.0" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <ChoiceBox fx:id="ReportList" layoutX="216.0" layoutY="109.0" prefWidth="150.0" />
       <Button layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#openCatalog" text="Catalog" />
-      <HBox fx:id="chartBox" layoutY="228.0" prefHeight="292.0" prefWidth="869.0" />
+      <HBox fx:id="chartBox" layoutX="12.0" layoutY="321.0" prefHeight="331.0" prefWidth="904.0" />
    </children>
 </AnchorPane>

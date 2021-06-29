@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.HomeLinkTicket;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -28,8 +29,22 @@ public class DBase {
         org.hibernate.cfg.Configuration configuration = new Configuration();
 
         // Add ALL of your entities here. You can also try adding a whole package.
+        configuration.addAnnotatedClass(Movie.class);
+        configuration.addAnnotatedClass(Hall.class);
+        configuration.addAnnotatedClass(Theater.class);
+        configuration.addAnnotatedClass(MovieShow.class);
+        configuration.addAnnotatedClass(TheaterMovie.class);
+        configuration.addAnnotatedClass(HomeMovie.class);
+        configuration.addAnnotatedClass(PriceRequest.class);
+        configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Ticket.class);
         configuration.addAnnotatedClass(HomeLinkTicket.class);
-
+        configuration.addAnnotatedClass(TheaterTicket.class);
+        configuration.addAnnotatedClass(Seat.class);
+        configuration.addAnnotatedClass(Bundle.class);
+        configuration.addAnnotatedClass(PurpleCard.class);
+        configuration.addAnnotatedClass(CinemaManager.class);
+        configuration.addAnnotatedClass(Complaint.class);
         ServiceRegistry serviceRegistry = new
                 StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -69,6 +84,28 @@ public class DBase {
         if(session!=null){
             session.close();
         }
+    }
+    public static  msgObject getAllMovies(){
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+        query.from(Movie.class);
+        List<Movie> list = session.createQuery(query).getResultList();
+        for (Movie m : list) {
+            if (m.getClass().equals(TheaterMovie.class)) {
+                TheaterMovie TM = (TheaterMovie) m;
+                List<MovieShow> temp = TM.getMSList();
+                for (MovieShow ms : temp) {
+                    ms.getTheater();
+                    //System.out.println();
+                }
+            }
+
+        }
+        msgObject msg = new msgObject("RefreshCatalog", list);
+        return msg;
+
     }
 
 }

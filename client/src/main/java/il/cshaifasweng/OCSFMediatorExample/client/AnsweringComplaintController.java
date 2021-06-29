@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
 import javafx.scene.text.Text;
+import java.time.LocalTime;
 
 public class AnsweringComplaintController implements Initializable{
 	ObservableList<Complaint> list = FXCollections.observableArrayList();
@@ -47,6 +48,9 @@ public class AnsweringComplaintController implements Initializable{
 
 	    @FXML // fx:id="complaint_date"
 	    private TableColumn<Complaint, LocalDate> complaint_date; // Value injected by FXMLLoader
+	    
+	    @FXML // fx:id="Complaint_time"
+	    private TableColumn<Complaint, LocalTime> Complaint_time; // Value injected by FXMLLoader
 
 	    @FXML // fx:id="Complaint_text"
 	    private TextArea Complaint_text; // Value injected by FXMLLoader
@@ -64,8 +68,8 @@ public class AnsweringComplaintController implements Initializable{
 	            return;
 	        }
 	        Complaint_text.setText(table_Comp.getSelectionModel().getSelectedItem().getContent());
-	        if(status_col.getCellData(index).toString()=="answered")
-	        {
+	        if(table_Comp.getSelectionModel().getSelectedItem().isStatus().equals("Answered"))
+	        {   
 	        	if(!table_Comp.getSelectionModel().getSelectedItem().getAnswer().isEmpty()) {
 	        		Answer_text.setText(table_Comp.getSelectionModel().getSelectedItem().getAnswer());
 	        		Answer_text.setEditable(false);
@@ -103,6 +107,7 @@ public class AnsweringComplaintController implements Initializable{
 	    	status_col.setCellValueFactory(new PropertyValueFactory<>("status"));
 	    	answer_col.setCellValueFactory(new PropertyValueFactory<>("answer"));
 	    	complaint_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+	    	Complaint_time.setCellValueFactory(new PropertyValueFactory<>("sendTime"));
 	        
 	    }
 	    public void loadData() {

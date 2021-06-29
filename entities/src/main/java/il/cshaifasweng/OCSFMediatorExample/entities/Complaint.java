@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.time.LocalTime;
 @Entity
 @Table(name="Complaint")
 public class Complaint implements Serializable {
@@ -17,12 +18,12 @@ public class Complaint implements Serializable {
 	private String answer;
 	private String status;
 	private LocalDate date;
-	
+	private LocalTime sendTime;
 	public Complaint()
 	{
 		
 	}
-	public Complaint(int ComplaintID, String email,String content, String answer, String status, LocalDate date)
+	public Complaint(int ComplaintID, String email,String content, String answer, String status, LocalDate date, LocalTime sendTime)
 	{
 		this.ComplaintID = ComplaintID;
 		this.email = email;
@@ -30,6 +31,13 @@ public class Complaint implements Serializable {
 		this.answer = answer;
 		this.status = status;
 		this.date = date;
+		this.sendTime = sendTime;
+	}
+	public LocalTime getSendTime() {
+		return sendTime;
+	}
+	public void setSendTime(LocalTime sendTime) {
+		this.sendTime = sendTime;
 	}
 	public int getComplaintID() {
 		return ComplaintID;

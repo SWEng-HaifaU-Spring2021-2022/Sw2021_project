@@ -287,6 +287,8 @@ public class SimpleServer extends AbstractServer {
 				session.getTransaction().commit();
 				msgObject answer_msg=new msgObject("Complaint answered successfully");
 				client.sendToClient(answer_msg);
+				EmailUtil.sendEmailComplaintAnswer(cmp);
+				System.out.println("sending email to the client");
 				/*
 				 * try { System.out.println("a I'm in the server for answer");
 				 * session.update(((Complaint)msgObj.getObject())); session.flush();;

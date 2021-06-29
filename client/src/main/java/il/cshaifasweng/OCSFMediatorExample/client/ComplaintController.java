@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
@@ -37,6 +38,7 @@ public class ComplaintController {
     	comp.setEmail( email_txt.getText());
     	comp.setContent(content_txt.getText());
     	comp.setDate(LocalDate.now());
+    	comp.setSendTime(LocalTime.now());
     	comp.setStatus("Not answered");
     	msgObject msg=new msgObject();
     	msg.setMsg("#addComplaint");

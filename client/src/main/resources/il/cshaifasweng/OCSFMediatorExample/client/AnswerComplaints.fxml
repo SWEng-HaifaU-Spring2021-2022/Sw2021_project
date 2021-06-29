@@ -13,9 +13,10 @@
         <columns>
           <TableColumn fx:id="guest_email" prefWidth="75.0" text="Guest Email" />
           <TableColumn fx:id="complaint_content" prefWidth="120.0" text="Complaint content" />
-            <TableColumn fx:id="status_col" prefWidth="75.0" text="status" />
+            <TableColumn fx:id="status_col" prefWidth="75.0" text="Status" />
             <TableColumn fx:id="answer_col" prefWidth="75.0" text="Answer" />
             <TableColumn fx:id="complaint_date" prefWidth="94.39996337890625" text="Complaint Date" />
+            <TableColumn fx:id="Complaint_time" prefWidth="120.79998779296875" text="Complaint Time" />
         </columns>
       </TableView>
       <TextArea fx:id="Complaint_text" editable="false" layoutX="14.0" layoutY="282.0" prefHeight="108.0" prefWidth="560.0" />

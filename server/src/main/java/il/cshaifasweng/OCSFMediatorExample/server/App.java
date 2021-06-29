@@ -9,9 +9,9 @@ public class App
         server = new SimpleServer(3000);
 
         //server.test();
-      // server.AddUsers();
-      // server.addCinemaManager();
-       // server.addserviceWorker();
+      //server.AddUsers();
+      //server.addCinemaManager();
+       //server.addserviceWorker();
         //server.addcontentworker();
         server.listen();
         System.out.println("Server is up");

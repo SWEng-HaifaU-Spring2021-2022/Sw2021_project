@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="379.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AddMovieShowController">
+   <children>
+      <DatePicker fx:id="ShowDateDP" layoutX="191.0" layoutY="113.0" prefHeight="25.0" prefWidth="149.0" />
+      <TextField fx:id="startTimeTB" layoutX="191.0" layoutY="158.0" />
+      <TextField fx:id="endTimeTB" layoutX="191.0" layoutY="194.0" />
+      <Label layoutX="54.0" layoutY="30.0" text="Add Movie Show">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="TheatreCB" layoutX="191.0" layoutY="232.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="HallCB" layoutX="191.0" layoutY="273.0" prefWidth="150.0" />
+      <Label layoutX="41.0" layoutY="115.0" text="Show Date:" />
+      <Label layoutX="39.0" layoutY="160.0" text="Start Time:" />
+      <Label layoutX="40.0" layoutY="197.0" text="End Time:" />
+      <Label layoutX="39.0" layoutY="235.0" text="Theatre:" />
+      <Label layoutX="39.0" layoutY="276.0" text="Hall:" />
+      <Button fx:id="AddBtn" layoutX="289.0" layoutY="318.0" mnemonicParsing="false" onAction="#addMS" prefHeight="32.0" prefWidth="52.0" text="Add" />
+      <Label fx:id="msgLB" layoutX="41.0" layoutY="318.0" prefHeight="32.0" prefWidth="150.0" wrapText="true" />
+   </children>
+</AnchorPane>

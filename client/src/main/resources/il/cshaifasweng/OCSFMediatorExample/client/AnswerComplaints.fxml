@@ -19,7 +19,7 @@
             <TableColumn fx:id="Complaint_time" prefWidth="120.79998779296875" text="Complaint Time" />
         </columns>
       </TableView>
-      <TextArea fx:id="Complaint_text" editable="false" layoutX="14.0" layoutY="282.0" prefHeight="108.0" prefWidth="560.0" />
+      <TextArea fx:id="Complaint_text" editable="false" layoutX="14.0" layoutY="282.0" maxWidth="1000.0" prefHeight="108.0" prefWidth="560.0" wrapText="true" />
       <Label layoutX="14.0" layoutY="254.0" text="Complaint content" textFill="WHITE" />
       <Label layoutX="14.0" layoutY="403.0" text="Answer" textFill="WHITE" />
       <TextArea fx:id="Answer_text" layoutX="13.0" layoutY="421.0" prefHeight="108.0" prefWidth="560.0" />

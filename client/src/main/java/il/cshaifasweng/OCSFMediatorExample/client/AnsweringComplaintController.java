@@ -78,7 +78,10 @@ public class AnsweringComplaintController implements Initializable{
 	        		Answer_text.setText(table_Comp.getSelectionModel().getSelectedItem().getAnswer());
 	        		Answer_text.setEditable(false);
 	        	}
-	        }
+	        }else{
+	        	Answer_text.clear();
+	        	Answer_text.setEditable(true);
+			}
 	    }
 
 	    @FXML
@@ -97,6 +100,8 @@ public class AnsweringComplaintController implements Initializable{
 	            e.printStackTrace();
 	        }
 	        System.out.println("message sent to server to update the answer field to the selected complaint for a the DB");
+	        Answer_text.clear();
+	        Complaint_text.clear();
 	    }
 
 		@Override

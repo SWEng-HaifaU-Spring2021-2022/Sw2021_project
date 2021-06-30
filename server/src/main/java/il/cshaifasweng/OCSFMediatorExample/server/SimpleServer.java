@@ -101,18 +101,34 @@ public class SimpleServer extends AbstractServer {
     }
 
     private void DeleteTheaterTicket(TheaterTicket theaterTicket, MovieShow ms) {
-        if (!theaterTicket.getScreeningDate().isBefore(LocalDate.now())) {
-            EmailUtil.sendTheatetrTicketEmailMScancel(theaterTicket, 1.0);
-        }
-        Seats seats = ms.getSeats();
-        List<Seat> seatList = theaterTicket.getReservedSeats();
-        for (Seat st : seatList) {
-            seats.unReserveSeat(st.getSeatCol(), st.getSeatRow());
-            session.delete(st);
+        try{
+
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            if (!theaterTicket.getScreeningDate().isBefore(LocalDate.now())) {
+                EmailUtil.sendTheatetrTicketEmailMScancel(theaterTicket, 1.0);
+            }
+            Seats seats = ms.getSeats();
+            List<Seat> seatList = theaterTicket.getReservedSeats();
+            for (Seat st : seatList) {
+                seats.unReserveSeat(st.getSeatCol(), st.getSeatRow());
+                session.delete(st);
+                session.flush();
+            }
+            session.delete(theaterTicket);
             session.flush();
+            session.getTransaction().commit();
+
+        }catch (Exception e){
+            session.getTransaction().rollback();
+            e.printStackTrace();
         }
-        session.delete(theaterTicket);
-        session.flush();
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
     }
 
     public void DeleteTheaterTicket(AdvancedMsg msg, ConnectionToClient client) {
@@ -318,17 +334,12 @@ public class SimpleServer extends AbstractServer {
                 session.update(((Complaint) msgObj.getObject()));
                 session.flush();
                 session.getTransaction().commit();
-                msgObject answer_msg = new msgObject("Complaint answered successfully");
+                EmailUtil.sendEmailComplaintAnswer(cmp);
+                System.out.println("sending email to the client");
+                msgObject answer_msg=getAllComplaints();
+                answer_msg.setMsg("Complaint answered successfully");
                 client.sendToClient(answer_msg);
-                /*
-                 * try { System.out.println("a I'm in the server for answer");
-                 * session.update(((Complaint)msgObj.getObject())); session.flush();;
-                 * session.getTransaction().commit();;
-                 * System.out.println("a new answer to complaint have been added"); msgObject
-                 * answer_msg=new msgObject("an answer to complaint added",null);
-                 * client.sendToClient(answer_msg); } catch(IOException e) { msgObject
-                 * answer_msg=new msgObject("failed",null); client.sendToClient(answer_msg); }
-                 */
+
 
             }
           else if (msgObj.getMsg().equals("#updateAnswerToComplaint")) {

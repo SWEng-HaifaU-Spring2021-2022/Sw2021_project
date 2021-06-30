@@ -197,6 +197,7 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("Complaint answered successfully")){
 				Warning newwarning = new Warning("Complaint answered successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+				EventBus.getDefault().post(new ComplaintEvent((List<Complaint>) tempmsg.getObject()));
 			}
 			else if(tempmsg.getMsg().equals("Bundles and links sales")){
 				EventBus.getDefault().post(new ReportinfoEvent(tempmsg));

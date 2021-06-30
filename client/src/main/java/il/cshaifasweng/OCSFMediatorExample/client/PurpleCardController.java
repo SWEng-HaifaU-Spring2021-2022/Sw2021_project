@@ -230,6 +230,17 @@ public class PurpleCardController {
     }
 
 
+
+    @FXML
+    void goHome(ActionEvent event) {
+        try {
+            App.setRoot("GridCatalog");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @FXML
         // This method is called by the FXMLLoader when initialization is complete
     void initialize() {

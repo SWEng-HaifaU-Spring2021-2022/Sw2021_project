@@ -864,6 +864,10 @@ public class SimpleServer extends AbstractServer {
     }
 
     private MovieShow getMovieShowbyid(int id) {
+        if(!session.isOpen() ){
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+        }
         String sqlQ = "FROM MovieShow U WHERE U.id = :u_id";
         Query query = session.createQuery(sqlQ);
         query.setParameter("u_id", id);
@@ -941,18 +945,7 @@ public class SimpleServer extends AbstractServer {
             e.printStackTrace();
         }
     }
-    public static void addcontentworker() {
-        try {
-            User serviceWorker = new User("Yamen", "9e1f0bda8", "yamen", "masallha", 3);
-            SessionFactory sessionFactory = getSessionFactory();
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.save(serviceWorker);
-            session.getTransaction().commit(); // Save everything.
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     void getBundles(msgObject msg, ConnectionToClient client) {

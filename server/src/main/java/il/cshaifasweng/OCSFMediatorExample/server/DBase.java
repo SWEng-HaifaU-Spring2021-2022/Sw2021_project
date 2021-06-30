@@ -51,49 +51,52 @@ public class DBase {
 
         return configuration.buildSessionFactory(serviceRegistry);
     }
-    public static ArrayList<HomeLinkTicket> getHomeLinkTicket(){
+
+    public static ArrayList<HomeLinkTicket> getHomeLinkTicket() {
         System.out.println("getting all home movies ticket for this day");
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
-        CriteriaBuilder builder=session.getCriteriaBuilder();
-        CriteriaQuery<HomeLinkTicket> query=builder.createQuery(HomeLinkTicket.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<HomeLinkTicket> query = builder.createQuery(HomeLinkTicket.class);
         query.from(HomeLinkTicket.class);
         System.out.println(LocalDate.now());
-        ArrayList<HomeLinkTicket> data=(ArrayList<HomeLinkTicket>) session.createQuery(query).getResultList();
-        ArrayList<HomeLinkTicket>wantedData=new ArrayList<>();
-        for(HomeLinkTicket hlt:data){
-            if(hlt.getScreeningDate().equals(LocalDate.now()))
+        ArrayList<HomeLinkTicket> data = (ArrayList<HomeLinkTicket>) session.createQuery(query).getResultList();
+        ArrayList<HomeLinkTicket> wantedData = new ArrayList<>();
+        for (HomeLinkTicket hlt : data) {
+            if (hlt.getScreeningDate().equals(LocalDate.now()))
                 wantedData.add(hlt);
         }
         System.out.println(wantedData.size());
-        if(session!=null){
+        if (session != null) {
             session.close();
         }
-        return  wantedData;
+        return wantedData;
 
     }
-    public static ArrayList<Complaint> getComplaint(){
+
+    public static ArrayList<Complaint> getComplaint() {
         System.out.println("getting all the complaints");
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
-        CriteriaBuilder builder=session.getCriteriaBuilder();
-        CriteriaQuery<Complaint> query=builder.createQuery(Complaint.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Complaint> query = builder.createQuery(Complaint.class);
         query.from(Complaint.class);
         System.out.println(LocalDate.now());
-        ArrayList<Complaint> data=(ArrayList<Complaint>) session.createQuery(query).getResultList();
-        ArrayList<Complaint>wantedData=new ArrayList<>();
-        for(Complaint cm:data){
-            if(cm.getDate().equals(LocalDate.now()))
+        ArrayList<Complaint> data = (ArrayList<Complaint>) session.createQuery(query).getResultList();
+        ArrayList<Complaint> wantedData = new ArrayList<>();
+        for (Complaint cm : data) {
+            if (cm.getDate().equals(LocalDate.now()))
                 wantedData.add(cm);
         }
         System.out.println(wantedData.size());
-        if(session!=null){
+        if (session != null) {
             session.close();
         }
-        return  wantedData;
+        return wantedData;
 
     }
-    public static  void UpdateHometicket(HomeLinkTicket hlt){
+
+    public static void UpdateHometicket(HomeLinkTicket hlt) {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
         session.beginTransaction();
@@ -101,11 +104,12 @@ public class DBase {
         session.flush();
         session.getTransaction().commit();
         System.out.println("updating the ticket is sent attribute");
-        if(session!=null){
+        if (session != null) {
             session.close();
         }
     }
-    public static  void UpdateComplaint(Complaint cm){
+
+    public static void UpdateComplaint(Complaint cm) {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
         session.beginTransaction();
@@ -113,29 +117,32 @@ public class DBase {
         session.flush();
         session.getTransaction().commit();
         System.out.println("updating the complaint is sent attribute");
-        if(session!=null){
+        if (session != null) {
             session.close();
         }
-    public static  msgObject getAllMovies(){
-        SessionFactory sessionFactory = getSessionFactory();
-        session = sessionFactory.openSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
-        query.from(Movie.class);
-        List<Movie> list = session.createQuery(query).getResultList();
-        for (Movie m : list) {
-            if (m.getClass().equals(TheaterMovie.class)) {
-                TheaterMovie TM = (TheaterMovie) m;
-                List<MovieShow> temp = TM.getMSList();
-                for (MovieShow ms : temp) {
-                    ms.getTheater();
-                    //System.out.println();
-                }
-            }
-
-        }
-        msgObject msg = new msgObject("RefreshCatalog", list);
-        return msg;
     }
 
+        public static msgObject getAllMovies () {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+            query.from(Movie.class);
+            List<Movie> list = session.createQuery(query).getResultList();
+            for (Movie m : list) {
+                if (m.getClass().equals(TheaterMovie.class)) {
+                    TheaterMovie TM = (TheaterMovie) m;
+                    List<MovieShow> temp = TM.getMSList();
+                    for (MovieShow ms : temp) {
+                        ms.getTheater();
+                        //System.out.println();
+                    }
+                }
+
+            }
+            msgObject msg = new msgObject("RefreshCatalog", list);
+            return msg;
+        }
+
 }
+

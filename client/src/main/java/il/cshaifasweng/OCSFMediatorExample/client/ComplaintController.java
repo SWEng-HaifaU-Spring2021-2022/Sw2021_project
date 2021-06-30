@@ -41,7 +41,7 @@ public class ComplaintController {
     	comp.setEmail( email_txt.getText());
     	comp.setContent(content_txt.getText());
     	comp.setSendTime(LocalTime.now());
-    	comp.setDate(LocalDate.now().plusDays(1));
+    	comp.setDate(LocalDate.now());
     	comp.setStatus("Not answered");
     	msgObject msg=new msgObject();
     	msg.setMsg("#addComplaint");

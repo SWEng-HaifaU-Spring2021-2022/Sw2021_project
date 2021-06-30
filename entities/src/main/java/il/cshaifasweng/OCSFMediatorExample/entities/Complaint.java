@@ -19,11 +19,12 @@ public class Complaint implements Serializable {
 	private String status;
 	private LocalDate date;
 	private LocalTime sendTime;
+	private int refundValue;
 	public Complaint()
 	{
 		
 	}
-	public Complaint(int ComplaintID, String email,String content, String answer, String status, LocalDate date, LocalTime sendTime)
+	public Complaint(int ComplaintID, String email,String content, String answer, String status, LocalDate date, LocalTime sendTime,int refundValue)
 	{
 		this.ComplaintID = ComplaintID;
 		this.email = email;
@@ -32,6 +33,7 @@ public class Complaint implements Serializable {
 		this.status = status;
 		this.date = date;
 		this.sendTime = sendTime;
+		this.refundValue=refundValue;
 	}
 	public LocalTime getSendTime() {
 		return sendTime;
@@ -75,7 +77,13 @@ public class Complaint implements Serializable {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
-	
+
+	public int getRefundValue() {
+		return refundValue;
+	}
+
+	public void setRefundValue(int refundValue) {
+		this.refundValue = refundValue;
+	}
 }
 

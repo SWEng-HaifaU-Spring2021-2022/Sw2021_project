@@ -117,6 +117,12 @@ public class ReportsController {
             if (newValue.equals("Refunds")){
                 chartBox.setVisible(false);
                 chartBox.getChildren().clear();
+                msgObject msg=new msgObject("#getRefundValue");
+                try {
+                    SimpleClient.getClient().sendToServer(msg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         if (TheaterList.isVisible()){
@@ -200,6 +206,9 @@ public class ReportsController {
                 System.out.println("before making the chart");
                 madeChart((List<Complaint>) eventmsg.getObject());
                 System.out.println("after making the chart");
+            }
+            if (eventmsg.getMsg().equals("The Refund Value")){
+                infolabel.setText("Refund value for this month = "+(int)eventmsg.getObject());
             }
         });
 

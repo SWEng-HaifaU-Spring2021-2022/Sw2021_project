@@ -278,6 +278,9 @@ public class SimpleServer extends AbstractServer {
             msgObject msg = getAllComplaints();
             msg.setMsg("Complaint List Reports");
             client.sendToClient(msg);
+        }else if(msgString.equals("#getRefundValue")){
+            msgObject msg=new msgObject("The Refund Value",getTicketsRefunds());
+            client.sendToClient(msg);
         }
     }
 

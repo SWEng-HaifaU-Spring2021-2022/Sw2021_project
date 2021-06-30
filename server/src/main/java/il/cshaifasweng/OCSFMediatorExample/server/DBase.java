@@ -85,7 +85,7 @@ public class DBase {
         ArrayList<Complaint> data = (ArrayList<Complaint>) session.createQuery(query).getResultList();
         ArrayList<Complaint> wantedData = new ArrayList<>();
         for (Complaint cm : data) {
-            if (cm.getDate().equals(LocalDate.now()))
+            if (cm.getDate().equals(LocalDate.now().minusDays(1)))
                 wantedData.add(cm);
         }
         System.out.println(wantedData.size());

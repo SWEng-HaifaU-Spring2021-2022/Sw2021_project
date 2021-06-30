@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent ;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 //import com.sun.glass.events.MouseEvent;
 
@@ -18,10 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TableView;
+
 import java.time.LocalDate;
 import java.util.Date;
 import javafx.scene.Node;
@@ -65,6 +63,9 @@ public class AnsweringComplaintController implements Initializable{
 	    @FXML // fx:id="Answer_btn"
 	    private Button Answer_btn; // Value injected by FXMLLoader
 
+		@FXML
+		private TextField refundValueTbox;
+
 	    @FXML
 	    void getSelected(MouseEvent event) {
 	    	int index=table_Comp.getSelectionModel().getSelectedIndex();
@@ -93,6 +94,7 @@ public class AnsweringComplaintController implements Initializable{
 	        Complaint tb=table_Comp.getSelectionModel().getSelectedItem();
 	        tb.setAnswer( Answer_text.getText());
 	        tb.setStatus("Answered");
+	        tb.setRefundValue(Integer.parseInt(refundValueTbox.getText()));
 	        msgObject msg=new msgObject("#updateAnswerToComplaint",tb);
 	        try {
 	            SimpleClient.getClient().sendToServer(msg);

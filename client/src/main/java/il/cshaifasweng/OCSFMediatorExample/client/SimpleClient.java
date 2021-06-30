@@ -157,8 +157,10 @@ public class SimpleClient extends AbstractClient {
 			}
 			else if(tempmsg.getMsg().equals("openReportPage")){
 				try {
+					System.out.println("open reports please");
 					obj=tempmsg.getObject();
 					App.setRoot("Reports");
+					System.out.println("open reports please2");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -230,6 +232,11 @@ public class SimpleClient extends AbstractClient {
 			}
 			else if(tempmsg.getMsg().equals("can Pick seat")){
 				EventBus.getDefault().post(new PurbleCardEvent(true));
+			}
+			else if(tempmsg.getMsg().equals("The Refund Value")){
+				Warning newwarning = new Warning("refund value for this month"+(int)tempmsg.getObject());
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+				EventBus.getDefault().post(new ReportinfoEvent(tempmsg) );
 			}
 		}
 

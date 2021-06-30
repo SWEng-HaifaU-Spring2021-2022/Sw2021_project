@@ -151,7 +151,7 @@ public class EmailUtil {
             msg.setReplyTo(InternetAddress.parse("sirtyacinema@gmail.com", false));
 
             msg.setSubject("refund", "UTF-8");
-            String body="a refund has been made to your bank account, we're sorry for being late to replay for your complaint";
+            String body="we're sorry for being late to replay for your complaint because of that you will get a vip ticket that allows you to enter 3 movie of your choice";
             msg.setText(body, "UTF-8");
 
             msg.setSentDate(new Date());
@@ -199,7 +199,7 @@ public class EmailUtil {
             msg.setReplyTo(InternetAddress.parse("sirtyacinema@gmail.com", false));
 
             msg.setSubject("Answer to you're complaint", "UTF-8");
-            String body="you've got an answer to you're complaint. Answer:"+cm.getAnswer();
+            String body="you've got an answer to you're complaint. Answer:"+cm.getAnswer()+"\n"+"You got a"+cm.getRefundValue()+"as a refund" ;
             msg.setText(body, "UTF-8");
 
             msg.setSentDate(new Date());

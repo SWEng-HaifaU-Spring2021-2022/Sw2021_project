@@ -72,6 +72,8 @@ public class BuyTicketWindowController {
     @FXML
     private Label seatInfoLabel;
 
+    @FXML
+    private Button chooseSeatBtn;
 
 
     @FXML
@@ -91,11 +93,8 @@ public class BuyTicketWindowController {
         AdvancedMsg advcmsg=new AdvancedMsg("#addTicket");
         advcmsg.addobject(theaterticket);
         advcmsg.addobject(DatesList.getValue());
-        //msgObject msg=new msgObject("#addTicket",theaterticket);
         SimpleClient.getClient().sendToServer(advcmsg);
         System.out.println("sending saving request to the server");
-      /* Stage thisStage = (Stage) MovieNameLabel.getScene().getWindow();
-       thisStage.close();*/
 
 
     }
@@ -124,7 +123,12 @@ public class BuyTicketWindowController {
         DatesList.getItems().clear();
         DatesList.getItems().addAll(MSL);
         DatesList.getSelectionModel().selectedItemProperty().addListener((v,oldValue,newValue)->{
-
+            msgObject msg=new msgObject("#CheckPurpleCard",newValue);
+            try {
+                SimpleClient.getClient().sendToServer(msg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
     @FXML
@@ -254,8 +258,32 @@ public class BuyTicketWindowController {
                 CvvText.clear();
                 seatInfoLabel.setText("");
                 choosenSeats.clear();
-
+                chooseSeatBtn.setDisable(false);
             });
         }
+    }
+    @Subscribe
+    public void onPurpleCardEvent(PurbleCardEvent event){
+        Platform.runLater(()->{
+            choosenSeats.clear();
+            seatInfoLabel.setText("Chosen Seats: ");
+            System.out.println(event.isOpenmap());
+            if(event.isOpenmap()){
+                chooseSeatBtn.setDisable(false);
+            }
+            else{
+                chooseSeatBtn.setDisable(true);
+                if (chooseSeatBtn.isDisabled()==true){
+                    if(DatesList.getValue().getSeats().getFirsTemptySeat()==null){
+                        seatInfoLabel.setText(seatInfoLabel.getText()+"there is no empty seats");
+                        return;
+                    }else{
+                        choosenSeats.add(DatesList.getValue().getSeats().getFirsTemptySeat());
+                        seatInfoLabel.setText(seatInfoLabel.getText()+DatesList.getValue().getSeats().getFirsTemptySeat().toString());
+                    }
+                }
+            }
+        });
+
     }
 }

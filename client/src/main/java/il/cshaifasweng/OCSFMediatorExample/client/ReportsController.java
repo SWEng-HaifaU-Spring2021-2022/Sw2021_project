@@ -91,8 +91,13 @@ public class ReportsController {
         ReportList.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
             if(newValue.equals("Tickets Sales")) {
                 chartBox.setVisible(false);
-                if(SimpleClient.getUser().getPermission()==4||TheaterList.getSelectionModel().getSelectedItem()!=null)
+                chartBox.getChildren().clear();
+                if(SimpleClient.getUser().getPermission()==4||TheaterList.getSelectionModel().getSelectedItem()!=null){
+
                     getsalesreport(branchid);
+                }else{
+                    infolabel.setText("Select a Branch");
+                }
             }
             if(newValue.equals("Complaints")){
                 msgObject msg=new msgObject("#getAllComplaintsReport");
@@ -106,6 +111,12 @@ public class ReportsController {
             }
             if(newValue.equals("Bundles&Links Sales")){
                 getBundlesLinksSales();
+                chartBox.setVisible(false);
+                chartBox.getChildren().clear();
+            }
+            if (newValue.equals("Refunds")){
+                chartBox.setVisible(false);
+                chartBox.getChildren().clear();
             }
         });
         if (TheaterList.isVisible()){
@@ -178,6 +189,7 @@ public class ReportsController {
     public  void onReportinfoEvent(ReportinfoEvent event) throws ExecutionException {
         Platform.runLater(()->{
             msgObject eventmsg=(msgObject) event.getReceivedData();
+            System.out.println(eventmsg.getMsg());
             if (eventmsg.getMsg().equals("Bundles and links sales")){
                 infolabel.setText("Bundles and links sales = "+(int)eventmsg.getObject());
             }

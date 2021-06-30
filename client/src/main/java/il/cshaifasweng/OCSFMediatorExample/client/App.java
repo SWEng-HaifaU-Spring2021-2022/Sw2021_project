@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.User;
+import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -78,8 +79,15 @@ public class App extends Application {
         });
 
     }
+   /* @Subscribe
+    public  void onReportinfoEvent(ReportinfoEvent event){
 
+        System.out.println("test event bus");
+        System.out.println(((msgObject)event.getReceivedData()).getMsg());
+    }*/
     public static void main(String[] args) {
         launch();
     }
+
+
 }

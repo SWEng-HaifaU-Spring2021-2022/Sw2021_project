@@ -14,6 +14,7 @@ public abstract class Ticket implements Serializable {
 	int ticketID;
 	String buyerEmail;
 	String movieName;
+	@Column( columnDefinition = "DATE")
 	LocalDate screeningDate;
 	String buyerName;
 	String visaNumber;

@@ -11,21 +11,26 @@ import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.PriceRequest;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class PriceChangeController implements Initializable {
 	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb){
+		EventBus.getDefault().register(this);
 		initCol();
 		loadData();
 		
@@ -148,6 +153,17 @@ public class PriceChangeController implements Initializable {
 			//set the new max-widht with some extra space
 			column.setPrefWidth( max + 10.0d );
 		} );
+	}
+	@Subscribe
+	public void onPriceChangeEvent(PriceChangeEvent event) {
+    	System.out.println("updating table view ");
+    	Platform.runLater(()->{
+			list.clear();
+			list.addAll((List<PriceRequest>)event.getPriceRequestList());
+			priceTable.setItems(list);
+			autoResizeColumns(priceTable);
+		});
+
 	}
 
 }

@@ -20,8 +20,8 @@
         </columns>
       </TableView>
       <TextArea fx:id="Complaint_text" editable="false" layoutX="14.0" layoutY="282.0" prefHeight="108.0" prefWidth="560.0" />
-      <Label layoutX="14.0" layoutY="254.0" text="Complaint content" />
-      <Label layoutX="14.0" layoutY="403.0" text="Answer" />
+      <Label layoutX="14.0" layoutY="254.0" text="Complaint content" textFill="WHITE" />
+      <Label layoutX="14.0" layoutY="403.0" text="Answer" textFill="WHITE" />
       <TextArea fx:id="Answer_text" layoutX="13.0" layoutY="421.0" prefHeight="108.0" prefWidth="560.0" />
       <Button fx:id="Answer_btn" layoutX="267.0" layoutY="568.0" mnemonicParsing="false" onAction="#sendAnswerToComplaint" text="Answer" />
       <Button layoutX="184.0" layoutY="568.0" mnemonicParsing="false" onAction="#goCatalog" text="Catalog" />

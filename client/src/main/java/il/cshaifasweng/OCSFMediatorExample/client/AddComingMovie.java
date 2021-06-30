@@ -130,8 +130,15 @@ public class AddComingMovie implements Initializable {
             msg.setMsg("#addMovie");
             SimpleClient.getClient().sendToServer(msg);
         }
-        Stage stage=(Stage)AddBtn.getScene().getWindow();
-        stage.close();
+        MovieEng.clear();
+        MovieLink.clear();
+        MovieHeb.clear();
+        Actors.clear();
+        Genre.clear();
+        Description.clear();
+        Producer.clear();
+        ImageURL.clear();
+        entryPrice.clear();
     }
     @FXML
     void goHome(ActionEvent event) {

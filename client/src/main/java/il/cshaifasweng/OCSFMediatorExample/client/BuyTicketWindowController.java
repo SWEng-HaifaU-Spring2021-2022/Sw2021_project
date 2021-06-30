@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +25,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class BuyTicketWindowController {
     private TheaterMovie curtheaterMovie;
@@ -91,13 +94,15 @@ public class BuyTicketWindowController {
         //msgObject msg=new msgObject("#addTicket",theaterticket);
         SimpleClient.getClient().sendToServer(advcmsg);
         System.out.println("sending saving request to the server");
-       Stage thisStage = (Stage) MovieNameLabel.getScene().getWindow();
-       thisStage.close();
+      /* Stage thisStage = (Stage) MovieNameLabel.getScene().getWindow();
+       thisStage.close();*/
+
 
     }
 
     @FXML
     void initialize() {
+        EventBus.getDefault().register(this);
         assert MovieNameLabel != null : "fx:id=\"MovieNameLabel\" was not injected: check your FXML file 'BuyTicketWindow.fxml'.";
         assert MovieImage != null : "fx:id=\"MovieImage\" was not injected: check your FXML file 'BuyTicketWindow.fxml'.";
         assert BuyerNameText != null : "fx:id=\"BuyerNameText\" was not injected: check your FXML file 'BuyTicketWindow.fxml'.";
@@ -116,6 +121,7 @@ public class BuyTicketWindowController {
         TicketPriceLabel.setText(TicketPriceLabel.getText()+" :"+theatermovie.getEntryPrice());
         ObservableList<MovieShow> MSL = FXCollections.observableArrayList();
         MSL.addAll(theatermovie.getMSList());
+        DatesList.getItems().clear();
         DatesList.getItems().addAll(MSL);
         DatesList.getSelectionModel().selectedItemProperty().addListener((v,oldValue,newValue)->{
 
@@ -179,57 +185,6 @@ public class BuyTicketWindowController {
         }
         seatInfoLabel.setText(reservedSeats);
     }
-   /* public CheckBox getSeat(Seats seats, int Row, int Col){//I fliped them by mistake
-        CheckBox CB=new CheckBox();
-        CB.setText("Row: "+Col+" Col: "+ Row);
-        if(seats.getSeatInfo(Col,Row)==false) {
-            if(choosenSeats.size()!=0){
-                for(Seat st:choosenSeats){
-                    if(st.getSeatCol()==Col&& st.getSeatRow()==Row){
-                        CB.setSelected(true);
-                        CB.setText("Row: "+Col+" Col: "+ Row+" selected");
-                    }
-                }
-            }
-            else{
-                CB.setSelected(false);
-                CB.setText("Row: "+Col+" Col: "+ Row);
-            }
-            //System.out.println("not reserved");
-        }
-        else{
-            // System.out.println("reserved");
-            CB.setSelected(true);
-            CB.setDisable(true);
-            CB.setText("Reserved");
-        }
-        CB.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Seat seat=new Seat();
-                seat.setSeatCol(Col);
-                seat.setSeatRow(Row);
-                if(CB.isSelected()){
-                    choosenSeats.add(seat);
-                }else{
-                    for(Seat st:choosenSeats){
-                        if(seat.getSeatCol()==Col&&seat.getSeatRow()==Row){
-                            choosenSeats.remove(st);
-                            System.out.println(st.toString());
-                            System.out.println("Deleted");
-                            break;
-                        }
-                    }
-                }
-              *//*  BuyTicketWindowController.SeatInfo="Seat, Row: "+Row+" Col: "+Col ;
-                System.out.println("Seat, Row: "+Row+" Col: "+Col);
-                Node node = (Node) event.getSource();
-                Stage thisStage = (Stage) node.getScene().getWindow();*//*
-            }
-        });
-
-        return  CB;
-    }*/
     public Button getSeat2(Seats seats, int Row, int Col){//I fliped them by mistake
         Button btn=new Button();
         btn.setMinWidth(133);
@@ -284,5 +239,22 @@ public class BuyTicketWindowController {
         });
 
         return  btn;
+    }
+    @Subscribe
+    public void  onBuyTicketEvent(BuyTicketEvent event){
+        if(curtheaterMovie.getMovieId()==event.getTheaterMovie().getMovieId()){
+            Platform.runLater(()->{
+                TicketPriceLabel.setText("Ticket Price");
+                setDetails(event.getTheaterMovie());
+                BuyerNameText.clear();
+                EmailTExt.clear();
+                DatesList.setValue(null);
+                VisaText.clear();
+                CvvText.clear();
+                seatInfoLabel.setText("");
+                choosenSeats.clear();
+
+            });
+        }
     }
 }

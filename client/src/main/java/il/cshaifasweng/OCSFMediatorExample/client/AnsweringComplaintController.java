@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent ;
 import javafx.scene.input.MouseEvent;
 //import com.sun.glass.events.MouseEvent;
@@ -28,6 +30,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
 import javafx.scene.text.Text;
 import java.time.LocalTime;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class AnsweringComplaintController implements Initializable{
 	ObservableList<Complaint> list = FXCollections.observableArrayList();
@@ -97,10 +101,10 @@ public class AnsweringComplaintController implements Initializable{
 
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
-			// TODO Auto-generated method stub
 	        initCol();
-	        loadData();
-	    }
+			loadData();
+			EventBus.getDefault().register(this);
+		}
 	    private void initCol() {//TODO: update it to match the final class attributes
 	    	guest_email.setCellValueFactory(new PropertyValueFactory<>("email"));
 	    	complaint_content.setCellValueFactory(new PropertyValueFactory<>("content"));
@@ -125,8 +129,7 @@ public class AnsweringComplaintController implements Initializable{
 			table_Comp.setItems(list);
 			autoResizeColumns(table_Comp);
 		}
-		public static void autoResizeColumns( TableView<?> table )//method to reszie columns taken from StackOverFlow
-		{
+		public static void autoResizeColumns( TableView<?> table ){
 			//Set the right policy
 			table.setColumnResizePolicy( TableView.UNCONSTRAINED_RESIZE_POLICY);
 			table.getColumns().stream().forEach( (column) ->
@@ -164,5 +167,13 @@ public class AnsweringComplaintController implements Initializable{
 		}
 		System.out.println("message sent to server to get all movies");
 	}
-	    
+	@Subscribe
+	public void onComplaintEvent(ComplaintEvent event){
+		Platform.runLater(()->{
+			list.clear();
+			list.addAll(event.getComplaintList());
+			table_Comp.setItems(list);
+			autoResizeColumns(table_Comp);
+		});
+	}
 }

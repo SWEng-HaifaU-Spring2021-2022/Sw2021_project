@@ -42,6 +42,8 @@ import javafx.util.Pair;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 
 public class GridCatalogController implements Initializable {
@@ -138,6 +140,10 @@ public class GridCatalogController implements Initializable {
     }
 
     public void initialize(URL url, ResourceBundle rb) {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+
         if (SimpleClient.getUser() != null) {
             LogBtn.setText("Log Out");
             logInStatusLB.setText("Logged in as: " + SimpleClient.getUser().getFirstName() + " " + SimpleClient.getUser().getLastName() + ".");
@@ -435,6 +441,18 @@ public class GridCatalogController implements Initializable {
             e.printStackTrace();
         }
         System.out.println("message sent to server to get all Complaints");
+    }
+
+    @Subscribe
+    public void onRefreshCatalogEvent(RefreshCatalogEvent event){
+        System.out.println("dasdadsasdasd");
+        movieList=event.getMovieList();
+        try {
+            fillGrids();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //event.sendRefreshRequest();
     }
 }
 

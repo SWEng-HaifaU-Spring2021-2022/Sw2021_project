@@ -63,4 +63,15 @@ public class Seats implements Serializable {
         return count;
     }
 
+    public Seat getFirsTemptySeat(){
+        int rowNum=0;
+        for(int i=0;i<seats.length;++i){
+            if(seats[i]==false){
+                rowNum=i/10;
+                return new Seat(rowNum,i,0);
+            }
+        }
+        return null;
+    }
+
 }

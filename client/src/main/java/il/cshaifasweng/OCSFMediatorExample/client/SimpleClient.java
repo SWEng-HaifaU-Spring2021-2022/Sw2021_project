@@ -225,6 +225,12 @@ public class SimpleClient extends AbstractClient {
 				Warning newwarning = new Warning(tempmsg.getMsg());
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
+			else if(tempmsg.getMsg().equals("can't Pick seat")){
+				EventBus.getDefault().post(new PurbleCardEvent(false));
+			}
+			else if(tempmsg.getMsg().equals("can Pick seat")){
+				EventBus.getDefault().post(new PurbleCardEvent(true));
+			}
 		}
 
 		if (msg.getClass().equals(AdvancedMsg.class)) {

@@ -65,6 +65,22 @@ public class SimpleServer extends AbstractServer {
                     change(msgObj, client);
                 }
                 if (msgObj.getMsg().startsWith("#delete")) change(msgObj, client);
+                if(msgObj.getMsg().equals("#CheckPurpleCard")){
+                    boolean flag=true;
+                    List<PurpleCard> cardslist=getAllInstructions2();
+                    MovieShow tempms=(MovieShow) msgObj.getObject();
+                    for (PurpleCard pc:cardslist){
+                        if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&pc.getProjAllowed()==false){
+                            msgObject answer_msg=new msgObject("can't Pick seat");
+                            client.sendToClient(answer_msg);
+                            flag=false;
+                        }
+                    }
+                    if(flag){
+                        msgObject answer_msg=new msgObject("can Pick seat");
+                        client.sendToClient(answer_msg);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -447,10 +463,10 @@ public class SimpleServer extends AbstractServer {
             List<PurpleCard> cardslist=getAllInstructions2();
             MovieShow tempms=(MovieShow) msgObj.getObject();
             for (PurpleCard pc:cardslist){
-                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())){
+                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&!pc.getProjAllowed()){
                     msgObject msg=new msgObject("there is a purple instruction you cant add a movie screening");
                     client.sendToClient(msg);
-                    break;
+                    return;
                 }
             }
             session.save((MovieShow) msgObj.getObject());
@@ -473,14 +489,14 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
 
-        } else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
+        } else if (msgObj.getMsg().equals("#updateMovieShow")) {
             List<PurpleCard> cardslist=getAllInstructions2();
             MovieShow tempms=(MovieShow) msgObj.getObject();
             for (PurpleCard pc:cardslist){
-                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())){
+                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&pc.getProjAllowed()==false){
                     msgObject msg=new msgObject("there is a purple instruction you cant add a movie screening");
                     client.sendToClient(msg);
-                    break;
+                    return;
                 }
             }
             session.update(((MovieShow) msgObj.getObject()));

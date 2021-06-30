@@ -1,7 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -73,6 +72,27 @@ public class DBase {
         return  wantedData;
 
     }
+    public static ArrayList<Complaint> getComplaint(){
+        System.out.println("getting all the complaints");
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        CriteriaBuilder builder=session.getCriteriaBuilder();
+        CriteriaQuery<Complaint> query=builder.createQuery(Complaint.class);
+        query.from(Complaint.class);
+        System.out.println(LocalDate.now());
+        ArrayList<Complaint> data=(ArrayList<Complaint>) session.createQuery(query).getResultList();
+        ArrayList<Complaint>wantedData=new ArrayList<>();
+        for(Complaint cm:data){
+            if(cm.getDate().equals(LocalDate.now()))
+                wantedData.add(cm);
+        }
+        System.out.println(wantedData.size());
+        if(session!=null){
+            session.close();
+        }
+        return  wantedData;
+
+    }
     public static  void UpdateHometicket(HomeLinkTicket hlt){
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
@@ -85,6 +105,17 @@ public class DBase {
             session.close();
         }
     }
+    public static  void UpdateComplaint(Complaint cm){
+        SessionFactory sessionFactory = getSessionFactory();
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(cm);
+        session.flush();
+        session.getTransaction().commit();
+        System.out.println("updating the complaint is sent attribute");
+        if(session!=null){
+            session.close();
+        }
     public static  msgObject getAllMovies(){
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
@@ -105,7 +136,6 @@ public class DBase {
         }
         msgObject msg = new msgObject("RefreshCatalog", list);
         return msg;
-
     }
 
 }

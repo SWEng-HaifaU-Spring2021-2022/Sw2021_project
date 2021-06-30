@@ -320,7 +320,9 @@ public class SimpleServer extends AbstractServer {
 				session.getTransaction().commit();
 				msgObject answer_msg=new msgObject("Complaint answered successfully");
 				client.sendToClient(answer_msg);
-
+				EmailUtil.sendEmailComplaintAnswer(cmp);
+				System.out.println("sending email to the client");
+	
 			}
 
         } catch (Exception exception) {

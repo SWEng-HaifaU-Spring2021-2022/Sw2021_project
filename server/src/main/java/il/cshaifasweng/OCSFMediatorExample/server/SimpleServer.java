@@ -265,7 +265,6 @@ public class SimpleServer extends AbstractServer {
                 session = sessionFactory.openSession();
                 session.beginTransaction();
                 change(msgObj, client);
-                //session.getTransaction().commit(); // Save everything.
                 msgObj.setMsg("movie show updated");
                 try {
                     if (msgObj.getMsg().equals("#updateMovieShow") && (msgObj.getMsg().equals("#updateMovieShowTicket") == false)) {//TODO:check it
@@ -433,14 +432,14 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
             System.out.println("test update1");
-         session.update(((MovieShow) msgObj.getObject()));
+            MovieShow ms=(MovieShow) msgObj.getObject();
+            System.out.println(ms.getShowDate().toString());
+         session.update(ms);
             System.out.println("test update1");
             session.flush();
-
-            System.out.println("test update1");
             AdvancedMsg tempmsg= new AdvancedMsg("MovieShow Updated");
-            MovieShow ms=(MovieShow)msgObj.getObject();
-            int movieid=ms.getMovie().getMovieId();
+            MovieShow ms2=(MovieShow)msgObj.getObject();
+            int movieid=ms2.getMovie().getMovieId();
             tempmsg.addobject((List<Theater>)getAllTheatres().getObject());
 
             tempmsg.addobject(getMovie(movieid));
@@ -533,14 +532,11 @@ public class SimpleServer extends AbstractServer {
                 }
                 session.getTransaction().commit();
                 msgObject msg = new msgObject("#updateMovieShowTicket", ms);
+                System.out.println(ms.getShowDate());
                 update(msg, client);
                 EmailUtil.sendTheatetrTicketEmail(theaterTicket);
                 System.out.println("Theater ticket have been saved successfully to the data base");
-             /*   msgObject answer_msg = new msgObject("purchased Successfully");
-                answer_msg.setObject((TheaterMovie)getMovie(ms.getMovie().getMovieId()));
-                this.sendToAllClients(answer_msg);
-                System.out.println("sending confirmation");
-                sendRefreshcatlogevent();*/
+
             } else {
 
                 msgObject msg = new msgObject("failed to reserve");
@@ -571,6 +567,7 @@ public class SimpleServer extends AbstractServer {
 				msgObject answer_msg = new msgObject("a Complaint added", null);
 				client.sendToClient(answer_msg);
 				answer_msg=getAllComplaints();
+				answer_msg.setMsg("RefreshAnswerComplaint");
 				this.sendToAllClients(answer_msg);
 			} catch (IOException e) {
 				msgObject answer_msg = new msgObject("failed", null);

@@ -10,8 +10,8 @@ public class App
 
         //server.test();
       // server.AddUsers();
-      // server.addCinemaManager();
-       // server.addserviceWorker();
+     // server.addCinemaManager();
+        //server.addserviceWorker();
         //server.addcontentworker();
         server.listen();
         System.out.println("Server is up");

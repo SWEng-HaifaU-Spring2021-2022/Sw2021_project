@@ -140,7 +140,10 @@ public class GridCatalogController implements Initializable {
     }
 
     public void initialize(URL url, ResourceBundle rb) {
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+
         if (SimpleClient.getUser() != null) {
             LogBtn.setText("Log Out");
             logInStatusLB.setText("Logged in as: " + SimpleClient.getUser().getFirstName() + " " + SimpleClient.getUser().getLastName() + ".");

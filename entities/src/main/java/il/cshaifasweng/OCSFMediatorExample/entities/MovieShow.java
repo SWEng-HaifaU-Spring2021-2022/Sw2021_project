@@ -18,6 +18,7 @@ public class MovieShow implements Serializable  {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "movie_id")
 	private Movie movie;
+	@Column( columnDefinition = "DATE")
 	private LocalDate showDate;
 	@ManyToOne( fetch = FetchType.EAGER)
 	@JoinColumn(name = "theater_id")

@@ -173,7 +173,6 @@ public class SimpleClient extends AbstractClient {
        else if(tempmsg.getMsg().equals("a Complaint added")){
 				Warning newwarning=new Warning("Your complaint has been sent ");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
-				EventBus.getDefault().post(new ComplaintEvent((List<Complaint>) tempmsg.getObject()));
 			}
 			else if(tempmsg.getMsg().equals("getComplaint")) {
 				obj=temp;
@@ -213,6 +212,9 @@ public class SimpleClient extends AbstractClient {
 			}
 			else if(tempmsg.getMsg().equals("updateHallMap")){
 				EventBus.getDefault().post(new BuyTicketEvent((TheaterMovie)tempmsg.getObject() ));
+			}
+			else if(tempmsg.getMsg().equals("RefreshAnswerComplaint")){
+				EventBus.getDefault().post(new ComplaintEvent((List<Complaint>) tempmsg.getObject()));
 			}
 		}
 

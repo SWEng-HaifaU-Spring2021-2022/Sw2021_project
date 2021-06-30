@@ -121,7 +121,6 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("Price request have been added to the DB");
 				Warning newwarning = new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-				EventBus.getDefault().post(new PriceChangeEvent((List<PriceRequest>)tempmsg.getObject()));
 			}
 			else if (tempmsg.getMsg().equals("movie added successfully")) {
 				Warning newwarning = new Warning("movie added successfully");
@@ -217,6 +216,9 @@ public class SimpleClient extends AbstractClient {
 			}
 			else if(tempmsg.getMsg().equals("RefreshAnswerComplaint")){
 				EventBus.getDefault().post(new ComplaintEvent((List<Complaint>) tempmsg.getObject()));
+			}
+			else if(tempmsg.getMsg().equals("refreshPriceRquestAccRej")){
+				EventBus.getDefault().post(new PriceChangeEvent((List<PriceRequest>)tempmsg.getObject()));
 			}
 		}
 

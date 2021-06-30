@@ -319,7 +319,9 @@ public class PurpleCardController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            msg = (msgObject) SimpleClient.obj;
+            if(SimpleClient.obj.getClass().equals(msgObject.class)){
+                msg = (msgObject) SimpleClient.obj;
+            }
         }
 
         List<PurpleCard> pList = (List<PurpleCard>) (((msgObject) SimpleClient.obj).getObject());

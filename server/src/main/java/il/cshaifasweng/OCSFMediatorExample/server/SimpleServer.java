@@ -512,6 +512,8 @@ public class SimpleServer extends AbstractServer {
             System.out.println("a new price change request have been added");
             msgObject answer_msg=getAllRequests();
             answer_msg.setMsg("a price request added");
+            client.sendToClient(answer_msg);
+            answer_msg.setMsg("refreshPriceRquestAccRej");
             this.sendToAllClients(answer_msg);
         }
         else if (msgObj.getMsg().equals("#addHomeTicket")) {
@@ -586,6 +588,10 @@ public class SimpleServer extends AbstractServer {
                 System.out.println("a new complaint have been added");
                 msgObject answer_msg = new msgObject("a Complaint added", null);
                 client.sendToClient(answer_msg);
+                answer_msg=getAllComplaints();
+                answer_msg.setMsg("RefreshAnswerComplaint");
+                this.sendToAllClients(answer_msg);
+
             } catch (IOException e) {
                 msgObject answer_msg = new msgObject("failed", null);
                 client.sendToClient(answer_msg);

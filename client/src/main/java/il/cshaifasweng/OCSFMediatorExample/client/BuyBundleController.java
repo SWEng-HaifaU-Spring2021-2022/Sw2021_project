@@ -119,4 +119,13 @@ public class BuyBundleController {
 
     }
 
+    @FXML
+    void goHome(ActionEvent event) {
+        try {
+            App.setRoot("primary");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

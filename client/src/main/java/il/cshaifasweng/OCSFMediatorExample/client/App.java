@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 public class App extends Application {
 
     private static Scene scene;
+    private static Stage STAGE;
     private static SimpleClient client;
 
     //private static Stage stage=new Stage();
@@ -43,12 +44,16 @@ public class App extends Application {
         /*JMetro jMetro = new JMetro(Style.LIGHT);
         jMetro.setScene(scene);*/
        // scene.setFill(Color.WHITE);
-        stage.setScene(scene);
-        stage.show();
+        STAGE = stage;
+        STAGE.setScene(scene);
+        STAGE.show();
     }
 
     static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+       // scene.setRoot(loadFXML(fxml));
+        scene = new Scene(loadFXML(fxml));
+        STAGE.setScene(scene);
+        STAGE.show();
     }
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));

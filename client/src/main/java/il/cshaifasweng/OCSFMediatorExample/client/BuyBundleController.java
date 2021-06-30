@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +78,7 @@ public class BuyBundleController {
 
     @FXML
     void checkOut(ActionEvent event) {
-        Bundle bundle = new Bundle(email.getText(), fName.getText(), lName.getText());
+        Bundle bundle = new Bundle(email.getText(), fName.getText(), lName.getText(), LocalDate.now());
         msgObject msg = new msgObject();
         msg.setMsg("BuyBundle");
         msg.setObject(bundle);

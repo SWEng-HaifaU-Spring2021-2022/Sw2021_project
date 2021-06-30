@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="Bundle")
@@ -14,12 +15,15 @@ public class Bundle implements Serializable {
     String email;
     String fName;
     String lName;
+    LocalDate date;
 
-    public Bundle( String email, String fName, String lName) {
+
+    public Bundle( String email, String fName, String lName, LocalDate date) {
         this.remainingEntries = 20;
         this.email = email;
         this.fName = fName;
         this.lName = lName;
+        this.date = date;
     }
 
     public Bundle() {
@@ -60,5 +64,13 @@ public class Bundle implements Serializable {
 
     public void setRemainingEntries(int remainingEntries) {
         this.remainingEntries = remainingEntries;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

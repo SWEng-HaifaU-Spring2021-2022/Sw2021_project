@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane onKeyPressed="#onEnter" prefHeight="370.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.LogInScreenController">
+<AnchorPane onKeyPressed="#onEnter" prefHeight="370.0" prefWidth="358.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.LogInScreenController">
    <children>
       <Label layoutX="71.0" layoutY="52.0" text="User Log In" textAlignment="CENTER" textFill="WHITE">
          <font>

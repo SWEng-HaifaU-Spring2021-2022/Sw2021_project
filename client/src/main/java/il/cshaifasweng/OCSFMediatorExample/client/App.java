@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.User;
+import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
+/*import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;*/
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -39,9 +40,9 @@ public class App extends Application {
         client.openConnection();
         scene = new Scene(loadFXML("primary"));
         //scene.getStylesheets().add(Main.class.getResource("/il/cshaifasweng/OCSFMediatorExample/CSSFiles/bootstrap3.css").toExternalForm());
-        JMetro jMetro = new JMetro(Style.LIGHT);
-        jMetro.setScene(scene);
-        scene.setFill(Color.WHITE);
+        /*JMetro jMetro = new JMetro(Style.LIGHT);
+        jMetro.setScene(scene);*/
+       // scene.setFill(Color.WHITE);
         stage.setScene(scene);
         stage.show();
     }
@@ -78,8 +79,15 @@ public class App extends Application {
         });
 
     }
+   /* @Subscribe
+    public  void onReportinfoEvent(ReportinfoEvent event){
 
+        System.out.println("test event bus");
+        System.out.println(((msgObject)event.getReceivedData()).getMsg());
+    }*/
     public static void main(String[] args) {
         launch();
     }
+
+
 }

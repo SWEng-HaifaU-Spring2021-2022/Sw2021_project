@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
@@ -62,14 +63,12 @@ public class SimpleClient extends AbstractClient {
 				});
 
 			}
-
 			else if (tempmsg.getMsg().equals("newmovieShowadd")) {
 				System.out.println("an object have been added");
 				Platform.runLater(()->{
 					RefreshCatalog();
 				});
 			}
-
 			else if (tempmsg.getMsg().equals("MovieShow Deleted")) {
 				System.out.println("an object have been deleted");
 				Platform.runLater(()->{
@@ -99,7 +98,6 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 				RefreshCatalog();
 			}
-
 			else if (tempmsg.getMsg().contains("failed")) {
 				Warning newwarning = new Warning("Some thing went wrong");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
@@ -123,6 +121,7 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("Price request have been added to the DB");
 				Warning newwarning = new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+				EventBus.getDefault().post(new PriceChangeEvent((List<PriceRequest>)tempmsg.getObject()));
 			}
 			else if (tempmsg.getMsg().equals("movie added successfully")) {
 				Warning newwarning = new Warning("movie added successfully");
@@ -138,8 +137,7 @@ public class SimpleClient extends AbstractClient {
 				}
 
 			}
-			else if(tempmsg.getMsg().equals("an answer to complaint added"))
-			{
+			else if(tempmsg.getMsg().equals("an answer to complaint added")) {
 				System.out.println("an answer to complaint have been added to the DB");
 				Warning newwarning=new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
@@ -156,6 +154,7 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("branch revenue")){
 				Warning newwarning = new Warning("the branch revenue for the last month is"+(int)tempmsg.getObject());
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+				EventBus.getDefault().post(new ReportinfoEvent(tempmsg) );
 			}
 			else if(tempmsg.getMsg().equals("openReportPage")){
 				try {
@@ -169,21 +168,15 @@ public class SimpleClient extends AbstractClient {
 				Warning newwarning = new Warning("Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
-			else  if(tempmsg.getMsg().equals("purchased Successfully")){
-				System.out.println("bla bla");
+        else  if(tempmsg.getMsg().equals("purchased Successfully")){
 				Warning newwarning = new Warning("TheaterMovie Ticket Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
-				Platform.runLater(()->{
-
-					RefreshCatalog();
-				});
 			}
-			else if(tempmsg.getMsg().equals("a Complaint added")){
+       else if(tempmsg.getMsg().equals("a Complaint added")){
 				Warning newwarning=new Warning("Your complaint has been sent ");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
 			}
-			else if(tempmsg.getMsg().equals("getComplaint"))
-			{
+			else if(tempmsg.getMsg().equals("getComplaint")) {
 				obj=temp;
 			}
 			else if(tempmsg.getMsg().equals("Complaints")) {
@@ -197,8 +190,7 @@ public class SimpleClient extends AbstractClient {
 					}
 				});
 			}
-			else if(tempmsg.getMsg().equals("an answer to complaint added"))
-			{
+			else if(tempmsg.getMsg().equals("an answer to complaint added")) {
 				System.out.println("an answer to complaint have been added to the DB");
 				Warning newwarning=new Warning("The request successfully sent");
 				EventBus.getDefault().post(new WarningEvent((Warning)newwarning));
@@ -206,6 +198,25 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("Complaint answered successfully")){
 				Warning newwarning = new Warning("Complaint answered successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}
+			else if(tempmsg.getMsg().equals("Bundles and links sales")){
+				EventBus.getDefault().post(new ReportinfoEvent(tempmsg));
+			}
+			else if (tempmsg.getMsg().equals("Complaint List Reports")){
+				EventBus.getDefault().post(new ReportinfoEvent(tempmsg));
+			}
+			else if(tempmsg.getMsg().equals("PriceRequestAccRej")){
+				EventBus.getDefault().post(new PriceChangeEvent(tempmsg.getObject()));
+			}
+			else if(tempmsg.getMsg().equals("RefreshCatalog")){
+				System.out.println("event bus auto update");
+				EventBus.getDefault().post(new RefreshCatalogEvent(tempmsg));
+			}
+			else if(tempmsg.getMsg().equals("updateHallMap")){
+				EventBus.getDefault().post(new BuyTicketEvent((TheaterMovie)tempmsg.getObject() ));
+			}
+			else if(tempmsg.getMsg().equals("RefreshAnswerComplaint")){
+				EventBus.getDefault().post(new ComplaintEvent((List<Complaint>) tempmsg.getObject()));
 			}
 		}
 

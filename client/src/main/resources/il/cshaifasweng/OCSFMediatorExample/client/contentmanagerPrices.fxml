@@ -5,9 +5,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PriceChangeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PriceChangeController">
    <children>
-      <TableView fx:id="priceTable" layoutX="14.0" layoutY="67.0" prefHeight="196.0" prefWidth="306.0">
+      <TableView fx:id="priceTable" layoutX="14.0" layoutY="67.0" prefHeight="196.0" prefWidth="477.0">
         <columns>
           <TableColumn fx:id="oldPriceCol" prefWidth="75.0" text="old Price" />
           <TableColumn fx:id="newPriceCol" prefWidth="75.0" text="new price" />

@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent ;
 import javafx.scene.input.MouseEvent;
 //import com.sun.glass.events.MouseEvent;
@@ -27,6 +29,9 @@ import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
 import javafx.scene.text.Text;
+import java.time.LocalTime;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class AnsweringComplaintController implements Initializable{
 	ObservableList<Complaint> list = FXCollections.observableArrayList();
@@ -47,6 +52,9 @@ public class AnsweringComplaintController implements Initializable{
 
 	    @FXML // fx:id="complaint_date"
 	    private TableColumn<Complaint, LocalDate> complaint_date; // Value injected by FXMLLoader
+	    
+	    @FXML // fx:id="Complaint_time"
+	    private TableColumn<Complaint, LocalTime> Complaint_time; // Value injected by FXMLLoader
 
 	    @FXML // fx:id="Complaint_text"
 	    private TextArea Complaint_text; // Value injected by FXMLLoader
@@ -64,11 +72,11 @@ public class AnsweringComplaintController implements Initializable{
 	            return;
 	        }
 	        Complaint_text.setText(table_Comp.getSelectionModel().getSelectedItem().getContent());
-	        if(status_col.getCellData(index).toString()=="answered")
-	        {
+	        if(table_Comp.getSelectionModel().getSelectedItem().isStatus().equals("Answered"))
+	        {   
 	        	if(!table_Comp.getSelectionModel().getSelectedItem().getAnswer().isEmpty()) {
 	        		Answer_text.setText(table_Comp.getSelectionModel().getSelectedItem().getAnswer());
-	        		//Answer_text.disabledProperty();
+	        		Answer_text.setEditable(false);
 	        	}
 	        }
 	    }
@@ -84,12 +92,7 @@ public class AnsweringComplaintController implements Initializable{
 	        tb.setStatus("Answered");
 	        msgObject msg=new msgObject("#updateAnswerToComplaint",tb);
 	        try {
-	        	 System.out.println("test1");
 	            SimpleClient.getClient().sendToServer(msg);
-	            System.out.println("test2");
-	            Node node = (Node) event.getSource();
-	            Stage thisStage = (Stage) node.getScene().getWindow();
-	            thisStage.close();
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
@@ -98,16 +101,17 @@ public class AnsweringComplaintController implements Initializable{
 
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
-			// TODO Auto-generated method stub
 	        initCol();
-	        loadData();
-	    }
+			loadData();
+			EventBus.getDefault().register(this);
+		}
 	    private void initCol() {//TODO: update it to match the final class attributes
 	    	guest_email.setCellValueFactory(new PropertyValueFactory<>("email"));
 	    	complaint_content.setCellValueFactory(new PropertyValueFactory<>("content"));
 	    	status_col.setCellValueFactory(new PropertyValueFactory<>("status"));
 	    	answer_col.setCellValueFactory(new PropertyValueFactory<>("answer"));
 	    	complaint_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+	    	Complaint_time.setCellValueFactory(new PropertyValueFactory<>("sendTime"));
 	        
 	    }
 	    public void loadData() {
@@ -125,8 +129,7 @@ public class AnsweringComplaintController implements Initializable{
 			table_Comp.setItems(list);
 			autoResizeColumns(table_Comp);
 		}
-		public static void autoResizeColumns( TableView<?> table )//method to reszie columns taken from StackOverFlow
-		{
+		public static void autoResizeColumns( TableView<?> table ){
 			//Set the right policy
 			table.setColumnResizePolicy( TableView.UNCONSTRAINED_RESIZE_POLICY);
 			table.getColumns().stream().forEach( (column) ->
@@ -152,5 +155,25 @@ public class AnsweringComplaintController implements Initializable{
 				column.setPrefWidth( max + 10.0d );
 			} );
 		}
-	    
+
+
+	@FXML
+	void goCatalog(ActionEvent event) {
+		msgObject msg = new msgObject("#getAllMovies");
+		try {
+			SimpleClient.getClient().sendToServer(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("message sent to server to get all movies");
+	}
+	@Subscribe
+	public void onComplaintEvent(ComplaintEvent event){
+		Platform.runLater(()->{
+			list.clear();
+			list.addAll(event.getComplaintList());
+			table_Comp.setItems(list);
+			autoResizeColumns(table_Comp);
+		});
+	}
 }

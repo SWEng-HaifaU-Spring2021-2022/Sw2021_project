@@ -7,21 +7,23 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AnsweringComplaintController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="736.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AnsweringComplaintController">
    <children>
       <TableView fx:id="table_Comp" layoutX="14.0" layoutY="27.0" onMouseClicked="#getSelected" prefHeight="202.0" prefWidth="658.0">
         <columns>
           <TableColumn fx:id="guest_email" prefWidth="75.0" text="Guest Email" />
           <TableColumn fx:id="complaint_content" prefWidth="120.0" text="Complaint content" />
-            <TableColumn fx:id="status_col" prefWidth="75.0" text="status" />
+            <TableColumn fx:id="status_col" prefWidth="75.0" text="Status" />
             <TableColumn fx:id="answer_col" prefWidth="75.0" text="Answer" />
             <TableColumn fx:id="complaint_date" prefWidth="94.39996337890625" text="Complaint Date" />
+            <TableColumn fx:id="Complaint_time" prefWidth="120.79998779296875" text="Complaint Time" />
         </columns>
       </TableView>
       <TextArea fx:id="Complaint_text" editable="false" layoutX="14.0" layoutY="282.0" prefHeight="108.0" prefWidth="560.0" />
-      <Label layoutX="14.0" layoutY="254.0" text="Complaint content" />
-      <Label layoutX="14.0" layoutY="403.0" text="Answer" />
+      <Label layoutX="14.0" layoutY="254.0" text="Complaint content" textFill="WHITE" />
+      <Label layoutX="14.0" layoutY="403.0" text="Answer" textFill="WHITE" />
       <TextArea fx:id="Answer_text" layoutX="13.0" layoutY="421.0" prefHeight="108.0" prefWidth="560.0" />
       <Button fx:id="Answer_btn" layoutX="267.0" layoutY="568.0" mnemonicParsing="false" onAction="#sendAnswerToComplaint" text="Answer" />
+      <Button layoutX="184.0" layoutY="568.0" mnemonicParsing="false" onAction="#goCatalog" text="Catalog" />
    </children>
 </AnchorPane>

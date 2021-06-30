@@ -60,4 +60,8 @@ public class Seat implements Serializable {
     public void setTicket(TheaterTicket ticket) {
         this.ticket = ticket;
     }
+
+    public int getSeatdId() {
+        return seatdId;
+    }
 }

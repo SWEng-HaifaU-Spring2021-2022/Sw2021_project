@@ -3,15 +3,19 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.msgObject;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class ComplaintController {
 
@@ -36,13 +40,16 @@ public class ComplaintController {
     	Complaint comp=new Complaint();
     	comp.setEmail( email_txt.getText());
     	comp.setContent(content_txt.getText());
-    	comp.setDate(LocalDate.now());
+    	comp.setSendTime(LocalTime.now());
+    	comp.setDate(LocalDate.now().plusDays(1));
     	comp.setStatus("Not answered");
     	msgObject msg=new msgObject();
     	msg.setMsg("#addComplaint");
     	msg.setObject(comp);
     	System.out.println("sending to server a new complaint");
     	SimpleClient.getClient().sendToServer(msg);
+    	email_txt.clear();
+    	content_txt.clear();
     }
 
     @FXML
@@ -52,4 +59,15 @@ public class ComplaintController {
         assert send_btn != null : "fx:id=\"send_btn\" was not injected: check your FXML file 'Complaint.fxml'.";
 
     }
+    @FXML
+    void goCatalog(ActionEvent event) {
+        msgObject msg = new msgObject("#getAllMovies");
+        try {
+            SimpleClient.getClient().sendToServer(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("message sent to server to get all movies");
+    }
+
 }

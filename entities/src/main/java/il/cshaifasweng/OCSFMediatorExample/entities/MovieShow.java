@@ -137,4 +137,5 @@ public class MovieShow implements Serializable {
         this.seats.setSeats(ns);
 
     }
+
 }

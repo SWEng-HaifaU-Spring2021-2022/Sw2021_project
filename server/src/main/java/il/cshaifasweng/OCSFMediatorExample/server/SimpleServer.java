@@ -444,6 +444,15 @@ public class SimpleServer extends AbstractServer {
 
         }
         else if (msgObj.getMsg().equals("#addMovieShow")) {
+            List<PurpleCard> cardslist=getAllInstructions2();
+            MovieShow tempms=(MovieShow) msgObj.getObject();
+            for (PurpleCard pc:cardslist){
+                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())){
+                    msgObject msg=new msgObject("there is a purple instruction you cant add a movie screening");
+                    client.sendToClient(msg);
+                    break;
+                }
+            }
             session.save((MovieShow) msgObj.getObject());
             session.flush();
             session.getTransaction().commit();
@@ -465,7 +474,15 @@ public class SimpleServer extends AbstractServer {
             }
 
         } else if (msgObj.getMsg().equals("#updateMovieShow")) {//TODO: check it here
-            System.out.println("test update1");
+            List<PurpleCard> cardslist=getAllInstructions2();
+            MovieShow tempms=(MovieShow) msgObj.getObject();
+            for (PurpleCard pc:cardslist){
+                if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())){
+                    msgObject msg=new msgObject("there is a purple instruction you cant add a movie screening");
+                    client.sendToClient(msg);
+                    break;
+                }
+            }
             session.update(((MovieShow) msgObj.getObject()));
             System.out.println("test update1");
             session.flush();
@@ -630,6 +647,10 @@ public class SimpleServer extends AbstractServer {
     }
 
     private static msgObject getAllMovies() throws Exception {
+        if(!session.isOpen()){
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+        }
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
         query.from(Movie.class);
@@ -1179,6 +1200,7 @@ public class SimpleServer extends AbstractServer {
             session.beginTransaction();
             if (s.equals("AddInstruction")) {
                 session.save(card);
+
             } else if (s.equals("UpdateInstruction")) {
                 session.update(card);
             } else if (s.equals("DeleteInstruction"))
@@ -1205,15 +1227,20 @@ public class SimpleServer extends AbstractServer {
 
         try {
             client.sendToClient(msg);
-            if (s.equals("AddInstruction") || s.equals("UpdateInstruction"))
+            System.out.println(msg.getMsg());
+            System.out.println("problem problem");
+
+            if (s.equals("AddInstruction") || s.equals("UpdateInstruction")){
                 InstructionEmailReturn(temp);
+                sendRefreshcatlogevent();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    void getAllInstructions(msgObject msg, ConnectionToClient client) {
+    void getAllInstructions(msgObject msg, ConnectionToClient client)   {
         SessionFactory sessionFactory = getSessionFactory();
         session = sessionFactory.openSession();
         String sqlQ = "FROM PurpleCard";
@@ -1230,7 +1257,17 @@ public class SimpleServer extends AbstractServer {
                 session.close();
         }
     }
+    List<PurpleCard> getAllInstructions2()   {
+        if(!session.isOpen()){
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+        }
+        String sqlQ = "FROM PurpleCard";
+        Query query = session.createQuery(sqlQ);
+        List<PurpleCard> list = query.list();
 
+        return list;
+    }
 
     void InstructionEmailReturn(PurpleCard card) {
 

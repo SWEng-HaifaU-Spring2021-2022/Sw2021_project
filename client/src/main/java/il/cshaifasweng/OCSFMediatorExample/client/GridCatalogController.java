@@ -445,7 +445,6 @@ public class GridCatalogController implements Initializable {
 
     @Subscribe
     public void onRefreshCatalogEvent(RefreshCatalogEvent event){
-        System.out.println("dasdadsasdasd");
         movieList=event.getMovieList();
         try {
             fillGrids();

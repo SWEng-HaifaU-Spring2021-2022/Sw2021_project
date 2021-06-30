@@ -221,6 +221,10 @@ public class SimpleClient extends AbstractClient {
 			else if(tempmsg.getMsg().equals("refreshPriceRquestAccRej")){
 				EventBus.getDefault().post(new PriceChangeEvent((List<PriceRequest>)tempmsg.getObject()));
 			}
+			else if(tempmsg.getMsg().equals("there is a purple instruction you cant add a movie screening")){
+				Warning newwarning = new Warning(tempmsg.getMsg());
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
+			}
 		}
 
 		if (msg.getClass().equals(AdvancedMsg.class)) {

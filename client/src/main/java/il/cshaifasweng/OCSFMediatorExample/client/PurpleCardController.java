@@ -233,11 +233,13 @@ public class PurpleCardController {
 
     @FXML
     void goHome(ActionEvent event) {
+        msgObject msg = new msgObject("#getAllMovies");
         try {
-            App.setRoot("GridCatalog");
+            SimpleClient.getClient().sendToServer(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("message sent to server to get all movies");
     }
 
 

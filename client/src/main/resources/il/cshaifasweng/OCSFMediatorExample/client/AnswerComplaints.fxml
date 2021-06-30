@@ -12,7 +12,7 @@
       <TableView fx:id="table_Comp" layoutX="14.0" layoutY="27.0" onMouseClicked="#getSelected" prefHeight="202.0" prefWidth="658.0">
         <columns>
           <TableColumn fx:id="guest_email" prefWidth="75.0" text="Guest Email" />
-          <TableColumn fx:id="complaint_content" prefWidth="120.0" text="Complaint content" />
+          <TableColumn fx:id="complaint_content" maxWidth="150.0" prefWidth="120.0" text="Complaint content" />
             <TableColumn fx:id="status_col" prefWidth="75.0" text="Status" />
             <TableColumn fx:id="answer_col" prefWidth="75.0" text="Answer" />
             <TableColumn fx:id="complaint_date" prefWidth="94.39996337890625" text="Complaint Date" />

@@ -244,12 +244,16 @@ public class BuyTicketWindowController {
     public void  onBuyTicketEvent(BuyTicketEvent event){
         if(curtheaterMovie.getMovieId()==event.getTheaterMovie().getMovieId()){
             Platform.runLater(()->{
+                TicketPriceLabel.setText("Ticket Price");
                 setDetails(event.getTheaterMovie());
                 BuyerNameText.clear();
                 EmailTExt.clear();
                 DatesList.setValue(null);
                 VisaText.clear();
                 CvvText.clear();
+                seatInfoLabel.setText("");
+                choosenSeats.clear();
+
             });
         }
     }

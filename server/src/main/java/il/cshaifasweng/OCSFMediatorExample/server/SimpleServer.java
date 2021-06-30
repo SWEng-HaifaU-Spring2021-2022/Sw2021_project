@@ -89,7 +89,8 @@ public class SimpleServer extends AbstractServer {
                 msgObject msg1=new msgObject("#updateMovieShow",movieShow);
                 update(msg1,client);
                 */
-            } else if (advcmsg.getMsg().equals("#deleteTheaterTicket")) {
+            }
+            else if (advcmsg.getMsg().equals("#deleteTheaterTicket")) {
                 System.out.println("deleting theater ticket");
                 DeleteTheaterTicket(advcmsg, client);
             }
@@ -113,21 +114,20 @@ public class SimpleServer extends AbstractServer {
     }
     public void DeleteTheaterTicket(AdvancedMsg msg,ConnectionToClient client){
         try {
-            if(session==null){
                 SessionFactory sessionFactory = getSessionFactory();
                 session = sessionFactory.openSession();
                 session.beginTransaction();
-            }
+
             TheaterTicket theaterticket=(TheaterTicket) msg.getObjectList().get(0);
             EmailUtil.sendTheatetrTicketEmailCancelation(theaterticket,(double)msg.getObjectList().get(1));
             MovieShow ms=getMovieShowbyid(theaterticket.getMovieShowid());
             Seats seats=ms.getSeats();
             List<Seat>seatList=theaterticket.getReservedSeats();
-            for (Seat st:seatList){
+            for (Seat st:seatList){//ERROR:A different object with the same identifier value was already associated with the session
                 seats.unReserveSeat(st.getSeatCol(),st.getSeatRow());
-
                 session.delete(st);
                 session.flush();
+
             }
             ms.setSeats(seats);
             session.update(ms);
@@ -136,6 +136,10 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().commit();
             try {
                 client.sendToClient(getAllTickets(theaterticket.getBuyerEmail()));
+                System.out.println("sending updated ticket list");
+                sendRefreshcatlogevent();
+                msgObject updateHallMapMsg=new msgObject("updateHallMap",(TheaterMovie)getMovie(ms.getMovie().getMovieId()));
+                this.sendToAllClients(updateHallMapMsg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -151,6 +155,10 @@ public class SimpleServer extends AbstractServer {
             session.close();
         }
 
+    }
+    private  Seat getSeatById(int Seatid){
+        Seat st = (Seat) session.get(Seat.class, Seatid);
+        return st;
     }
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {

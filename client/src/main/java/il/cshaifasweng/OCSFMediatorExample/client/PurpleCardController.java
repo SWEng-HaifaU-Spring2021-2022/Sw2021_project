@@ -103,7 +103,9 @@ public class PurpleCardController {
 
     @FXML
     void addInst(ActionEvent event) {
-        String maxCap = "0" + AddCap.getText();
+        String maxCap = "0";
+        if (AddFScreening.isSelected())
+            maxCap += AddCap.getText();
         PurpleCard card = new PurpleCard(AddSDate.getValue(), AddEDate.getValue(), Integer.parseInt(maxCap), AddFScreening.isSelected());
         msgObject msg = new msgObject("AddInstruction", card);
 

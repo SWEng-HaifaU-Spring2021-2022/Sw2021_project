@@ -152,6 +152,8 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
 			else if(tempmsg.getMsg().equals("branch revenue")){
+				Warning newwarning = new Warning("the branch revenue for the last month is"+(int)tempmsg.getObject());
+				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 				EventBus.getDefault().post(new ReportinfoEvent(tempmsg) );
 			}
 			else if(tempmsg.getMsg().equals("openReportPage")){
@@ -162,7 +164,7 @@ public class SimpleClient extends AbstractClient {
 					e.printStackTrace();
 				}
 			}
-        else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
+			else if(tempmsg.getMsg().equals("HomeMoviePurchasedSuccessfully")){
 				Warning newwarning = new Warning("Purchased successfully");
 				EventBus.getDefault().post(new WarningEvent((Warning) newwarning));
 			}
@@ -179,13 +181,13 @@ public class SimpleClient extends AbstractClient {
 			}
 			else if(tempmsg.getMsg().equals("Complaints")) {
 				Platform.runLater(()->{
-				obj = tempmsg.getObject();
-				try {
-					App.setRoot("AnswerComplaints");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					obj = tempmsg.getObject();
+					try {
+						App.setRoot("AnswerComplaints");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				});
 			}
 			else if(tempmsg.getMsg().equals("an answer to complaint added")) {

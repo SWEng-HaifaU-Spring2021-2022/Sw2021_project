@@ -29,24 +29,25 @@ public class PrimaryController {
 
 	@FXML
 	void sendWarning(ActionEvent event) throws IOException {
+		 Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION,
+                    String.format("Message: %s\nTimestamp: %s\n",
+                            event.getWarning().getMessage(),
+                            event.getWarning().getTime().toString())
+            );
+            alert.show();
+        });
+	}
+	@FXML
+	void buyBundle(ActionEvent event) {
 		try {
-			// SimpleClient.getClient().sendToServer("#warning");
-			msgObject msg = new msgObject("#getAllMovies");
-			SimpleClient.getClient().sendToServer(msg);
-			System.out.println("message sent to server to get all movies");
+			App.setRoot("BuyBundle");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	@FXML
-		void buyBundle(ActionEvent event) {
-			try {
-				App.setRoot("BuyBundle");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
+
 	@FXML
 	void PCard(ActionEvent event) {
 		try {
@@ -78,7 +79,7 @@ public class PrimaryController {
 		msgObject msg = new msgObject("#getAllComplaints");
 		SimpleClient.getClient().sendToServer(msg);
 		System.out.println("message sent to server to get all Complaints");
-		
+
 		//App.setRoot("AnswerComplaints");
 
 	}

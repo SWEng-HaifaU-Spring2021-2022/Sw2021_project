@@ -877,7 +877,7 @@ public class SimpleServer extends AbstractServer {
         query.select(root).where(builder.equal(root.get("branchid"), branchid));
         ArrayList<TheaterTicket> Data = (ArrayList<TheaterTicket>) session.createQuery(query).getResultList();
         for (TheaterTicket tt : Data) {
-            if (tt.getScreeningDate().getMonth().getValue() == LocalDate.now().getMonth().getValue())
+            if (tt.getBuyingDate().getMonth().equals(LocalDate.now().getMonth()))
                 sum += tt.getTotalCost();
         }
         return sum;
@@ -932,7 +932,7 @@ public class SimpleServer extends AbstractServer {
         Root<HomeLinkTicket> root = query.from(HomeLinkTicket.class);
         ArrayList<HomeLinkTicket> Data = (ArrayList<HomeLinkTicket>) session.createQuery(query).getResultList();
         for (HomeLinkTicket tt : Data) {
-            if (tt.getScreeningDate().getMonth().getValue() == LocalDate.now().getMonth().getValue())
+            if (tt.getBuyingDate().getMonth().getValue() == LocalDate.now().getMonth().getValue())
                 sum += tt.getTotalCost();
         }
         CriteriaQuery<Bundle> query2 = builder.createQuery(Bundle.class);

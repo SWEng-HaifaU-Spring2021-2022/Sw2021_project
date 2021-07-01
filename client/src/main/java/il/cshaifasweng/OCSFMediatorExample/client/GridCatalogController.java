@@ -367,7 +367,7 @@ public class GridCatalogController implements Initializable {
 
                             if (ld2.isAfter(ms.getShowDate()) || ld2.isEqual(ms.getShowDate())) {
                                 FilteredMovieList.add(m);
-
+                                break;
                             }
 
                         }

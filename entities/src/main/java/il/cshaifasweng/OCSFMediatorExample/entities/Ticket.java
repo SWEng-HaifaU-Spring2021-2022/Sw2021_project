@@ -20,6 +20,7 @@ public abstract class Ticket implements Serializable {
 	String visaNumber;
 	String cvv;
 	int totalCost;
+	LocalDate BuyingDate;
 	public Ticket(){}
 
 	public Ticket(String buyerEmail, String movieName, LocalDate screeningDate, String buyerName, String visaNumber, String cvv) {
@@ -29,6 +30,7 @@ public abstract class Ticket implements Serializable {
 		this.buyerName = buyerName;
 		this.visaNumber = visaNumber;
 		this.cvv = cvv;
+		this.BuyingDate=LocalDate.now();
 	}
 
 
@@ -89,5 +91,13 @@ public abstract class Ticket implements Serializable {
 
 	public void setTotalCost(int totalCost) {
 		this.totalCost = totalCost;
+	}
+
+	public LocalDate getBuyingDate() {
+		return BuyingDate;
+	}
+
+	public void setBuyingDate(LocalDate buyingDate) {
+		BuyingDate = buyingDate;
 	}
 }

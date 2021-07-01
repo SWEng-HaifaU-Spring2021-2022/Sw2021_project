@@ -158,7 +158,7 @@ public class ReportsController {
         complaintchart.setStyle("-fx-background-color: #ffbd05");
         int monthDaysNum=LocalDate.now().getMonth().length(LocalDate.now().isLeapYear());
         LocalDate startDate=LocalDate.now().withDayOfMonth(1);
-        LocalDate endDate=startDate.plusDays(monthDaysNum);
+        LocalDate endDate=startDate.plusDays(monthDaysNum).minusDays(1);
         XYChart.Series series=new XYChart.Series();
         for (LocalDate itDate=startDate;!itDate.isAfter(endDate);itDate=itDate.plusDays(1)){
             series.getData().add(new XYChart.Data( itDate.toString(),getNumOfComplaint(complaintList,itDate)));

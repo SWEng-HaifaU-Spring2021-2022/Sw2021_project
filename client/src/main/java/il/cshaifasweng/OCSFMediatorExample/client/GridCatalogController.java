@@ -174,12 +174,13 @@ public class GridCatalogController implements Initializable {
         }
 
         retVal=10;
-
+        movieType.getItems().add("choose a type");
         movieType.getItems().add("All Movies");
         movieType.setValue("All Movies");
         movieType.getItems().add("Coming Soon");
         movieType.getItems().add("Home Movie");
         movieType.getItems().add("Theater Movie");
+        movieType.setValue("choose a type");
         movieType.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
             List<Movie> FilteredMovieList = new ArrayList<>();
             for (Movie m : reserveList) {
@@ -198,7 +199,7 @@ public class GridCatalogController implements Initializable {
                 }
 
             }
-            if (newValue.equals("All Movies")) {
+            if (newValue.equals("All Movies")||newValue.equals("choose a type")) {
                 movieList = reserveList;
                 try {
                     fillGrids();
@@ -222,29 +223,44 @@ public class GridCatalogController implements Initializable {
              */
 
         });
+        theaterBranch.getItems().add("choose branch");
         theaterBranch.getItems().add("Haifa");
         theaterBranch.getItems().add("Herzilya");
         theaterBranch.getItems().add("Tel-Aviv");
+        theaterBranch.setValue("choose branch");
         theaterBranch.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
-            List<Movie> FilteredMovieList = new ArrayList<>();
-            for (Movie m : reserveList) {
-                if (m.getClass().equals(TheaterMovie.class)) {
-                    TheaterMovie TM = (TheaterMovie) m;
-                    List<MovieShow> MSL = TM.getMSList();
-                    for (MovieShow ms : MSL) {
-                        if (newValue.equals(ms.getTheater().getLocation().toString())) {
-                            FilteredMovieList.add(m);
-                        }
-                    }
-
+            if(newValue.equals("choose branch")){
+                movieList = reserveList;
+                try {
+                    fillGrids();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             }
-            movieList = FilteredMovieList;
-            try {
-                fillGrids();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            else{
+
+                List<Movie> FilteredMovieList = new ArrayList<>();
+                for (Movie m : reserveList) {
+                    if (m.getClass().equals(TheaterMovie.class)) {
+                        TheaterMovie TM = (TheaterMovie) m;
+                        List<MovieShow> MSL = TM.getMSList();
+                        for (MovieShow ms : MSL) {
+                            if (newValue.equals(ms.getTheater().getLocation().toString())) {
+                                FilteredMovieList.add(m);
+                                break;
+                            }
+                        }
+
+                    }
+                }
+                movieList = FilteredMovieList;
+                try {
+                    fillGrids();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -394,7 +410,8 @@ public class GridCatalogController implements Initializable {
             if(SimpleClient.getUser().getPermission()==5){
                 msgObject msg=new msgObject("#getDataForReports");
                 SimpleClient.getClient().sendToServer(msg);
-            }else{
+            }
+            else{
                 App.setRoot("Reports");
             }
         } catch (IOException e) {

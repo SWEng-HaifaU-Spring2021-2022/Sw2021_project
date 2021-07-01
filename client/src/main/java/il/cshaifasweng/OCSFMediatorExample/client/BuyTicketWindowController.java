@@ -266,7 +266,7 @@ public class BuyTicketWindowController {
     public void onPurpleCardEvent(PurbleCardEvent event){
         Platform.runLater(()->{
             choosenSeats.clear();
-            seatInfoLabel.setText("Chosen Seats: ");
+            seatInfoLabel.setText("");
             System.out.println(event.isOpenmap());
             if(event.isOpenmap()){
                 chooseSeatBtn.setDisable(false);
@@ -277,7 +277,7 @@ public class BuyTicketWindowController {
                     if(DatesList.getValue()!=null && DatesList.getValue().getSeats().getFirsTemptySeat()==null){
                         seatInfoLabel.setText(seatInfoLabel.getText()+"there is no empty seats");
                         return;
-                    }else{
+                    }else if (DatesList.getValue()!=null){
                         choosenSeats.add(DatesList.getValue().getSeats().getFirsTemptySeat());
                         seatInfoLabel.setText(seatInfoLabel.getText()+DatesList.getValue().getSeats().getFirsTemptySeat().toString());
                     }

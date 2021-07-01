@@ -71,13 +71,13 @@ public class SimpleServer extends AbstractServer {
                     MovieShow tempms=(MovieShow) msgObj.getObject();
                     if(tempms!=null){
                         for (PurpleCard pc:cardslist){
-                            if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&pc.getProjAllowed()==false){
+                            if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())){
                                 msgObject answer_msg=new msgObject("can't Pick seat");
                                 client.sendToClient(answer_msg);
                                 flag=false;
                             }
                         }
-                        if(flag){
+                       if(flag){
                             msgObject answer_msg=new msgObject("can Pick seat");
                             client.sendToClient(answer_msg);
                         }
@@ -1000,6 +1000,11 @@ public class SimpleServer extends AbstractServer {
             session = sessionFactory.openSession();
             session.beginTransaction();
             session.save(CM);
+            CinemaManager CM2 = new CinemaManager("Zinat", "9e1f0bda8", "wajeeh", "atrash", 4, 2);
+            session.save(CM2);
+            CinemaManager CM3 = new CinemaManager("Raghad", "9e1f0bda8", "wajeeh", "atrash", 4, 3);
+
+            session.save(CM3);
             session.getTransaction().commit(); // Save everything.
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -1289,8 +1294,10 @@ public class SimpleServer extends AbstractServer {
     }
 
     void getAllInstructions(msgObject msg, ConnectionToClient client) {
-        SessionFactory sessionFactory = getSessionFactory();
-        session = sessionFactory.openSession();
+        if(session!=null &&!session.isOpen()){
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+        }
         String sqlQ = "FROM PurpleCard";
         Query query = session.createQuery(sqlQ);
         List<PurpleCard> list = query.list();

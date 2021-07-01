@@ -156,7 +156,7 @@ public class ReportsController {
         complaintchart.getXAxis().setStyle("-fx-border-color: OrangeRed transparent transparent; -fx-border-width:3");
         complaintchart.getYAxis().setStyle("-fx-border-color: transparent OrangeRed transparent transparent; -fx-border-width:3");
         complaintchart.setStyle("-fx-background-color: #ffbd05");
-        int monthDaysNum=LocalDate.now().getDayOfMonth();
+        int monthDaysNum=LocalDate.now().getMonth().length(LocalDate.now().isLeapYear());
         LocalDate startDate=LocalDate.now().withDayOfMonth(1);
         LocalDate endDate=startDate.plusDays(monthDaysNum);
         XYChart.Series series=new XYChart.Series();

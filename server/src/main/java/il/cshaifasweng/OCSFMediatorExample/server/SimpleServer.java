@@ -201,9 +201,7 @@ public class SimpleServer extends AbstractServer {
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
-        if(!session.isOpen()){
-            session = sessionFactory.openSession();
-        }
+        session = sessionFactory.openSession();
         //session.beginTransaction();
         String msgString = msgobject.getMsg();
         System.out.println(msgString);

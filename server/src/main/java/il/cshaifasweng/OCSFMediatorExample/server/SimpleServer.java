@@ -69,16 +69,18 @@ public class SimpleServer extends AbstractServer {
                     boolean flag=true;
                     List<PurpleCard> cardslist=getAllInstructions2();
                     MovieShow tempms=(MovieShow) msgObj.getObject();
-                    for (PurpleCard pc:cardslist){
-                        if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&pc.getProjAllowed()==false){
-                            msgObject answer_msg=new msgObject("can't Pick seat");
-                            client.sendToClient(answer_msg);
-                            flag=false;
+                    if(tempms!=null){
+                        for (PurpleCard pc:cardslist){
+                            if (tempms.getShowDate().isAfter(pc.getStart())&&tempms.getShowDate().isBefore(pc.getEnd())&&pc.getProjAllowed()==false){
+                                msgObject answer_msg=new msgObject("can't Pick seat");
+                                client.sendToClient(answer_msg);
+                                flag=false;
+                            }
                         }
-                    }
-                    if(flag){
-                        msgObject answer_msg=new msgObject("can Pick seat");
-                        client.sendToClient(answer_msg);
+                        if(flag){
+                            msgObject answer_msg=new msgObject("can Pick seat");
+                            client.sendToClient(answer_msg);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -198,8 +200,10 @@ public class SimpleServer extends AbstractServer {
     }
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
-        SessionFactory sessionFactory = getSessionFactory();
-        session = sessionFactory.openSession();
+        if(!session.isOpen()){
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+        }
         //session.beginTransaction();
         String msgString = msgobject.getMsg();
         System.out.println(msgString);

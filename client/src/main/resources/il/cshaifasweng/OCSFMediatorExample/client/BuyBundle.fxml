@@ -9,7 +9,7 @@
 
 <AnchorPane onKeyPressed="#onEnter" prefHeight="308.0" prefWidth="399.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BuyBundleController">
    <children>
-      <Button fx:id="checkOutBtn" layoutX="295.0" layoutY="255.0" mnemonicParsing="false" onAction="#checkOut" prefHeight="31.0" prefWidth="82.0" text="Check out" />
+      <Button fx:id="checkOutBtn" layoutX="295.0" layoutY="255.0" mnemonicParsing="false" onAction="#checkOut" prefHeight="32.0" prefWidth="92.0" text="Check out" />
       <Label fx:id="mainlabel" layoutX="61.0" layoutY="29.0" text="Buy Tickets Bundle" textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
          <font>
             <Font name="Calibri Light" size="37.0" />

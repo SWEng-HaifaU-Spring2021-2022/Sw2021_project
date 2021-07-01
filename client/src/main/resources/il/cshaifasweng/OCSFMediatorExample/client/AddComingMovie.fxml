@@ -45,14 +45,14 @@
             <Font size="14.0" />
          </font></Label>
       <Button fx:id="AddBtn" layoutX="14.0" layoutY="293.0" mnemonicParsing="false" onAction="#addMovie" prefHeight="36.0" prefWidth="81.0" text="Add" />
-      <Label fx:id="message" layoutX="22.0" layoutY="279.0" textFill="RED">
+      <Label fx:id="message" layoutX="22.0" layoutY="279.0" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <TextField fx:id="entryPrice" layoutX="19.0" layoutY="244.0" visible="false" />
-      <Label fx:id="priceLabel" layoutX="22.0" layoutY="220.0" text="Entry Price" visible="false" />
-      <Label fx:id="linkLabel" layoutX="210.0" layoutY="221.0" text="Link" visible="false" />
+      <Label fx:id="priceLabel" layoutX="22.0" layoutY="220.0" text="Entry Price" textFill="WHITE" visible="false" />
+      <Label fx:id="linkLabel" layoutX="210.0" layoutY="221.0" text="Link" textFill="WHITE" visible="false" />
       <TextField fx:id="MovieLink" layoutX="210.0" layoutY="244.0" visible="false" />
       <ChoiceBox fx:id="MovieType" layoutX="187.0" layoutY="27.0" prefWidth="150.0" />
       <Button layoutX="19.0" layoutY="28.0" mnemonicParsing="false" onAction="#goHome" text="Catalog" />

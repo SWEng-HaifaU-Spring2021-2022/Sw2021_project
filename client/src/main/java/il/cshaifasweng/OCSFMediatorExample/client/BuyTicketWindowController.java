@@ -274,7 +274,7 @@ public class BuyTicketWindowController {
             else{
                 chooseSeatBtn.setDisable(true);
                 if (chooseSeatBtn.isDisabled()==true){
-                    if(DatesList.getValue().getSeats().getFirsTemptySeat()==null){
+                    if(DatesList.getValue()!=null && DatesList.getValue().getSeats().getFirsTemptySeat()==null){
                         seatInfoLabel.setText(seatInfoLabel.getText()+"there is no empty seats");
                         return;
                     }else{

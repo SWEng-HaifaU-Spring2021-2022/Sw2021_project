@@ -200,8 +200,8 @@ public class SimpleServer extends AbstractServer {
     }
 
     private void get(msgObject msgobject, ConnectionToClient client) throws Exception {
+        SessionFactory sessionFactory = getSessionFactory();
         if(!session.isOpen()){
-            SessionFactory sessionFactory = getSessionFactory();
             session = sessionFactory.openSession();
         }
         //session.beginTransaction();

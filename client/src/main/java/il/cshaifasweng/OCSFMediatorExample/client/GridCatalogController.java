@@ -326,21 +326,6 @@ public class GridCatalogController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       /* FXMLLoader loader = new FXMLLoader(getClass().getResource("AddComingMovie.fxml"));
-        Parent parent = null;
-        try {
-            parent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // AddComingMovie addmovie=(AddComingMovie)loader.getController();
-        Stage stage = new Stage();
-        stage.setTitle("add coming soon movie");
-        stage.setScene(new Scene(parent));
-        stage.show();*/
-        /*
-         * stage.setOnHiding((e) -> { handleRefresh(new ActionEvent()); });
-         */
     }
 
     private void handleRefresh(ActionEvent actionEvent) {
@@ -374,6 +359,7 @@ public class GridCatalogController implements Initializable {
                     if (ld2 == null) {
                         if (ld1.isBefore(ms.getShowDate()) || ld1.isEqual(ms.getShowDate())) {
                             FilteredMovieList.add(m);
+                            break;
                         }
                     } else {
 
@@ -445,13 +431,14 @@ public class GridCatalogController implements Initializable {
 
     @Subscribe
     public void onRefreshCatalogEvent(RefreshCatalogEvent event){
-        movieList=event.getMovieList();
-        try {
-            fillGrids();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //event.sendRefreshRequest();
+        Platform.runLater(()->{
+            movieList=event.getMovieList();
+            try {
+                fillGrids();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
 

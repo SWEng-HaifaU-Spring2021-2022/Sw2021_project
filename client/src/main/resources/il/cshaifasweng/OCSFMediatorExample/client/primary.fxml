@@ -19,10 +19,9 @@
             </Label>
             <Button fx:id="grid" layoutX="330.0" layoutY="99.0" mnemonicParsing="false" onAction="#open_grid" prefHeight="32.0" prefWidth="130.0" text="Show Catalog" />
       
-                  <Button layoutX="331.0" layoutY="210.0" mnemonicParsing="false" onAction="#buyBundle" prefHeight="32.0" prefWidth="130.0" text="Buy Bundles" />
-            <Button layoutX="331.0" layoutY="260.0" mnemonicParsing="false" onAction="#showBundles" text="Show My Bundles" />
+                  <Button layoutX="331.0" layoutY="157.0" mnemonicParsing="false" onAction="#buyBundle" prefHeight="32.0" prefWidth="130.0" text="Buy Bundles" />
+            <Button layoutX="329.0" layoutY="210.0" mnemonicParsing="false" onAction="#showBundles" text="Show My Bundles" />
             <Button layoutX="335.0" layoutY="316.0" mnemonicParsing="false" onAction="#PCard" prefHeight="32.0" prefWidth="130.0" text="PurbleCard" visible="false" />
-            <Button layoutX="331.0" layoutY="155.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="130.0" text="LogIn" />
          </children>
       </AnchorPane>
    </children>

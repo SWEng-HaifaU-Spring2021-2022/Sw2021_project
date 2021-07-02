@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="426.0" prefWidth="460.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PurpleCardController">
+<AnchorPane prefHeight="489.0" prefWidth="551.0" stylesheets="@../CSSFiles/bootstrap3.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PurpleCardController">
    <children>
-      <TabPane fx:id="TabPane" prefHeight="426.0" prefWidth="460.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="TabPane" prefHeight="489.0" prefWidth="551.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab fx:id="AddInstTab" text="Add Instruction">
             <content>
@@ -36,7 +36,7 @@
                         <TextField fx:id="AddCap" layoutX="44.0" layoutY="273.0" prefHeight="25.0" prefWidth="173.0" promptText="Whats the max capacity?" />
                         <Button fx:id="Add" layoutX="325.0" layoutY="343.0" mnemonicParsing="false" onAction="#addInst" text="Add Insrtruction" />
                         <Label fx:id="AddMsgLabel" layoutX="29.0" layoutY="342.0" />
-                        <Button layoutX="251.0" layoutY="343.0" mnemonicParsing="false" onAction="#goHome" text="Home" />
+                        <Button layoutX="251.0" layoutY="343.0" mnemonicParsing="false" onAction="#goHome" text="Catalog" />
                      </children>
                   </AnchorPane>
             </content>
@@ -45,7 +45,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="401.0" prefWidth="400.0">
                      <children>
-                        <TableView fx:id="InstTable" layoutY="8.0" prefHeight="213.0" prefWidth="460.0">
+                        <TableView fx:id="InstTable" layoutY="8.0" prefHeight="213.0" prefWidth="551.0">
                           <columns>
                             <TableColumn fx:id="sDateCol" prefWidth="75.0" text="Start Date" />
                             <TableColumn fx:id="eDateCol" prefWidth="75.0" text="End Date" />
@@ -57,15 +57,16 @@
                            </columnResizePolicy>
                         </TableView>
                         <DatePicker fx:id="EditSDate" layoutX="29.0" layoutY="252.0" prefHeight="25.0" prefWidth="164.0" promptText="Start date" />
-                        <DatePicker fx:id="EditEDate" layoutX="266.0" layoutY="252.0" prefHeight="25.0" prefWidth="164.0" promptText="End Date" />
+                        <DatePicker fx:id="EditEDate" layoutX="349.0" layoutY="252.0" prefHeight="25.0" prefWidth="164.0" promptText="End Date" />
                         <CheckBox fx:id="EditFScreening" layoutX="35.0" layoutY="301.0" mnemonicParsing="false" onAction="#EditFScreeningCB" prefWidth="16.0" />
                         <Label layoutX="58.0" layoutY="301.0" text="Frontal screening" />
-                        <TextField fx:id="EditCap" layoutX="266.0" layoutY="309.0" prefHeight="25.0" prefWidth="165.0" />
-                        <Label layoutX="266.0" layoutY="284.0" text="Capacity" />
+                        <TextField fx:id="EditCap" layoutX="356.0" layoutY="307.0" prefHeight="25.0" prefWidth="165.0" />
+                        <Label layoutX="356.0" layoutY="282.0" text="Capacity" />
                         <Label layoutX="31.0" layoutY="228.0" text="Start &amp; end date on instructions" />
                         <Label fx:id="EditMsgLabel" layoutX="36.0" layoutY="336.0" prefHeight="47.0" prefWidth="193.0" wrapText="true" />
-                        <Button fx:id="DeleteBtn" layoutX="272.0" layoutY="346.0" mnemonicParsing="false" onAction="#DeleteInstruction" text="Delete" />
-                        <Button fx:id="EditApply" layoutX="334.0" layoutY="346.0" mnemonicParsing="false" onAction="#applyEdit" prefHeight="25.0" prefWidth="97.0" text="Apply Change" />
+                        <Button fx:id="DeleteBtn" layoutX="345.0" layoutY="344.0" mnemonicParsing="false" onAction="#DeleteInstruction" text="Delete" />
+                        <Button fx:id="EditApply" layoutX="407.0" layoutY="344.0" mnemonicParsing="false" onAction="#applyEdit" prefHeight="32.0" prefWidth="111.0" text="Apply Change" />
+                        <Button layoutX="276.0" layoutY="344.0" mnemonicParsing="false" onAction="#goHome" text="Catalog" />
                      </children>
                   </AnchorPane>
             </content>

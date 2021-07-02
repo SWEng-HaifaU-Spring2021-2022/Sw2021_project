@@ -157,6 +157,12 @@ public class GridCatalogController implements Initializable {
                 answercomplaintBtn.setVisible(true);
                 purpleBtn.setVisible(true);
             }
+            if(SimpleClient.getUser().getPermission()==3){
+                addBtn.setVisible(true);
+            }
+            else{
+                addBtn.setVisible(false);
+            }
         } else {
             addBtn.setVisible(false);
             logInStatusLB.setText("");

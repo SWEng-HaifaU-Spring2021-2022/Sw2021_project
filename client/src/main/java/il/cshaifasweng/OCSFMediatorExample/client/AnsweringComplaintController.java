@@ -104,6 +104,7 @@ public class AnsweringComplaintController implements Initializable{
 	        System.out.println("message sent to server to update the answer field to the selected complaint for a the DB");
 	        Answer_text.clear();
 	        Complaint_text.clear();
+			refundValueTbox.clear();
 	    }
 
 		@Override
@@ -181,6 +182,7 @@ public class AnsweringComplaintController implements Initializable{
 			list.addAll(event.getComplaintList());
 			table_Comp.setItems(list);
 			autoResizeColumns(table_Comp);
+
 		});
 	}
 }
